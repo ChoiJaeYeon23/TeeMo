@@ -1,19 +1,13 @@
-<<<<<<< HEAD
 import { useEffect, useState } from "react"
 import { SafeAreaView, Text, View, TouchableOpacity, StyleSheet, Image } from "react-native"
 import { login, getProfile as getKakaoProfile } from "@react-native-seoul/kakao-login"
 import { useNavigation, useIsFocused } from "@react-navigation/native"
-=======
-import { SafeAreaView, View, Text, Button } from "react-native"
-import { useNavigation } from "@react-navigation/native";
->>>>>>> Suji
 
 /**
  * 카카오 API를 이용한 로그인 화면입니다.
  */
 
 const KakaoLoginScreen = () => {
-<<<<<<< HEAD
   const [result, setResult] = useState("")
   const [auth, setAuth] = useState(false)
   const [profile, setProfile] = useState("")
@@ -81,24 +75,6 @@ const KakaoLoginScreen = () => {
               <Text>{name}</Text>
               <Text>이메일</Text>
               <Text>{email}</Text>
-=======
-    const navigation = useNavigation();
-
-    const goToRecord = () => {
-        navigation.navigate("Record");
-      };
-
-    const goToSave = () => {
-        navigation.navigate("Save");
-      };
-
-    return (
-        <SafeAreaView>
-            <View>
-                <Text>카카오 로그인 화면입니다.</Text>
-                <Button title="녹화" onPress={goToRecord} />
-                <Button title="저장" onPress={goToSave} />
->>>>>>> Suji
             </View>
           ) : (
             <Text>로그인 정보가 없습니다.</Text>
