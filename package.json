@@ -1,0 +1,17 @@
+{
+  "name": "TeeMo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "babel.config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@react-native/babel-preset": "^0.75.0-main"
+  }
+}
