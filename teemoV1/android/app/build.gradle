@@ -102,8 +102,8 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
-    sourceSets {    // java 코드 위치 추가
-        main.java.srcDirs += "src/main/java/com/teemoV1"
+    sourceSets {
+        main.java.srcDirs += 'src/main/java/com/teemov1'
     }
 }
 

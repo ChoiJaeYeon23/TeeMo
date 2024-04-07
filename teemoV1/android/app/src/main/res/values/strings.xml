@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">teemoV1</string>
+    
+    <!-- 카카오 네이티브 앱 키를 추가합니다. -->
+    <string name="kakao_app_key">1c2501d6ed93e3ead952f4b294c2e760</string>
 </resources>
