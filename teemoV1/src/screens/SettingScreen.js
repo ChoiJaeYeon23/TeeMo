@@ -36,6 +36,9 @@ const SettingScreen = () => {
     const goToSave = () => {
         navigation.navigate("Save")
     }
+    const goToPicture = () => {
+        navigation.navigate("Picture");
+      };
 
     const goToPerm = () => {
         navigation.navigate("권한화면")
@@ -53,8 +56,8 @@ const SettingScreen = () => {
                 <TouchableOpacity onPress={goToRecord}>
                     <Text>영상 녹화</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={goToSave}>
-                    <Text>저장</Text>
+                <TouchableOpacity onPress={goToPicture}>
+                    <Text>사진</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={goToPerm}>
                     <Text>접근 권한 허용</Text>
