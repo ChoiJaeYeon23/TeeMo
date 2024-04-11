@@ -3,6 +3,9 @@ import { SafeAreaView, View, Text, TouchableOpacity } from "react-native"
 import { logout } from "@react-native-seoul/kakao-login"
 import { useNavigation } from "@react-navigation/native"
 
+/**
+ * 모든 페이지 navigation.navigate() 되는지 확인
+ */
 const SettingScreen = () => {
     const [isLogout, setIsLogout] = useState("")
     const [isLogin, setIsLogin] = useState(true)
@@ -27,13 +30,16 @@ const SettingScreen = () => {
     }
 
     const goToRecord = () => {
-        navigation.navigate("Record");
-      };
+        navigation.navigate("Record")
+    }
 
     const goToSave = () => {
-        navigation.navigate("Save");
-      };
+        navigation.navigate("Save")
+    }
 
+    const goToPerm = () => {
+        navigation.navigate("권한화면")
+    }
     return (
         <SafeAreaView>
             <View>
@@ -49,6 +55,9 @@ const SettingScreen = () => {
                 </TouchableOpacity>
                 <TouchableOpacity onPress={goToSave}>
                     <Text>저장</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={goToPerm}>
+                    <Text>접근 권한 허용</Text>
                 </TouchableOpacity>
             </View>
         </SafeAreaView>

@@ -30,7 +30,7 @@ const PermissionScreen = () => {
             ])
             console.log("접근 권한이 허용되었습니다")
             Alert.alert("모든 접근 권한이 허용되었습니다.")
-            navigation.navigate("HOME")
+            navigation.navigate("설정화면")
         } catch (error) {
             console.error("접근 권한 요청 중 오류가 발생했습니다", error)
             Alert.alert("접근 권한 요청 중 오류가 발생했습니다.")

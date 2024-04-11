@@ -28,7 +28,7 @@ const KakaoLoginScreen = () => {
       if (result != null) {
         console.log("로그인 토큰 :: ", result)
         setAuth(true)
-        navigation.navigate("권환화면")
+        // navigation.navigate("권한화면")
         getProfile()
       }
     } catch (err) {
