@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { SafeAreaView, Text, View, TouchableOpacity, StyleSheet, Image } from "react-native"
 import { login, getProfile as getKakaoProfile } from "@react-native-seoul/kakao-login"
-import { useNavigation, useIsFocused } from "@react-navigation/native"
+import { useNavigation } from "@react-navigation/native"
 
 /**
  * 카카오 API를 이용한 로그인 화면입니다.
@@ -28,7 +28,7 @@ const KakaoLoginScreen = () => {
       if (result != null) {
         console.log("로그인 토큰 :: ", result)
         setAuth(true)
-        //navigation.navigate("")
+        navigation.navigate("권환화면")
         getProfile()
       }
     } catch (err) {
