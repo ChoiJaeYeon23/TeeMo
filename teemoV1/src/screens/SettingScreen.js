@@ -30,8 +30,8 @@ const SettingScreen = () => {
         navigation.navigate("Record");
       };
 
-    const goToSave = () => {
-        navigation.navigate("Save");
+    const goToPicture = () => {
+        navigation.navigate("Picture");
       };
 
     return (
@@ -47,8 +47,8 @@ const SettingScreen = () => {
                 <TouchableOpacity onPress={goToRecord}>
                     <Text>영상 녹화</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={goToSave}>
-                    <Text>저장</Text>
+                <TouchableOpacity onPress={goToPicture}>
+                    <Text>사진</Text>
                 </TouchableOpacity>
             </View>
         </SafeAreaView>
