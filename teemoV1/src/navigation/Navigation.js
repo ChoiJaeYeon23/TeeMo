@@ -7,8 +7,7 @@ import SettingScreen from "../screens/SettingScreen"
 import RecordScreen from '../screens/Record/RecordScreen';
 import PictureScreen from '../screens/Record/PictureScreen';
 import PermissionScreen from "../screens/PermissionScreen"
-import Record from "../screens/RecordScreen/Record"
-import Save from "../screens/RecordScreen/Save"
+
 
 const Stack = createStackNavigator()
 
