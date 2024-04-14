@@ -7,6 +7,8 @@ import SettingScreen from "../screens/SettingScreen"
 import PermissionScreen from "../screens/PermissionScreen"
 import Record from '../screens/RecordScreen/Record';
 import Save from '../screens/RecordScreen/Save';
+import UserList from '../recognition/UserList';
+import Userrecognition from '../recognition/Userrecognition';
 
 const Stack = createStackNavigator();
 
@@ -16,6 +18,8 @@ const Navigation = () => {
             <Stack.Screen name="로그인화면" component={KakaoLoginScreen} />
             <Stack.Screen name="설정화면" component={SettingScreen} />
             <Stack.Screen name="권한화면" component={PermissionScreen} />
+            <Stack.Screen name="UserList" component={UserList} />
+            <Stack.Screen name='Userrecognition' component={Userrecognition}/>
             <Stack.Screen name="Record" component={Record} />
             <Stack.Screen name="Save" component={Save} />
         </Stack.Navigator>

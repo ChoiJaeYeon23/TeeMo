@@ -25,6 +25,9 @@ const SettingScreen = () => {
             console.error("로그아웃 오류", err)
         }
     }
+    const goUserList = () => {
+        navigation.navigate("UserList");
+      };
 
     const goToRecord = () => {
         navigation.navigate("Record");
@@ -43,6 +46,9 @@ const SettingScreen = () => {
             <View>
                 <TouchableOpacity onPress={signOutWithKakao}>
                     <Text>로그아웃하기</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={goUserList}>
+                    <Text>사용자인식</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={goToRecord}>
                     <Text>영상 녹화</Text>
