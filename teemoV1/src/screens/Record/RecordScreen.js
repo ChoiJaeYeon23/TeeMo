@@ -3,6 +3,7 @@ import { View, TouchableOpacity, StyleSheet, Text } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import Video from 'react-native-video';
 
+// 영상 녹화 화면 코드
 const RecordScreen = () => {
   const [recording, setRecording] = useState(false);
   const [videoPath, setVideoPath] = useState(null);
@@ -10,7 +11,7 @@ const RecordScreen = () => {
   const cameraRef = useRef(null);
   const playerRef = useRef(null);
 
-  const startRecording = async () => {
+  const startRecording = async () => { //녹화 시작
     setRecording(true);
     const options = { quality: RNCamera.Constants.VideoQuality["720p"] };
     const { uri, codec = 'mp4' } = await cameraRef.current.recordAsync(options);
@@ -22,11 +23,11 @@ const RecordScreen = () => {
     }
   };
 
-  const stopRecording = () => {
+  const stopRecording = () => { //녹화 중지
     cameraRef.current.stopRecording();
   };
 
-  const resumeVideo = () => {
+  const resumeVideo = () => { //영상 확인
     setVideoPath(null);
     setProcessing(false);
   };
@@ -34,8 +35,7 @@ const RecordScreen = () => {
   let button = (
     <TouchableOpacity
       onPress={startRecording}
-      style={styles.button}
-    >
+      style={styles.button}>
       <Text style={{ fontSize: 14 }}> 녹화시작 </Text>
     </TouchableOpacity>
   );
@@ -44,9 +44,8 @@ const RecordScreen = () => {
     button = (
       <TouchableOpacity
         onPress={stopRecording}
-        style={styles.button}
-      >
-        <Text style={{ fontSize: 14 }}> STOP </Text>
+        style={styles.button}>
+        <Text style={{ fontSize: 14 }}> 중지 </Text>
       </TouchableOpacity>
     );
   }
@@ -60,40 +59,37 @@ const RecordScreen = () => {
           type={RNCamera.Constants.Type.back}
           flashMode={RNCamera.Constants.FlashMode.off}
           androidCameraPermissionOptions={{
-            title: 'Permission to use camera',
-            message: 'We need your permission to use your camera',
-            buttonPositive: 'Ok',
-            buttonNegative: 'Cancel',
+            title: '카메라 사용 권한',
+            message: '귀하의 카메라를 사용하려면 권한이 필요합니다',
+            buttonPositive: '확인',
+            buttonNegative: '취소',
           }}
           androidRecordAudioPermissionOptions={{
-            title: 'Permission to use audio recording',
-            message: 'We need your permission to use your audio',
-            buttonPositive: 'Ok',
-            buttonNegative: 'Cancel',
+            title: '오디오 녹음 사용 권한',
+            message: '귀하의 오디오를 사용하려면 권한이 필요합니다',
+            buttonPositive: '확인',
+            buttonNegative: '취소',
           }}
           android
         />
-        :
-        null
+        : null
       }
       <View
-        style={{ flex: 0, flexDirection: "row", justifyContent: "center" }}
-      >
+        style={{ flex: 0, flexDirection: "row", justifyContent: "center" }}>
         {button}
       </View>
 
-      {videoPath ?
-        // Reproduce el video en un pequeño espacio en la parte inferior
+      {videoPath ? 
         <View
           style={{ flex: 1, flexDirection: "column", justifyContent: "center" }}>
-          <Video source={{ uri: videoPath }}   // Can be a URL or a local file.
+          <Video source={{ uri: videoPath }} 
             ref={playerRef}
-            onBuffer={() => { }}                // Callback when remote video is buffering
-            onError={() => { }}               // Callback when video cannot be loaded
+             /* onBuffer={() => { }}                // Callback when remote video is buffering
+            onError={() => { }}               // Callback when video cannot be loaded */
             style={styles.backgroundVideo} />
           <TouchableOpacity style={styles.button}
             onPress={resumeVideo}>
-            <Text>Aceptar</Text>
+            <Text>확인</Text>
           </TouchableOpacity>
         </View>
         : null
