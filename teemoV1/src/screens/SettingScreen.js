@@ -33,9 +33,6 @@ const SettingScreen = () => {
         navigation.navigate("Record")
     }
 
-    const goToSave = () => {
-        navigation.navigate("Save")
-    }
     const goToPicture = () => {
         navigation.navigate("Picture");
       };
