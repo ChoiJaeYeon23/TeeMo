@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 
-class FaceDetectionCamera extends Component {
+class Userrecognition extends Component {
   render() {
     return (
       <View style={styles.container}>
@@ -42,4 +42,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default FaceDetectionCamera;
+export default Userrecognition;
