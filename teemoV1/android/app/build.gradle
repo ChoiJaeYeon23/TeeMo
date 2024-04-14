@@ -103,6 +103,7 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
+    // java 코드 위치를 알려줍니다.
     sourceSets {
         main.java.srcDirs += 'src/main/java/com/teemov1'
     }

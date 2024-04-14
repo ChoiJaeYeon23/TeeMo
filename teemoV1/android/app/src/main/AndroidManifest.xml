@@ -10,14 +10,6 @@
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <!-- Required -->
-    <uses-permission android:name="android.permission.CAMERA" />
-    <!-- Include this only if you are planning to use the microphone for video recording -->
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
-    <!-- 일단 넣음 -->
-    <!-- Include this only if you are planning to use the camera roll -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
       android:name=".MainApplication"
@@ -39,7 +31,7 @@
         </intent-filter>
       </activity>
 
-      <!-- 카카오 네이티브 앱 키를 추가합니다.-->
+      <!-- 카카오 네이티브 앱 키를 추가합니다. -->
       <activity 
         android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
         android:exported="true">

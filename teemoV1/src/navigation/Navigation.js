@@ -7,6 +7,8 @@ import SettingScreen from "../screens/SettingScreen"
 import RecordScreen from '../screens/Record/RecordScreen';
 import PictureScreen from '../screens/Record/PictureScreen';
 import PermissionScreen from "../screens/PermissionScreen"
+import UserList from '../recognition/UserList';
+import Userrecognition from '../recognition/Userrecognition';
 
 
 const Stack = createStackNavigator()
@@ -19,6 +21,8 @@ const Navigation = () => {
             <Stack.Screen name="Record" component={RecordScreen} />
             <Stack.Screen name="Picture" component={PictureScreen} />
             <Stack.Screen name="권한화면" component={PermissionScreen} />
+            <Stack.Screen name="UserList" component={UserList} />
+            <Stack.Screen name='Userrecognition' component={Userrecognition}/>
         </Stack.Navigator>
     )
 }
