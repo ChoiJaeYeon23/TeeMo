@@ -18,7 +18,7 @@ import java.security.NoSuchAlgorithmException;
  * MainActivity 클래스입니다.
  * 
  * 앱 실행 시 Splash Screen을 show
- * Key Hash를 받아오는 코드 추가 요함
+ * Key Hash 추출 코드 추가 완료
  */
 public class MainActivity extends ReactActivity {
   @Override

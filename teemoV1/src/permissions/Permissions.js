@@ -1,7 +1,7 @@
 import { PERMISSIONS } from "react-native-permissions"
 
 /**
- * 앱의 접근 권환 관련 코드 및 문구를 정의해놓은 파일입니다.
+ * 앱의 접근 권한 관련 코드 및 문구를 정의해놓은 파일입니다.
  * 
  * { APP_PERMISSION_CODE }: 안드로이드 접근 권한 요청 시 필요한 코드
  * { APP_PERMISSION_LIST }: 사용자에게 안내할 앱 접근 권한 리스트
