@@ -1,130 +1,99 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { View, TouchableOpacity, StyleSheet, Text } from 'react-native';
-import { Camera, useCameraDevice } from 'react-native-vision-camera';
+import React, { useState, useRef, useEffect } from 'react';
+import { View, TouchableOpacity, Text, ActivityIndicator } from 'react-native';
+import { Camera, useCameraDevices, useCameraPermission } from 'react-native-vision-camera';
+import { CameraRoll } from "react-native";
+import { useNavigation } from '@react-navigation/native';
 
 //영상 녹화 화면 코드
 const RecordScreen = () => {
-  const [cameraPermission, setCameraPermission] = useState('not-determined');
-  const [devices, setDevices] = useState([]);
-  const [selectedDevice, setSelectedDevice] = useState(null);
   const [recording, setRecording] = useState(false);
   const [videoPath, setVideoPath] = useState(null);
-  const [processing, setProcessing] = useState(false);
-  const device = useCameraDevice('front')
-
   const cameraRef = useRef(null);
+  const devices = useCameraDevices('back');
+  const { hasPermission } = useCameraPermission();
+
+  const navigation = useNavigation();
 
   useEffect(() => {
-    const checkPermissionAndLoadDevices = async () => {
-      let permission = await Camera.getCameraPermissionStatus();
-      if (permission === 'not-determined') {
-        permission = await Camera.requestCameraPermission();
-      }
-      setCameraPermission(permission);
-  
-      if (permission === 'authorized') {
-        const availableDevices = await Camera.getAvailableCameraDevices();
-        setDevices(availableDevices);
-        const frontCamera = availableDevices.find(device => device.position === 'front');
-        setSelectedDevice(frontCamera); // 전면 카메라로 변경
-      } else {
-        alert('카메라 권한이 필요합니다. 권한을 허용해주세요.');
-      }
-    };
-  
-    checkPermissionAndLoadDevices();
-  }, []);  
+    if (devices && !recording) {
+      startRecording(); // devices가 설정되고 녹화 중이 아닐 때 녹화를 시작합니다.
+    }
+  }, [devices, recording]);
 
-  const startRecording = async () => {
+  //녹화 시작 or 중지
+  const toggleRecording = async () => {
+    if (recording) {
+      stopRecording();
+    } else {
+      startRecording();
+    }
+  };
+
+//녹화 시작
+const startRecording = async () => {
     if (cameraRef.current) {
-      setRecording(true);
       try {
-        const video = await cameraRef.current.recordAsync();
-        setRecording(false);
+        const video = await cameraRef.current();
+        setRecording(true);
         setVideoPath(video.uri);
-        setProcessing(true);
       } catch (error) {
         console.error('녹화 오류 :', error);
+        setRecording(false);
       }
     } else {
       console.error('카메라가 준비 되지 않았습니다.');
     }
-  };  
-
-  const stopRecording = () => {
-    cameraRef.current.stopRecording();
   };
 
-  const resumeVideo = () => {
-    setVideoPath(null);
-    setProcessing(false);
+  //녹화 중지
+  const stopRecording = async () => {
+    if (cameraRef.current && recording) {
+      try {
+        const video = await cameraRef.current.stopRecording();
+        setRecording(false);
+        saveVideoToCameraRoll(video.uri);
+      } catch (error) {
+        console.error('녹화 중지 오류 :', error);
+      }
+    }
   };
 
-  let button = (
-    <TouchableOpacity
-      onPress={startRecording}
-      style={styles.button}>
-      <Text style={{ fontSize: 14 }}> 녹화 시작 </Text>
-    </TouchableOpacity>
-  );
+  // 비디오를 카메라 롤에 저장
+  const saveVideoToCameraRoll = async (videoUri) => {
+    try {
+      const saveResult = await CameraRoll.save(videoUri, { type: 'video' });
+      console.log('비디오 저장 결과:', saveResult);
+    } catch (error) {
+      console.error('비디오 저장 오류 :', error);
+    }
+  };
 
-  if (recording) {
-    button = (
-      <TouchableOpacity
-        onPress={stopRecording}
-        style={styles.button}>
-        <Text style={{ fontSize: 14 }}> 중지 </Text>
-      </TouchableOpacity>
-    );
+  //권한, 카메라 장치가 없으면 indicator 표시
+  if (!hasPermission || devices == null) {
+    return <ActivityIndicator size={20} color={'red'} />;
+  }
+
+  if (!hasPermission) {
+    navigation.navigate('권한화면');
+    return null;
   }
 
   return (
-    <View style={styles.container}>
-      {!processing && selectedDevice && (
-        <Camera
-          ref={cameraRef}
-          style={styles.camera}
-          cameraFlipType={'front'} // 전면 카메라
-          autoFocus={'on'}
-          isActive={true}
-          device={device}
-        />
-      )}
-      <View style={{ flex: 0, flexDirection: "row", justifyContent: "center" }}>
-        {button}
+    <View style={{ flex: 1 }}>
+      <Camera
+        style={{ flex: 1 }}
+        ref={cameraRef}
+        device={devices[0]}
+        autoFocus="on"
+        video={true}
+      />
+      <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20 }}>
+        <TouchableOpacity onPress={toggleRecording} style={{ padding: 20, backgroundColor: recording ? 'red' : 'transparent', borderRadius: 50 }}>
+          <Text style={{ color: recording ? 'white' : 'red', fontSize: 24 }}>{recording ? '■' : '●'}</Text>
+        </TouchableOpacity>
       </View>
-
-      {videoPath && (
-        <View style={{ flex: 1, flexDirection: "column", justifyContent: "center" }}>
-          <TouchableOpacity style={styles.button} onPress={resumeVideo}>
-            <Text>확인</Text>
-          </TouchableOpacity>
-        </View>
-      )}
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-    backgroundColor: 'black',
-  },
-  camera: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  },
-  button: {
-    flex: 0,
-    backgroundColor: '#fff',
-    borderRadius: 5,
-    padding: 15,
-    paddingHorizontal: 20,
-    alignSelf: 'center',
-    margin: 20,
-  },
-});
 
 export default RecordScreen;

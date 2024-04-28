@@ -114,6 +114,7 @@ dependencies {
     implementation("com.facebook.react:react-android")
     implementation("com.facebook.react:flipper-integration")
     implementation project(':react-native-splash-screen')   // react-native-splash-screen 추가
+    implementation project(':@react-native-camera-roll_camera-roll') // react-native-camera-roll 추가
 
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
