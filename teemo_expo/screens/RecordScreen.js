@@ -4,7 +4,11 @@ import { Camera, CameraType } from "expo-camera"
 import * as MediaLibrary from "expo-media-library"
 import { Ionicons, FontAwesome6 } from "@expo/vector-icons"
 
-const RecordPage = () => {
+/**
+ * 동영상 녹화 페이지입니다.
+ * 사진 모드로 전환 시 TakePictureScreen 화면을 반환합니다.
+ */
+const RecordScreen = () => {
     const cameraRef = useRef(null)
     const [cameraType, setCameraType] = useState(CameraType.front)
     const [hasCameraPermission, setHasCameraPermission] = useState(null)
@@ -104,7 +108,7 @@ const RecordPage = () => {
     )
 }
 
-export default RecordPage
+export default RecordScreen
 
 const containers = StyleSheet.create({
     container: {

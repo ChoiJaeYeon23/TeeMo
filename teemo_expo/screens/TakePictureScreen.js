@@ -3,15 +3,18 @@ import { SafeAreaView, View, Text, TouchableOpacity, StyleSheet, Alert } from "r
 import { Camera, CameraType } from "expo-camera"
 import * as MediaLibrary from "expo-media-library"
 import { Ionicons, Foundation, Entypo } from "@expo/vector-icons"
-import RecordPage from "./RecordPage"
+import RecordScreen from "./RecordScreen"
 
-const TakePicturePage = () => {
+/**
+ * 사진 촬영 페이지입니다.
+ * 동영상 모드로 전환 시 RecordScreen 화면을 반환합니다.
+ */
+const TakePictureScreen = () => {
     const [cameraType, setCameraType] = useState(CameraType.front)
     const [image, setImage] = useState(null)
     const [hasCameraPermission, setHasCameraPermission] = useState(null)
     const cameraRef = useRef(null)
     const [cameraMode, setCameraMode] = useState("CAMERA")
-
 
     useEffect(() => {
         (async () => {
@@ -105,10 +108,10 @@ const TakePicturePage = () => {
                 </View>
             </View>
         </SafeAreaView>
-    ) : <RecordPage />
+    ) : <RecordScreen />
 }
 
-export default TakePicturePage
+export default TakePictureScreen
 
 const containers = StyleSheet.create({
     container: {

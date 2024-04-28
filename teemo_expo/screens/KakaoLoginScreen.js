@@ -1,11 +1,14 @@
 import { SafeAreaView, View, Text, Image, TouchableOpacity, Alert, StyleSheet } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 
-const KakaoLoginPage = () => {
+/**
+ * 카카오 로그인 화면입니다.
+ */
+const KakaoLoginScreen = () => {
     const navigation = useNavigation()
 
     const loginHandler = () => {
-        navigation.navigate("WebViewPage")
+        navigation.navigate("WebViewScreen")
     }
 
     return (
@@ -31,7 +34,7 @@ const KakaoLoginPage = () => {
     )
 }
 
-export default KakaoLoginPage
+export default KakaoLoginScreen
 
 const containers = StyleSheet.create({
     container: {

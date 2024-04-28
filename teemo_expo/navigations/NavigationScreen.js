@@ -1,35 +1,47 @@
 import { SafeAreaView, View, Text, Image, TouchableOpacity, Alert, StyleSheet } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 
-const NavigationPage = () => {
+/**
+ * 앱 전체 페이지로 이동할 수 있는 화면입니다.
+ * 구현이 완료되면 삭제할 예정입니다.
+ */
+const NavigationScreen = () => {
     const navigation = useNavigation()
 
     const togoTakePicture = () => {
-        navigation.navigate("TakePicturePage")
+        navigation.navigate("TakePictureScreen")
     }
 
     const togoRecord = () => {
-        navigation.navigate("RecordPage")
+        navigation.navigate("RecordScreen")
     }
 
     const togoUserList = () => {
-        navigation.navigate("UserListPage")
+        navigation.navigate("UserListScreen")
     }
 
     const togoCamera = () => {
-        navigation.navigate("CameraPage")
+        navigation.navigate("CameraScreen")
     }
 
     const togoLogin = () => {
-        navigation.navigate("LoginPage")
+        navigation.navigate("LoginScreen")
     }
 
     const togoFaceRecog = () => {
-        navigation.navigate("FaceRecognitionPage")
+        navigation.navigate("FaceRecognitionScreen")
+    }
+
+    const togoSignin = () => {
+        navigation.navigate("SignInScreen")
+    }
+
+    const togoSignup = () => {
+        navigation.navigate("SignUpScreen")
     }
 
     return (
-        <SafeAreaView style={{flex: 1}}>
+        <SafeAreaView style={{ flex: 1 }}>
             <View style={containers.container}>
                 <TouchableOpacity onPress={togoTakePicture} style={containers.buttonContainer}>
                     <Text style={contents.text}>사진촬영화면</Text>
@@ -48,18 +60,26 @@ const NavigationPage = () => {
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={togoLogin} style={containers.buttonContainer}>
-                    <Text style={contents.text}>로그인화면</Text>
+                    <Text style={contents.text}>카카오로그인화면</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={togoFaceRecog} style={containers.buttonContainer}>
                     <Text style={contents.text}>사용자인식화면</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={togoSignin} style={containers.buttonContainer}>
+                    <Text style={contents.text}>로그인화면</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={togoSignup} style={containers.buttonContainer}>
+                    <Text style={contents.text}>회원가입화면</Text>
                 </TouchableOpacity>
             </View>
         </SafeAreaView>
     )
 }
 
-export default NavigationPage
+export default NavigationScreen
 
 const containers = StyleSheet.create({
     container: {
@@ -69,7 +89,7 @@ const containers = StyleSheet.create({
     },
     buttonContainer: {
         flex: 1,
-        paddingTop: 100
+        paddingTop: 60
     }
 })
 

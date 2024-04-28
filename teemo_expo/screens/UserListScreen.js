@@ -2,7 +2,10 @@ import { useState } from "react"
 import { SafeAreaView, View, Text, ScrollView, TouchableOpacity, StyleSheet, Modal, TouchableWithoutFeedback } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 
-const UserListPage = () => {
+/**
+ * 모자이크 처리를 하지 않을 인물들의 리스트를 출력하는 페이지입니다.
+ */
+const UserListScreen = () => {
     const [showModal, setShowModal] = useState(false)
 
     const navigation = useNavigation()
@@ -17,13 +20,13 @@ const UserListPage = () => {
 
     const takePicture = () => {
         console.log("사진찍으러가기")
-        navigation.navigate("TakePicturePage")
+        navigation.navigate("TakePictureScreen")
         setShowModal(false)
     }
 
     const recordVideo = () => {
         console.log("영상찍으러가기")
-        navigation.navigate("TakePicturePage")
+        navigation.navigate("RecordScreen")
         setShowModal(false)
     }
 
@@ -77,7 +80,7 @@ const UserListPage = () => {
     )
 }
 
-export default UserListPage
+export default UserListScreen
 
 const containers = StyleSheet.create({
     container: {

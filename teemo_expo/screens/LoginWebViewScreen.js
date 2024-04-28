@@ -4,7 +4,10 @@ import qs from "qs"
 import { WebView } from "react-native-webview"
 import { useNavigation } from "@react-navigation/native"
 
-const LoginWebViewPage = () => {
+/**
+ * 카카오 로그인 시 열리는 WebView 페이지입니다.
+ */
+const LoginWebViewScreen = () => {
     const navigation = useNavigation()
 
     const REST_API_KEY = "1b13f316da9c6ceaa13c69366cd87551"
@@ -47,7 +50,7 @@ const LoginWebViewPage = () => {
             // if (result === "stored") {
             //     const user = await getData("user")
             //     dispatch(read_S(user))
-            navigation.navigate("NavigationPage")
+            navigation.navigate("NavigationScreen")
 
             const userInfo = await getUserInfo(ACCESS_TOKEN)
             const email = userInfo.kakao_account.email
@@ -92,4 +95,4 @@ const LoginWebViewPage = () => {
     )
 }
 
-export default LoginWebViewPage
+export default LoginWebViewScreen

@@ -3,7 +3,10 @@ import { SafeAreaView, View, StyleSheet, Text, Image, TouchableOpacity } from "r
 import { Camera, CameraType } from "expo-camera"
 import { Feather } from "@expo/vector-icons"
 
-const FaceRecognitionPage = () => {
+/**
+ * 모자이크 처리하지 않을 인물의 얼굴 사진을 촬영하는 화면입니다.
+ */
+const FaceRecognitionScreen = () => {
     const cameraType = CameraType.front
     const cameraRef = useRef(null)
 
@@ -110,7 +113,7 @@ const FaceRecognitionPage = () => {
     )
 }
 
-export default FaceRecognitionPage
+export default FaceRecognitionScreen
 
 const containers = StyleSheet.create({
     container: {
