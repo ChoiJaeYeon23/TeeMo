@@ -4,24 +4,24 @@ import { useNavigation } from '@react-navigation/native';
 
 const UserList = () => {
   const navigation = useNavigation(); 
-  
-  const handleStart = () => {
-    console.log('시작');
-  };
 
   const handleAdd = () => {
     navigation.navigate('Userrecognition'); // 사용자 얼굴 인식 이동
   };
 
+  const handleGoBack = () => {
+    navigation.goBack(); // 뒤로가기 기능
+  };
+
   return (
     <View style={styles.container}>
+      <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
+        <Text style={styles.backButtonText}>←</Text>
+      </TouchableOpacity>
       <View style={styles.content}>
         <Text style={styles.title}>사용자 리스트</Text>
       </View>
       <View style={styles.footer}>
-        <TouchableOpacity style={[styles.button, styles.firstButton]} onPress={handleStart}>
-          <Text style={styles.buttonText}>시작</Text>
-        </TouchableOpacity>
         <TouchableOpacity style={[styles.button, styles.secondButton]} onPress={handleAdd}>
           <Text style={styles.buttonText}>추가</Text>
         </TouchableOpacity>
@@ -67,6 +67,17 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center', 
   },
+  backButton: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    padding: 10,
+    zIndex: 1
+  },
+  backButtonText: {
+    fontSize: 30,
+    color: "#000000"
+  }
 });
 
 export default UserList;
