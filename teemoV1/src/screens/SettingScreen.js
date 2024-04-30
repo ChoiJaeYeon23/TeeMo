@@ -1,73 +1,39 @@
-import { useState } from "react"
-import { SafeAreaView, View, Text, TouchableOpacity } from "react-native"
-import { logout } from "@react-native-seoul/kakao-login"
-import { useNavigation } from "@react-navigation/native"
+import React from "react";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import Home from "./Home";
+import User from "./User";
+import Icon from "react-native-vector-icons/Ionicons";
 
-/**
- * 모든 페이지 navigation.navigate() 되는지 확인
- */
+const Tab = createBottomTabNavigator();
+
 const SettingScreen = () => {
-    const [isLogout, setIsLogout] = useState("")
-    const [isLogin, setIsLogin] = useState(true)
+  return (
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
 
-    const navigation = useNavigation()
+          if (route.name === "사진영상") {
+            iconName = focused ? "camera" : "camera-outline"; 
+          } else if (route.name === "내정보") {
+            iconName = focused ? "person" : "person-outline";
+          }
 
-    /**
-     * 계정 로그아웃을 시도하는 함수입니다.
-     * 
-     */
-    const signOutWithKakao = async () => {
-        console.log("로그아웃 버튼 눌림")
-        try {
-            const message = await logout()
-            setIsLogout(message)
-            setIsLogin(false)
-            if (isLogout == "Successfully logged out") console.log("로그아웃 성공")
-            navigation.navigate("로그인화면")
-        } catch (err) {
-            console.error("로그아웃 오류", err)
-        }
-    }
-    const goUserList = () => {
-        navigation.navigate("UserList");
-      };
+          return <Icon name={iconName} size={size} color={color} />;
+        },
+      })}
+      tabBarOptions={{  // tabBarOptions를 screenOptions로 이동합니다.
+        activeTintColor: "#000000", 
+        inactiveTintColor: "gray", 
+        style: {
+          display: "flex",
+        },
+      }}
+    >
+      <Tab.Screen name="사진영상" component={Home} options={{ tabBarLabel: () => null }} />
+      <Tab.Screen name="내정보" component={User} options={{ tabBarLabel: () => null }} />
+    </Tab.Navigator>
+  );
+};
 
-    const goToRecord = () => {
-        navigation.navigate("Record")
-    }
-
-    const goToPicture = () => {
-        navigation.navigate("Picture");
-      };
-
-    const goToPerm = () => {
-        navigation.navigate("권한화면")
-    }
-    return (
-        <SafeAreaView>
-            <View>
-                <Text>앱 설정화면입니다.</Text>
-            </View>
-
-            <View>
-                <TouchableOpacity onPress={signOutWithKakao}>
-                    <Text>로그아웃하기</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={goUserList}>
-                    <Text>사용자인식</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={goToRecord}>
-                    <Text>영상 녹화</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={goToPicture}>
-                    <Text>사진</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={goToPerm}>
-                    <Text>접근 권한 허용</Text>
-                </TouchableOpacity>
-            </View>
-        </SafeAreaView>
-    )
-}
-
-export default SettingScreen
+export default SettingScreen;
