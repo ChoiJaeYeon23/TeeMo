@@ -25,7 +25,7 @@ const NavigationScreen = () => {
     }
 
     const togoLogin = () => {
-        navigation.navigate("LoginScreen")
+        navigation.navigate("KakaoLoginScreen")
     }
 
     const togoFaceRecog = () => {
@@ -38,6 +38,14 @@ const NavigationScreen = () => {
 
     const togoSignup = () => {
         navigation.navigate("SignUpScreen")
+    }
+
+    const togoUpload = () => {
+        navigation.navigate("MediaUploadScreen")
+    }
+
+    const togoResult = () => {
+        navigation.navigate("ResultMediaScreen")
     }
 
     return (
@@ -73,6 +81,14 @@ const NavigationScreen = () => {
 
                 <TouchableOpacity onPress={togoSignup} style={containers.buttonContainer}>
                     <Text style={contents.text}>회원가입화면</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={togoUpload} style={containers.buttonContainer}>
+                    <Text style={contents.text}>사진/동영상업로드화면</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={togoResult} style={containers.buttonContainer}>
+                    <Text style={contents.text}>사진/동영상결과물화면</Text>
                 </TouchableOpacity>
             </View>
         </SafeAreaView>

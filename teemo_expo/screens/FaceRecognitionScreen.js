@@ -1,26 +1,45 @@
-import { useRef, useState } from "react"
+import { useRef, useState, useCallback } from "react"
 import { SafeAreaView, View, StyleSheet, Text, Image, TouchableOpacity } from "react-native"
 import { Camera, CameraType } from "expo-camera"
 import { Feather } from "@expo/vector-icons"
+import { useNavigation } from "@react-navigation/native"
 
 /**
  * 모자이크 처리하지 않을 인물의 얼굴 사진을 촬영하는 화면입니다.
  */
-const FaceRecognitionScreen = () => {
+const FaceRecognitionScreen = ({ route }) => {
+    // UserListScreen 에서 전달받은 식별 인물 이름과 식별 인물을 추가하는 함수 초기화
+    const { userName, addUserHandler } = route.params
+    
     const cameraType = CameraType.front
     const cameraRef = useRef(null)
+    
+    const navigation = useNavigation()
 
+    // 정면, 상, 하, 좌, 우 이미지 uri
     const front = "../images/front.jpg"
     const top = "../images/top.jpg"
     const bottom = "../images/bottom.jpg"
     const left = "../images/left.jpg"
     const right = "../images/right.jpg"
 
+    // 사용자가 찍은 정면, 상, 하, 좌, 우 사진 set
     const [frontFace, setFrontFace] = useState(null)
     const [topFace, setTopFace] = useState(null)
     const [bottomFace, setBottomFace] = useState(null)
     const [leftFace, setLeftFace] = useState(null)
     const [rightFace, setRightFace] = useState(null)
+
+    /**
+     * 사진을 업로드합니다.
+     * 서버로 업로드하는 로직 필요
+     */
+    const uploadHandler = useCallback(() => {
+        console.log("사진을 업로드합니다.")
+        // 리스트 추가 함수 호출
+        addUserHandler(userName)
+        navigation.goBack()
+    }, [userName, addUserHandler, navigation])
 
     return (
         <SafeAreaView style={containers.container}>
@@ -104,7 +123,7 @@ const FaceRecognitionScreen = () => {
             </View>
 
             <View style={containers.buttonContainer}>
-                <TouchableOpacity style={containers.upload}>
+                <TouchableOpacity style={containers.upload} onPress={() => uploadHandler()}>
                     <Feather name="upload" size={40} color="#333333" />
                     <Text style={texts.upload}>업로드</Text>
                 </TouchableOpacity>
