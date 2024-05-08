@@ -1,10 +1,10 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { View, TouchableOpacity, Text, StyleSheet, Platform, PermissionsAndroid } from 'react-native';
-import { Camera, useCameraDevice } from 'react-native-vision-camera';
+import { View, TouchableOpacity, Text, StyleSheet, Platform, PermissionsAndroid, ToastAndroid } from 'react-native';
+import { Camera, useCameraDevices, RNVisionCamera } from 'react-native-vision-camera'; // useCameraDevices 추가
 import { useNavigation } from '@react-navigation/native';
 
 const Userrecognition = () => {
-  const cameraRef = useRef(null);
+  const cameraRef = useRef<RNVisionCamera>(null);
   const [instructionIndex, setInstructionIndex] = useState(0);
   const [isCameraInitialized, setIsCameraInitialized] = useState(false);
   const instructions = [
@@ -15,7 +15,7 @@ const Userrecognition = () => {
     '얼굴 중앙을 찍어주세요'
   ];
   const navigation = useNavigation();
-  const device = useCameraDevice('front'); // front 또는 back 중 선택
+  const devices = useCameraDevices(); // useCameraDevices 훅을 사용하여 카메라 장치 목록 가져오기
 
   useEffect(() => {
     // 권한 확인 및 초기화
@@ -40,19 +40,27 @@ const Userrecognition = () => {
   };
 
   const takePicture = async () => {
-    if (cameraRef.current) {
-      try {
-        const photo = await cameraRef.current.takePhoto();
-
-        // 사진 객체에서 필요한 정보만 추출하여 사용
-        console.log(photo.uri);
-
-        if (instructionIndex < instructions.length - 1) {
-          setInstructionIndex(instructionIndex + 1);
-        }
-      } catch (error) {
-        console.error('사진 찍기 오류:', error);
+    try {
+      if (cameraRef.current == null) {
+        return;
       }
+      await RNVisionCamera.requestCameraPermission();
+      const data = await cameraRef.current?.takePhoto({
+        qualityPrioritization: 'speed',
+        flash: 'off', // 플래시 설정
+        quality: 50,
+        enableShutterSound: false
+      });
+      const { path, width, height } = data || {};
+      const uri = `file://${path}`;
+      console.log('사진 경로:', uri);
+
+      if (instructionIndex < instructions.length - 1) {
+        setInstructionIndex(instructionIndex + 1);
+      }
+    } catch (e) {
+      console.error('사진 찍기 오류:', e);
+      ToastAndroid.show('카메라 오류가 발생했습니다', ToastAndroid.SHORT);
     }
   };
 
@@ -63,12 +71,12 @@ const Userrecognition = () => {
 
   return (
     <View style={styles.container}>
-      {isCameraInitialized && device && (
+      {isCameraInitialized && devices.length > 0 && ( // 장치가 존재하는지 확인
         <Camera
           ref={cameraRef}
           style={styles.preview}
           autoFocus="on"
-          device={device}
+          device={devices[0]} // 첫 번째 카메라 장치를 선택
           photo={true} // 사진 촬영 기능 활성화
           onInitialized={onCameraInitialized}
         />
