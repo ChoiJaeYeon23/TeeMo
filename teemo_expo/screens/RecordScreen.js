@@ -16,6 +16,7 @@ const RecordScreen = () => {
     const [isRecording, setIsRecording] = useState(false)
     const [video, setVideo] = useState(null)
 
+    // 페이지 로드 시 카메라, 녹음, 갤러리 접근 권한 허용 여부 확인
     useEffect(() => {
         (async () => {
             MediaLibrary.requestPermissionsAsync()
@@ -27,6 +28,7 @@ const RecordScreen = () => {
         })()
     }, [])
 
+    // 카메라 타입(전면, 후면) 전환 함수
     const toggleCameraType = () => {
         setCameraType(current => (
             current === CameraType.front ?
@@ -34,6 +36,7 @@ const RecordScreen = () => {
         ))
     }
 
+    // 녹화 시작 함수
     const recordVideo = async () => {
         if (cameraRef) {
             try {
@@ -56,6 +59,7 @@ const RecordScreen = () => {
         }
     }
 
+    // 녹화 종료 함수
     const stopRecording = () => {
         setIsRecording(false)
         cameraRef.current.stopRecording()

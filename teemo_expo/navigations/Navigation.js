@@ -10,6 +10,8 @@ import LoginWebViewScreen from "../screens/LoginWebViewScreen"
 import FaceRecognitionScreen from "../screens/FaceRecognitionScreen"
 import SignInScreen from "../screens/SignInScreen"
 import SignUpScreen from "../screens/SignUpScreen"
+import MediaUploadScreen from "../screens/MediaUploadScreen"
+import ResultMediaScreen from "../screens/ResultMediaScreen"
 
 const Stack = createStackNavigator()
 
@@ -26,6 +28,8 @@ const Navigation = () => {
             <Stack.Screen name="FaceRecognitionScreen" component={FaceRecognitionScreen} options={{ headerShown: false }} />
             <Stack.Screen name="SignInScreen" component={SignInScreen} options={{ headerShown: false }} />
             <Stack.Screen name="SignUpScreen" component={SignUpScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="MediaUploadScreen" component={MediaUploadScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="ResultMediaScreen" component={ResultMediaScreen} options={{ headerShown: false }} />
         </Stack.Navigator>
     )
 }

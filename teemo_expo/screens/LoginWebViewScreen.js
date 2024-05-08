@@ -10,8 +10,8 @@ import { useNavigation } from "@react-navigation/native"
 const LoginWebViewScreen = () => {
     const navigation = useNavigation()
 
+    // 카카오 API 사용 시 필요한 RestAPI key, Redirect URI, Injected Javascript 값 초기화
     const REST_API_KEY = "1b13f316da9c6ceaa13c69366cd87551"
-    // const REDIRET_URI = "https://192.168.219.105:8081"
     const REDIRET_URI = "https://teemo.com/oauth"
     const INJECTED_JAVASCRIPT = `window.ReactNativeWebView.postMessage('message from webView')`
 
@@ -25,6 +25,7 @@ const LoginWebViewScreen = () => {
         }
     }
 
+    // 로그인 토큰 값 (Access Token) 및 로그인 정보를 가져오는 함수
     const requestToken = async (code) => {
         const requestTokenUrl = "https://kauth.kakao.com/oauth/token"
 
