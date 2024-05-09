@@ -1,4 +1,4 @@
-import { SafeAreaView, View, Text, Image, TouchableOpacity, Alert, StyleSheet } from "react-native"
+import { SafeAreaView, View, Text, TouchableOpacity, StyleSheet } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 
 /**
@@ -26,10 +26,6 @@ const NavigationScreen = () => {
 
     const togoLogin = () => {
         navigation.navigate("KakaoLoginScreen")
-    }
-
-    const togoFaceRecog = () => {
-        navigation.navigate("FaceRecognitionScreen")
     }
 
     const togoSignin = () => {
@@ -69,10 +65,6 @@ const NavigationScreen = () => {
 
                 <TouchableOpacity onPress={togoLogin} style={containers.buttonContainer}>
                     <Text style={contents.text}>카카오로그인화면</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={togoFaceRecog} style={containers.buttonContainer}>
-                    <Text style={contents.text}>사용자인식화면</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={togoSignin} style={containers.buttonContainer}>

@@ -10,10 +10,10 @@ import { useNavigation } from "@react-navigation/native"
 const FaceRecognitionScreen = ({ route }) => {
     // UserListScreen 에서 전달받은 식별 인물 이름과 식별 인물을 추가하는 함수 초기화
     const { userName, addUserHandler } = route.params
-    
+
     const cameraType = CameraType.front
     const cameraRef = useRef(null)
-    
+
     const navigation = useNavigation()
 
     // 정면, 상, 하, 좌, 우 이미지 uri
@@ -23,7 +23,7 @@ const FaceRecognitionScreen = ({ route }) => {
     const left = "../images/left.jpg"
     const right = "../images/right.jpg"
 
-    // 사용자가 찍은 정면, 상, 하, 좌, 우 사진 set
+    // 사용자가 찍은 정면, 상, 하, 좌, 우 사진 URI set
     const [frontFace, setFrontFace] = useState(null)
     const [topFace, setTopFace] = useState(null)
     const [bottomFace, setBottomFace] = useState(null)
@@ -31,14 +31,43 @@ const FaceRecognitionScreen = ({ route }) => {
     const [rightFace, setRightFace] = useState(null)
 
     /**
-     * 사진을 업로드합니다.
+     * 서버로 사진을 업로드합니다.
+     * 사용자 이름과 얼굴의 정면, 상, 하, 좌, 우 사진 URI를 전송합니다.
      * 서버로 업로드하는 로직 필요
      */
     const uploadHandler = useCallback(() => {
         console.log("사진을 업로드합니다.")
-        // 리스트 추가 함수 호출
-        addUserHandler(userName)
-        navigation.goBack()
+
+        const faceData = {
+            name: userName,
+            front: frontFace,
+            top: topFace,
+            bot: bottom,
+            left: leftFace,
+            right: rightFace
+        }
+
+        // 로직 확인을 위해 따로 빼둠
+        // 서버랑 디비 연결 되면 밑에 두 줄 지우고 밑에 주석 활성화시키기
+        addUserHandler(userName);
+        navigation.goBack();
+        // fetch("http://13.209.77.184/api/upload_my_face", {
+        //     method: "POST",
+        //     headers: {
+        //         "Content-Type": "application/json",
+        //     },
+        //     body: JSON.stringify(faceData),
+        // })
+        //     .then((response) => response.json())
+        //     .then((data) => {
+        //         alert("얼굴 업로드 완료!");
+        //         console.log("얼굴 업로드성공함(DB서버)");
+        //         addUserHandler(userName);
+        //         navigation.goBack();
+        //     })
+        //     .catch((error) => {
+        //         alert("업로드 실패: " + error.message);
+        //     });
     }, [userName, addUserHandler, navigation])
 
     return (

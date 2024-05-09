@@ -1,4 +1,4 @@
-import { useRef, useState } from "react"
+import { useEffect, useLayoutEffect, useRef, useState } from "react"
 import {
     SafeAreaView,
     View,
@@ -13,7 +13,7 @@ import {
     Animated
 } from "react-native"
 import { useNavigation } from "@react-navigation/native"
-import { Entypo } from "@expo/vector-icons"
+import { Entypo, Feather } from "@expo/vector-icons"
 import UserList from "../src/UserList"
 
 /**
@@ -37,14 +37,53 @@ const UserListScreen = () => {
 
     const navigation = useNavigation()
 
+    useEffect(() => {
+        setUser()
+    }, [])
+
+    /**
+     * 서버로부터 받아온 사용자의 리스트를 userList에 저장합니다.
+     */
+    const setUser = async () => {
+        try {
+            const response = await fetch("http://13.209.77.184/api/load_user_list");
+            const data = await response.json();
+            setUserList(data);  // 얼굴 객체 배열에 저장합니다. 배열형태가 아닌 경우 배열 형태로 변환 후 저장해야함!
+        } catch (error) {
+            console.error("얼굴 불러오기 실패:", error);
+        }
+    }
+
     const addButtonHandler = () => {
         setShowInputModal(true)
     }
 
     const addUserHandler = (newUser) => {
         setUserList([...userList, newUser])
+        console.log([...userList, newUser])
         console.log("현재 리스트:", userList)
     }
+
+    /**
+     * userList가 변경될 때마다 서버로 포스트
+     */
+    useEffect(() => {
+        fetch("http://13.209.77.184/api/post_user_list", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(userList),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                alert("사용자 리스트 전송 완료!");
+                console.log("사용자 리스트 전송 성공함(DB서버)");
+            })
+            .catch((error) => {
+                alert("사용자 리스트 전송 실패: " + error.message);
+            });
+    }, [userList])
 
     const deleteUserHandler = (position) => {
         const deleteUser = () => {
@@ -94,9 +133,16 @@ const UserListScreen = () => {
 
     const addUser = () => {
         if (inputName != "") {
-            console.log("추가할 사용자 이름1:", inputName)
-            setShowInputModal(false)
-            navigation.navigate("FaceRecognitionScreen", { userName: inputName, addUserHandler: addUserHandler })
+            if (userList.includes(inputName)) {
+                Alert.alert("기존 사용자와 겹치지 않는 이름을 사용해주세요!")
+            } else {
+                console.log("추가할 사용자 이름1:", inputName)
+                setShowInputModal(false)
+                navigation.navigate("FaceRecognitionScreen", {
+                    userName: inputName,
+                    addUserHandler: addUserHandler
+                })
+            }
             setInputName("")
         } else {
             Alert.alert("추가할 사용자 이름을 한 글자 이상 입력해주세요")
@@ -174,12 +220,12 @@ const UserListScreen = () => {
                                 onChangeText={changeInputName}
                             />
                             <View style={{ width: "100%", flexDirection: "row", justifyContent: "space-between" }}>
-                                <TouchableOpacity style={{ flex: 1, marginLeft: 10, height: 40, backgroundColor: "blue", alignItems: "center", justifyContent: "center" }} onPress={() => [setShowInputModal(false), setInputName("")]}>
+                                <TouchableOpacity style={{ flex: 1, height: 40, alignItems: "center", justifyContent: "center" }} onPress={() => [setShowInputModal(false), setInputName("")]}>
                                     <View style={{}}>
                                         <Text style={modal.text}>닫기</Text>
                                     </View>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={{ flex: 1, marginRight: 10, height: 40, backgroundColor: "red", alignItems: "center", justifyContent: "center" }} onPress={() => addUser()} hitSlop={10} >
+                                <TouchableOpacity style={{ flex: 1, height: 40, alignItems: "center", justifyContent: "center" }} onPress={() => addUser()} hitSlop={10} >
                                     <Text style={modal.text}>확인</Text>
                                 </TouchableOpacity>
                             </View>
@@ -193,10 +239,12 @@ const UserListScreen = () => {
                     <View style={modal.modalContainer}>
                         <View style={modal.modalContent}>
                             <TouchableOpacity style={modal.optionButton} onPress={() => takePicture()} activeOpacity={0.6}>
-                                <Text style={modal.text}>{"  📷 사진 촬영 하기"}</Text>
+                                <Feather name="camera" size={15} color="#555555" style={{ marginHorizontal: 10 }} />
+                                <Text style={modal.text}>{"사진 촬영 하기"}</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={modal.optionButton} onPress={() => recordVideo()} activeOpacity={0.6}>
-                                <Text style={modal.text}>{"  🎥 영상 녹화 하기"}</Text>
+                                <Feather name="video" size={15} color="#555555" style={{ marginHorizontal: 10 }} />
+                                <Text style={modal.text}>{"영상 녹화 하기"}</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={modal.closeButton} onPress={() => setShowModal(false)} activeOpacity={1} >
                                 <Text style={modal.closeButtonText}>닫기</Text>
@@ -219,31 +267,23 @@ const containers = StyleSheet.create({
         alignItems: "center",
     },
     top: {
-        height: "8%",
+        height: "10%",
         width: "100%",
         alignItems: "center",
         justifyContent: "center",
+        marginTop: 10
     },
     middle: {
-        height: "84%",
+        height: "75%",
         width: "100%",
         backgroundColor: "#C5C5C530",
         elevation: 5
     },
     bottom: {
-        height: "8%",
+        height: "15%",
         width: "100%",
         alignItems: "center",
         justifyContent: "center",
-    },
-    user: {
-
-    },
-    list: {
-
-    },
-    delButtonContainer: {
-
     },
     addButtonContainer: {
         position: "absolute",
@@ -270,9 +310,6 @@ const texts = StyleSheet.create({
         fontSize: 30,
         fontWeight: "bold",
         color: "#333333",
-    },
-    userName: {
-
     },
     delButton: {
         fontSize: 20,
@@ -305,7 +342,8 @@ const modal = StyleSheet.create({
     },
     input: {
         borderWidth: 1,
-        borderRadius: 20,
+        borderColor: "#555555",
+        borderRadius: 100,
         color: "#555555",
         padding: 10,
         fontSize: 20,
@@ -315,26 +353,28 @@ const modal = StyleSheet.create({
     },
     optionButton: {
         padding: 15,
-        backgroundColor: "#BBBBBB80",
-        borderRadius: 25,
-        margin: 10
+        backgroundColor: "#CCCCCC80",
+        borderRadius: 100,
+        margin: 10,
+        flexDirection: "row",
+        alignItems: "center"
     },
     closeButton: {
         marginTop: 20,
         marginHorizontal: 10,
         padding: 15,
-        backgroundColor: "#333333bb",
-        borderRadius: 20,
+        backgroundColor: "#777777",
+        borderRadius: 100,
         alignItems: "center"
     },
     text: {
-        fontSize: 21,
-        color: "#333333bb",
-        fontWeight: "bold"
+        fontSize: 18,
+        color: "#555555",
+        fontWeight: "600"
     },
     closeButtonText: {
         color: "#FFFFFF",
-        fontWeight: "bold",
-        fontSize: 21
+        fontWeight: "600",
+        fontSize: 18
     }
 }) 
