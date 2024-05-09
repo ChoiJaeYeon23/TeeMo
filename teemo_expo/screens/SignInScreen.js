@@ -27,25 +27,55 @@ const SignInScreen = () => {
         setPassword("")
     }
 
+    // 화면 전환 시 모든 입력값을 초기화합니다.
+    const clearAll = () => {
+        setId("")
+        setPassword("")
+    }
+
     /**
      * 로그인 로직입니다.
      */
     const signInButtonHandler = () => {
         if (id === "") {
             Alert.alert("아이디를 입력하세요.")
+            return
         } else if (password === "") {
             Alert.alert("비밀번호를 입력하세요.")
+            return
         } else {
             console.log(
                 "로그인 입력 정보 :::",
                 "아이디:", id,
                 "비밀번호:", password
             )
-            navigation.navigate("NavigationScreen")
-            // 로그인 로직 추가
+
+            const userData = {
+                id: id,
+                pw: password
+            }
+
+            // 서버로 로그인 요청을 보내는 함수
+            fetch("http://13.209.77.184/api/signin", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(userData),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    alert("로그인 완료!"); // 로그인 성공 알림
+                    console.log("로그인성공함(DB서버)");
+                    clearAll();
+                    navigation.navigate("UserListScreen"); // 사용자 리스트 화면으로 이동
+                })
+                .catch((error) => {
+                    alert("로그인 실패: " + error.message);
+                });
         }
     }
-    
+
     // 회원가입 화면으로 전환합니다.
     const signUpButtonHandler = () => {
         navigation.navigate("SignUpScreen")
@@ -104,14 +134,14 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: "center",
+        justifyContent: "center"
     },
     logoContainer: {
         width: "100%",
         height: "30%",
         alignItems: "center",
         justifyContent: "flex-start",
-        marginTop: 130,
-        marginBottom: 30
+        marginBottom: 50
     },
     logo: {
         width: 250,
@@ -119,35 +149,37 @@ const styles = StyleSheet.create({
     },
     inputContainer: {
         width: "100%",
+        height: "20%",
         alignItems: "center"
     },
     input: {
-        fontSize: 20,
+        fontSize: 18,
         color: "#444444",
         width: "50%",
         borderWidth: 1,
         borderColor: "#33333340",
-        padding: 10,
-        marginBottom: 20,
-        borderRadius: 20
+        padding: 8,
+        marginBottom: 10,
+        borderRadius: 100
     },
     signinContainer: {
         backgroundColor: "#33333340",
         padding: 10,
-        borderRadius: 20,
+        borderRadius: 100,
         width: "50%",
         alignItems: "center",
         marginBottom: 5
     },
     signin: {
-        fontSize: 20,
-        color: "#444444"
+        fontSize: 18,
+        color: "#FFF",
+        fontWeight: "600"
     },
     signupContainer: {
         padding: 5
     },
     signup: {
-        fontSize: 16,
+        fontSize: 15,
         color: "#444444"
     }
 })

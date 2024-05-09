@@ -13,6 +13,7 @@ import {
 } from "react-native"
 import MediaDisplay from "./MediaDisplay"
 import * as ImagePicker from "expo-image-picker"
+import { Entypo, Feather } from "@expo/vector-icons"
 
 const { width } = Dimensions.get("window")
 
@@ -21,9 +22,16 @@ const { width } = Dimensions.get("window")
  */
 const MediaUploadScreen = () => {
     const [mediaType, setMediaType] = useState("PHOTO") // 미디어 타입 PHOTO(사진) 또는 VIDEO(동영상), 기본 값은 PHOTO로 초기화
+    const [media, setMedia] = useState({
+        fileName: "",
+        height: "",
+        width: "",
+        mimeType: "",
+        type: "",
+        duration: "",
+        uri: ""
+    })
     const [mediaUri, setMediaUri] = useState("")    // 결과물 미디어(사진 or 동영상)의 URI
-    // const [resultPhoto, setResultPhoto] = useState("")  // 결과물 사진의 URI
-    // const [resultVideo, setResultVideo] = useState("")  // 결과물 동영상의 URI
     const [recogFaceObj, setRecogFaceObj] = useState([])    // 탐지된 얼굴 객체의 이미지 URI를 초기화할 배열
 
     const temp = [
@@ -75,6 +83,16 @@ const MediaUploadScreen = () => {
 
         console.log(result)
 
+        setMedia({
+            fileName: result.assets[0].fileName,
+            height: result.assets[0].height,
+            width: result.assets[0].width,
+            mimeType: result.assets[0].mimeType,    // 미디어 유형/타입 (ex. video/mp4)
+            type: result.assets[0].type,    // 미디어 타입 (ex. jpg)
+            duration: result.assets[0].duration,    // 동영상 재생시간
+            uri: result.assets[0].uri
+        })
+
         if (!result.canceled) {
             setMediaType("PHOTO")
             setMediaUri(result.assets[0].uri)
@@ -96,12 +114,80 @@ const MediaUploadScreen = () => {
 
         console.log(result)
 
+        // 선택한 미디어(사진, 동영상)의 정보를 저장
+        setMedia({
+            fileName: result.assets[0].fileName,
+            height: result.assets[0].height,
+            width: result.assets[0].width,
+            mimeType: result.assets[0].mimeType,    // 미디어 유형/타입 (ex. video/mp4)
+            type: result.assets[0].type,    // 미디어 타입 (ex. jpg)
+            duration: result.assets[0].duration,    // 동영상 재생시간 (사진의 경우 null)
+            uri: result.assets[0].uri
+        })
+
         if (!result.canceled) {
             setMediaType("VIDEO")
             setMediaUri(result.assets[0].uri)
         } else {
             Alert.alert("동영상 선택이 취소되었습니다.")
         }
+    }
+
+    /**
+     * 서버로 미디어(사진, 동영상) 업로드를 요청하는 함수입니다.
+     */
+    const uploadMedia = () => {
+        fetch("http://13.209.77.184/api/media-upload", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(media),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                alert("미디어 업로드 완료!");
+                console.log("미디어 업로드 성공함(DB서버)");
+            })
+            .catch((error) => {
+                alert("미디어 업로드 실패: " + error.message);
+            });
+    }
+
+    /**
+     * 미디어에서 인식된 사람들의 얼굴 사진 배열을 서버로부터 불러오는 함수입니다.
+     * 사진 URI 배열을 받아와야 합니다.
+     */
+    const loadImages = async () => {
+        try {
+            const response = await fetch("http://13.209.77.184/api/load_image");
+            const data = await response.json();
+            setRecogFaceObj(data);  // 얼굴 객체 배열에 저장합니다. 배열형태가 아닌 경우 배열 형태로 변환 후 저장해야함!
+        } catch (error) {
+            console.error("얼굴 불러오기 실패:", error);
+        }
+    };
+
+    /**
+     * 서버로 모자이크를 제외할 사람이 선택된 배열을 업로드하는 함수입니다.
+     * 사진 URI 배열을 전송합니다.(아니면 배열 인덱스?)
+     */
+    const uploadSelectedFace = () => {
+        fetch("http://13.209.77.184/api/upload_selected_face", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(selectedFaceObj),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                alert("업로드 완료!");
+                console.log("업로드성공함(DB서버)");
+            })
+            .catch((error) => {
+                alert("업로드 실패: " + error.message);
+            });
     }
 
     return (
@@ -114,7 +200,7 @@ const MediaUploadScreen = () => {
                 <MediaDisplay mediaType={mediaType} mediaUri={mediaUri} />
             </View>
 
-            <View style={styles.scrollContainer}>
+            <View style={[styles.scrollContainer, { flexDirection: "row" }]}>
                 <ScrollView
                     showsHorizontalScrollIndicator={true}
                     horizontal
@@ -123,15 +209,22 @@ const MediaUploadScreen = () => {
                         renderImages()
                     }
                 </ScrollView>
+                <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => uploadSelectedFace()}>
+                    <Feather name="check-square" size={30} color="#777777" />
+                </TouchableOpacity>
             </View>
 
             <View style={styles.bottomContainer}>
                 <TouchableOpacity style={styles.uploadButton} onPress={() => pickPhoto()}>
-                    <Text style={styles.uploadText}>사진 업로드</Text>
+                    <Entypo name="image-inverted" size={30} color="#777777" />
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.uploadButton} onPress={() => pickVideo()}>
-                    <Text style={styles.uploadText}>동영상 업로드</Text>
+                    <Entypo name="video" size={28} color="#777777" />
+                </TouchableOpacity>
+
+                <TouchableOpacity style={[styles.uploadButton, { marginLeft: 100 }]} onPress={() => uploadMedia()}>
+                    <Feather name="upload" size={24} color="#777777" />
                 </TouchableOpacity>
             </View>
         </SafeAreaView>
@@ -147,7 +240,7 @@ const styles = StyleSheet.create({
         justifyContent: "center"
     },
     titleContainer: {
-        marginTop: 15
+        marginTop: 30
     },
     title: {
         fontSize: 24,
@@ -157,31 +250,28 @@ const styles = StyleSheet.create({
     },
     previewContainer: {
         width: width - 40,
-        height: 600,
-        borderWidth: 1,
-        borderColor: "#333333",
+        height: "65%",
         alignItems: "center",
         justifyContent: "center",
-        marginBottom: 5
+        marginBottom: 10
     },
     scrollContainer: {
-        backgroundColor: "red",
-        height: 55,
-        width: width - 40
+        height: 70,
+        width: width - 40,
+        justifyContent: "center"
     },
     bottomContainer: {
         flexDirection: "row",
         justifyContent: "space-around",
         borderRadius: 5,
-        marginVertical: 20,
+        marginTop: 20,
         paddingHorizontal: 20
     },
     uploadButton: {
-        backgroundColor: "#87CEFA",
-        paddingVertical: 20,
-        paddingHorizontal: 30,
-        marginHorizontal: 25,
-        borderRadius: 25
+        paddingVertical: 12,
+        paddingHorizontal: 20,
+        marginHorizontal: 10,
+        borderRadius: 100
     },
     uploadText: {
         color: "#333333",
@@ -189,8 +279,8 @@ const styles = StyleSheet.create({
         fontSize: 18
     },
     thumbnail: {
-        width: 50,
-        height: 50,
+        width: 70,
+        height: 70,
         resizeMode: "cover",
         marginHorizontal: 5
     },
