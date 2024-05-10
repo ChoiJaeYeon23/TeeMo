@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, Platform, PermissionsAndroid, ToastAndroid } from 'react-native';
-import { Camera, useCameraDevices, RNVisionCamera } from 'react-native-vision-camera'; // useCameraDevices 추가
+import { Camera, useCameraDevices, RNVisionCamera } from 'react-native-vision-camera';
 import { useNavigation } from '@react-navigation/native';
 
 const Userrecognition = () => {
@@ -15,73 +15,64 @@ const Userrecognition = () => {
     '얼굴 중앙을 찍어주세요'
   ];
   const navigation = useNavigation();
-  const devices = useCameraDevices(); // useCameraDevices 훅을 사용하여 카메라 장치 목록 가져오기
+  const devices = useCameraDevices();
+  const [photoData, setPhotoData] = useState([]);
 
   useEffect(() => {
-    // 권한 확인 및 초기화
     checkCameraPermission();
   }, []);
 
+  useEffect(() => {
+    if (instructionIndex === instructions.length) {
+      navigation.navigate('UserList', { photos: photoData });
+    }
+  }, [instructionIndex, photoData, navigation]);
+
   const checkCameraPermission = async () => {
     if (Platform.OS === 'android') {
-      try {
-        const granted = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.CAMERA);
-        if (granted) {
-          console.log('카메라 권한이 이미 허용됨');
-          setIsCameraInitialized(true);
-        } else {
-          console.log('카메라 권한이 허용되지 않음');
-          navigation.navigate('PermissionScreen');
-        }
-      } catch (err) {
-        console.warn('카메라 권한 확인 중 오류:', err);
+      const granted = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.CAMERA);
+      if (granted) {
+        setIsCameraInitialized(true);
+      } else {
+        console.warn('카메라 권한 확인 중 오류');
+        navigation.navigate('PermissionScreen');
       }
     }
   };
 
   const takePicture = async () => {
-    try {
-      if (cameraRef.current == null) {
-        return;
-      }
-      await RNVisionCamera.requestCameraPermission();
-      const data = await cameraRef.current?.takePhoto({
+    if (cameraRef.current) {
+      const data = await cameraRef.current.takePhoto({
         qualityPrioritization: 'speed',
-        flash: 'off', // 플래시 설정
+        flash: 'off',
         quality: 50,
         enableShutterSound: false
       });
-      const { path, width, height } = data || {};
-      const uri = `file://${path}`;
-      console.log('사진 경로:', uri);
-
-      if (instructionIndex < instructions.length - 1) {
-        setInstructionIndex(instructionIndex + 1);
-      }
-    } catch (e) {
-      console.error('사진 찍기 오류:', e);
-      ToastAndroid.show('카메라 오류가 발생했습니다', ToastAndroid.SHORT);
+      setPhotoData([...photoData, data]);
+      setInstructionIndex(instructionIndex + 1);
     }
-  };
-
-  const onCameraInitialized = () => {
-    console.log('카메라 초기화 완료');
-    setIsCameraInitialized(true);
   };
 
   return (
     <View style={styles.container}>
-      {isCameraInitialized && devices.length > 0 && ( // 장치가 존재하는지 확인
+      {isCameraInitialized && devices.length > 0 && (
         <Camera
           ref={cameraRef}
           style={styles.preview}
           autoFocus="on"
-          device={devices[0]} // 첫 번째 카메라 장치를 선택
-          photo={true} // 사진 촬영 기능 활성화
-          onInitialized={onCameraInitialized}
+          device={devices[0]}
+          photo={true}
+          onInitialized={() => setIsCameraInitialized(true)}
         />
       )}
-      <View style={styles.bottomContainer}>
+      <View style={styles.controlContainer}>
+        <View style={styles.buttonRow}>
+          {instructions.map((instruction, index) => (
+            <TouchableOpacity key={index} style={styles.angleButton} onPress={() => setInstructionIndex(index)}>
+              <Text style={styles.buttonText}>{instruction.split(' ')[1]}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
         <Text style={styles.instruction}>{instructions[instructionIndex]}</Text>
         <TouchableOpacity style={styles.captureButton} onPress={takePicture}>
           <View style={styles.captureInnerButton} />
@@ -100,10 +91,23 @@ const styles = StyleSheet.create({
   preview: {
     flex: 0.6,
   },
-  bottomContainer: {
+  controlContainer: {
     flex: 0.4,
-    justifyContent: 'center',
+    justifyContent: 'space-around',
     alignItems: 'center',
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+  },
+  angleButton: {
+    padding: 10,
+    backgroundColor: '#ddd',
+    borderRadius: 20,
+  },
+  buttonText: {
+    color: 'black',
   },
   instruction: {
     fontSize: 18,

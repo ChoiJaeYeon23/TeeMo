@@ -67,8 +67,8 @@ const KakaoLoginScreen = () => {
     }
   };
 
-  const goToSignUpScreen = () => {
-    navigation.navigate("SignUpScreen");
+  const goToSettingsScreen = () => {
+    navigation.navigate("SettingScreen");
   };
 
   return (
@@ -108,6 +108,9 @@ const KakaoLoginScreen = () => {
             </TouchableOpacity>
             <TouchableOpacity onPress={signInWithKakao} style={styles.kakaoButtonContainer}>
               <Image source={require("../images/kakao_login_medium_wid.png")} style={styles.kakaoButton} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={goToSettingsScreen} style={styles.settingsButtonContainer}>
+              <Text style={styles.settingsButtonText}>화면 바로가기</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -165,7 +168,19 @@ const styles = StyleSheet.create({
   },
   kakaoButton: {
     width: 50,
-    height: 50, 
+    height: 50,
+  },
+  settingsButtonContainer: {
+    padding: 10,
+    marginBottom: 20,
+    backgroundColor: "#DDDDDD",
+    borderRadius: 20,
+    width: "100%",
+    alignItems: "center",
+  },
+  settingsButtonText: {
+    fontSize: 18,
+    color: "#444444",
   },
   signupContainer: {
     padding: 5,
