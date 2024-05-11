@@ -3,6 +3,10 @@
 # dependencies
 node_modules/
 
+# lock 파일
+yarn.lock/
+package-lock.json/
+
 # Expo
 .expo/
 dist/
