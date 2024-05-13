@@ -2,29 +2,29 @@ import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-const Home = () => {
+const Realtime = () => {
     const navigation = useNavigation();
 
-    const goToNonrealtime = () => {
-        navigation.navigate("Nonrealtime");
+    const goToRecord = () => {
+        navigation.navigate("Record");
     };
 
-    const goToRealtime = () => {
-        navigation.navigate("Realtime");
+    const goToPicture = () => {
+        navigation.navigate("realtime");
     };
 
     return (
         <View style={styles.container}>
             <View style={styles.buttonContainer}>
-                <TouchableOpacity style={[styles.button, styles.leftButton]} onPress={goToNonrealtime}>
-                    <Text style={styles.buttonText}>비실시간</Text>
+                <TouchableOpacity style={[styles.button, styles.leftButton]} onPress={goToPicture}>
+                    <Text style={styles.buttonText}>사진</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.button, styles.rightButton]} onPress={goToRealtime}>
-                    <Text style={styles.buttonText}>실시간</Text>
+                <TouchableOpacity style={[styles.button, styles.rightButton]} onPress={goToRecord}>
+                    <Text style={styles.buttonText}>동영상</Text>
                 </TouchableOpacity>
             </View>
             <View style={styles.centered}>
-                <Text style={styles.headerText}>모자이크 방식을 선택하세요.</Text>
+                <Text style={styles.headerText}>사진 또는 동영상을 업로드 하여 모자이크.</Text>
             </View>
         </View>
     );
@@ -75,4 +75,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Home;
+export default Realtime;

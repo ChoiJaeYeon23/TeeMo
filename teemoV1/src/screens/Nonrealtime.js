@@ -2,25 +2,25 @@ import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-const Home = () => {
+const Nonrealtime = () => {
     const navigation = useNavigation();
 
-    const goToNonrealtime = () => {
-        navigation.navigate("Nonrealtime");
+    const goToPhoto = () => {
+        navigation.navigate("Photo");
     };
 
-    const goToRealtime = () => {
-        navigation.navigate("Realtime");
+    const goToVideo = () => {
+        navigation.navigate("Video");
     };
 
     return (
         <View style={styles.container}>
             <View style={styles.buttonContainer}>
-                <TouchableOpacity style={[styles.button, styles.leftButton]} onPress={goToNonrealtime}>
-                    <Text style={styles.buttonText}>비실시간</Text>
+                <TouchableOpacity style={[styles.button, styles.leftButton]} onPress={goToPhoto}>
+                    <Text style={styles.buttonText}>사진</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.button, styles.rightButton]} onPress={goToRealtime}>
-                    <Text style={styles.buttonText}>실시간</Text>
+                <TouchableOpacity style={[styles.button, styles.rightButton]} onPress={goToVideo}>
+                    <Text style={styles.buttonText}>영상 촬영</Text>
                 </TouchableOpacity>
             </View>
             <View style={styles.centered}>
@@ -75,4 +75,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Home;
+export default Nonrealtime;
