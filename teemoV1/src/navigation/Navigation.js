@@ -13,6 +13,10 @@ import Userrecognition from "../recognition/Userrecognition";
 import User from "../screens/User";
 import Home from "../screens/Home";
 import SignUpScreen from "../screens/SingnUpScreen";
+import Realtime from "../screens/Realtime";
+import Nonrealtime from "../screens/Nonrealtime";
+import Photo from "../Upload/Photo";
+import Video from "../Upload/Video"
 
 const Stack = createStackNavigator();
 
@@ -30,6 +34,10 @@ const Navigation = () => {
         <Stack.Screen name="Userrecognition" component={Userrecognition} />
         <Stack.Screen name="User" component={User} />
         <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="Realtime" component={Realtime}/>
+        <Stack.Screen name="Nonrealtime" component={Nonrealtime}/>
+        <Stack.Screen name="Photo" component={Photo}/>
+        <Stack.Screen name="Video" component={Video}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

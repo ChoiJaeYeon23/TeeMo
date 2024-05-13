@@ -34,16 +34,14 @@ const KakaoLoginScreen = () => {
     } else {
       console.log("로그인 입력 정보 ::: 아이디:", id, "비밀번호:", password);
       navigation.navigate("NavigationScreen");
-      // 실제 로그인 로직 추가
     }
   };
 
   const signInWithKakao = async () => {
-    console.log("카카오 로그인 버튼 눌림");
     try {
       const token = await login();
       setResult(JSON.stringify(token));
-      if (result != null) {
+      if (result) {
         console.log("로그인 토큰 :: ", result);
         setAuth(true);
         navigation.navigate("권한화면");
@@ -55,11 +53,9 @@ const KakaoLoginScreen = () => {
   };
 
   const getProfile = async () => {
-    console.log("사용자 프로필 조회 시도");
     try {
       const profile = await getKakaoProfile();
       setProfile(JSON.stringify(profile));
-      console.log("프로필 토큰 :: ", profile);
       setName(profile.nickname);
       setEmail(profile.email);
     } catch (err) {
@@ -67,8 +63,12 @@ const KakaoLoginScreen = () => {
     }
   };
 
+  const goToSignUpScreen = () => {
+    navigation.navigate("SignUpScreen");
+  };
+
   const goToSettingsScreen = () => {
-    navigation.navigate("SettingScreen");
+    navigation.navigate("설정화면");  // 네비게이션 목적지를 확인하세요. "SettingScreen"이 올바른지 확인하세요.
   };
 
   return (
@@ -78,28 +78,26 @@ const KakaoLoginScreen = () => {
           <View style={styles.logoContainer}>
             <Image source={require("../images/app_logo.png")} style={styles.logo} />
           </View>
-
           <View style={styles.inputContainer}>
             <TextInput
               value={id}
               onChangeText={setId}
-              placeholder="  아이디"
+              placeholder="아이디"
               style={styles.input}
               returnKeyType="next"
               onSubmitEditing={() => passwordInputRef.current.focus()}
-              onFocus={() => clearId()}
+              onFocus={clearId}
             />
             <TextInput
               ref={passwordInputRef}
               value={password}
               onChangeText={setPassword}
-              placeholder="  비밀번호"
+              placeholder="비밀번호"
               secureTextEntry={true}
               style={styles.input}
               returnKeyType="done"
-              onFocus={() => clearPassword()}
+              onFocus={clearPassword}
             />
-
             <TouchableOpacity onPress={signInButtonHandler} style={styles.buttonContainer}>
               <Text style={styles.buttonText}>로그인</Text>
             </TouchableOpacity>
