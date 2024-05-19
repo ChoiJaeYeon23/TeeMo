@@ -55,11 +55,7 @@ const SignInScreen = () => {
                 pw: password
             }
             // 서버로 로그인 요청을 보내는 함수
-<<<<<<< HEAD
             fetch("http://13.209.77.184:5001/api/signin", {
-=======
-            fetch("http://13.209.77.184/api/sign_in", {
->>>>>>> JiYeon
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
