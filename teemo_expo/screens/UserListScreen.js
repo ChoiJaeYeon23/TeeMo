@@ -48,9 +48,9 @@ const UserListScreen = () => {
         try {
             const response = await fetch("http://13.209.77.184/api/load_user_list");
             const data = await response.json();
-            setUserList(data);  // 얼굴 객체 배열에 저장합니다. 배열형태가 아닌 경우 배열 형태로 변환 후 저장해야함!
+            setUserList(data);  // 사용자 리스트에 저장합니다. 배열형태가 아닌 경우 배열 형태로 변환 후 저장해야함!
         } catch (error) {
-            console.error("얼굴 불러오기 실패:", error);
+            console.error("사용자 리스트 불러오기 실패:", error);
         }
     }
 

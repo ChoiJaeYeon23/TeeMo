@@ -116,7 +116,7 @@ const SignUpScreen = () => {
         }
 
         return new Promise((resolve, reject) => {
-            fetch("http://13.209.77.184/api/check-id", {
+            fetch("http://13.209.77.184/api/check_id", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -129,7 +129,7 @@ const SignUpScreen = () => {
                         // alert("이미 사용 중인 아이디입니다.");
                         setAvailableID_text("이미 사용 중인 아이디입니다.");
                         setAvailableID_color("#DB0000");
-                        reject(new Error("이미 사용 중인 아이디 입니다."));
+                        reject(new Error("이미 사용 중인 아이디입니다."));
                     } else {
                         // alert("사용 가능한 아이디입니다.");
                         setAvailableID_text("사용 가능한 아이디입니다.");
@@ -183,7 +183,7 @@ const SignUpScreen = () => {
             }
 
             // 서버로 회원가입 요청을 보냄
-            fetch("http://13.209.77.184/api/signup", {
+            fetch("http://13.209.77.184/api/sign_up", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

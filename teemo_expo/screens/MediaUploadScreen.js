@@ -137,7 +137,7 @@ const MediaUploadScreen = () => {
      * 서버로 미디어(사진, 동영상) 업로드를 요청하는 함수입니다.
      */
     const uploadMedia = () => {
-        fetch("http://13.209.77.184/api/media-upload", {
+        fetch("http://13.209.77.184/api/media_upload", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -160,7 +160,7 @@ const MediaUploadScreen = () => {
      */
     const loadImages = async () => {
         try {
-            const response = await fetch("http://13.209.77.184/api/load_image");
+            const response = await fetch("http://13.209.77.184/api/load_recog_face");
             const data = await response.json();
             setRecogFaceObj(data);  // 얼굴 객체 배열에 저장합니다. 배열형태가 아닌 경우 배열 형태로 변환 후 저장해야함!
         } catch (error) {
