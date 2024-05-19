@@ -21,7 +21,7 @@ const Navigation = () => {
                 component={NavigationScreen}
                 options={{
                     headerShown: false,
-                    gestureEnabled: false
+                    // gestureEnabled: false
                 }}
             />
             <Stack.Screen
@@ -29,7 +29,7 @@ const Navigation = () => {
                 component={TakePictureScreen}
                 options={{
                     headerShown: false,
-                    gestureEnabled: false
+                    // gestureEnabled: false
                 }}
             />
             <Stack.Screen
@@ -37,7 +37,7 @@ const Navigation = () => {
                 component={RecordScreen}
                 options={{
                     headerShown: false,
-                    gestureEnabled: false
+                    // gestureEnabled: false
                 }}
             />
             <Stack.Screen
@@ -45,7 +45,7 @@ const Navigation = () => {
                 component={UserListScreen}
                 options={{
                     headerShown: false,
-                    gestureEnabled: false
+                    // gestureEnabled: false
                 }}
             />
             <Stack.Screen
@@ -53,7 +53,7 @@ const Navigation = () => {
                 component={LoginWebViewScreen}
                 options={{
                     headerShown: false,
-                    gestureEnabled: false
+                    // gestureEnabled: false
                 }}
             />
             <Stack.Screen
@@ -61,7 +61,7 @@ const Navigation = () => {
                 component={FaceRecognitionScreen}
                 options={{
                     headerShown: false,
-                    gestureEnabled: false
+                    // gestureEnabled: false
                 }}
             />
             <Stack.Screen
@@ -69,7 +69,7 @@ const Navigation = () => {
                 component={SignInScreen}
                 options={{
                     headerShown: false,
-                    gestureEnabled: false
+                    // gestureEnabled: false
                 }}
             />
             <Stack.Screen
@@ -77,7 +77,7 @@ const Navigation = () => {
                 component={SignUpScreen}
                 options={{
                     headerShown: false,
-                    gestureEnabled: false
+                    // gestureEnabled: false
                 }}
             />
             <Stack.Screen
@@ -85,7 +85,7 @@ const Navigation = () => {
                 component={MediaUploadScreen}
                 options={{
                     headerShown: false,
-                    gestureEnabled: false
+                    // gestureEnabled: false
                 }}
             />
             <Stack.Screen
@@ -93,7 +93,7 @@ const Navigation = () => {
                 component={ResultMediaScreen}
                 options={{
                     headerShown: false,
-                    gestureEnabled: false
+                    // gestureEnabled: false
                 }}
             />
         </Stack.Navigator>
