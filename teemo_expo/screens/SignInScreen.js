@@ -62,10 +62,17 @@ const SignInScreen = () => {
                 },
                 body: JSON.stringify(userData),
             })
-                .then((response) => response.json())
+                .then((response) => {
+                    if (!response.ok) {
+                        return response.json().then((data) => {
+                            throw new Error(data.message || '로그인 실패');
+                        });
+                    }
+                    return response.json();
+                })
                 .then((data) => {
-                    alert("로그인 완료!"); // 로그인 성공 알림
-                    console.log("로그인성공함(DB서버)");
+                    alert(data.message); // 로그인 성공 알림
+                    console.log("로그인 성공(DB 서버)");
                     clearAll();
                     navigation.navigate("UserListScreen"); // 사용자 리스트 화면으로 이동
                 })
