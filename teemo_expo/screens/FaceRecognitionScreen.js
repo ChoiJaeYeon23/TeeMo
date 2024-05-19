@@ -7,8 +7,8 @@ import {
     Image,
     TouchableOpacity
 } from "react-native"
-import { Camera, CameraType } from "expo-camera"
-import { Feather } from "@expo/vector-icons"
+import { CameraView } from "expo-camera"
+import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons"
 import { useNavigation } from "@react-navigation/native"
 
 /**
@@ -18,7 +18,7 @@ const FaceRecognitionScreen = ({ route }) => {
     // UserListScreen 에서 전달받은 식별 인물 이름과 식별 인물을 추가하는 함수 초기화
     const { userName, addUserHandler } = route.params
 
-    const cameraType = CameraType.front
+    const cameraType = "front"
     const cameraRef = useRef(null)
 
     const navigation = useNavigation()
@@ -129,19 +129,33 @@ const FaceRecognitionScreen = ({ route }) => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <View style={styles.titleContainer}>
+            <View style={styles.header}>
                 <Text style={styles.titleText}>사용자 인식</Text>
+
             </View>
 
+            <TouchableOpacity style={styles.uploadButton} onPress={() => uploadHandler()}>
+                <MaterialIcons name="upload" size={24} color="#555555" />
+            </TouchableOpacity>
+
             <View style={styles.cameraContainer}>
-                <Camera
+                <CameraView
                     ref={cameraRef}
-                    type={cameraType}
+                    facing={cameraType}
                     style={styles.camera}
                 >
                     <Text style={styles.guideText}>얼굴 위치를 프레임에 맞춰주세요</Text>
-                    <View style={[styles.frame, styles.center]} />
-                </Camera>
+                    <View style={{ flexDirection: "row", marginBottom: "50%" }}>
+                        <Text style={styles.guideLine}>┌</Text>
+                        <Text style={styles.guideLine}>┐</Text>
+                    </View>
+
+                    <View style={{ flexDirection: "row" }}>
+                        <Text style={styles.guideLine}>└</Text>
+                        <Text style={styles.guideLine}>┘</Text>
+                    </View>
+
+                </CameraView>
             </View>
 
             <View style={styles.guideImgContainer}>
@@ -155,14 +169,10 @@ const FaceRecognitionScreen = ({ route }) => {
             </View>
 
             <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.button} onPress={() => uploadHandler()}>
-                    <Feather name="upload" size={40} color="#555555" />
-                    <Text style={styles.buttonText}>업로드</Text>
-                </TouchableOpacity>
+
 
                 <TouchableOpacity style={styles.button} onPress={() => takePicture()}>
-                    <Feather name="camera" size={40} color="#555555" />
-                    <Text style={styles.buttonText}>촬영</Text>
+                    <MaterialCommunityIcons name="camera-iris" size={65} color="#555555" />
                 </TouchableOpacity>
             </View>
         </SafeAreaView>
@@ -176,15 +186,24 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: "center",
     },
-    titleContainer: {
-        marginTop: 30,
-        marginBottom: 10,
-        padding: 30
+    header: {
+        marginTop: "3%",
+        marginBottom: "5%",
+        justifyContent: "center",
+        alignItems: "center"
     },
-    frame: {
-        borderWidth: 2,
-        borderColor: "#FFFFFF70",
-        zIndex: 1
+    uploadButton: {
+        position: "absolute",
+        right: "5%",
+        top: "7.5%"
+    },
+    frameContainer: {
+        flexDirection: "row",
+    },
+    guideLine: {
+        color: "#FFFFFFBB",
+        fontSize: 50,
+        marginHorizontal: "25%"
     },
     center: {
         borderRadius: 10,
@@ -224,15 +243,15 @@ const styles = StyleSheet.create({
         justifyContent: "center"
     },
     titleText: {
-        fontSize: 30,
+        fontSize: 25,
         fontWeight: "bold",
         color: "#333333"
     },
     guideText: {
         fontSize: 20,
         fontWeight: "600",
-        marginBottom: 10,
-        color: "#FFFFFF"
+        marginBottom: "5%",
+        color: "#FFFFFFBB"
     },
     buttonText: {
         fontSize: 18,

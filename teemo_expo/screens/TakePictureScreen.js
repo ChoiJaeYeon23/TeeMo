@@ -1,20 +1,25 @@
 import { useEffect, useRef, useState } from "react"
-import { SafeAreaView, View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native"
-import { Camera, CameraType } from "expo-camera"
+import {
+    View,
+    TouchableOpacity,
+    StyleSheet,
+    Alert
+} from "react-native"
+import { Camera, CameraView } from "expo-camera"
 import * as MediaLibrary from "expo-media-library"
-import { Ionicons, Foundation, Entypo } from "@expo/vector-icons"
-import RecordScreen from "./RecordScreen"
+import { useNavigation } from "@react-navigation/native"
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons"
 
 /**
  * 사진 촬영 페이지입니다.
  * 동영상 모드로 전환 시 RecordScreen 화면을 반환합니다.
  */
 const TakePictureScreen = () => {
-    const [cameraType, setCameraType] = useState(CameraType.front)
+    const navigation = useNavigation()
+    const [cameraType, setCameraType] = useState("front")
     const [image, setImage] = useState(null)
     const [hasCameraPermission, setHasCameraPermission] = useState(null)
     const cameraRef = useRef(null)
-    const [cameraMode, setCameraMode] = useState("CAMERA")
 
     useEffect(() => {
         (async () => {
@@ -24,10 +29,10 @@ const TakePictureScreen = () => {
         })()
     }, [])
 
+    // 카메라 타입(전면, 후면) 전환 함수
     const toggleCameraType = () => {
         setCameraType(current => (
-            current === CameraType.front ?
-                CameraType.back : CameraType.front
+            current === "front" ? "back" : "front"
         ))
     }
 
@@ -37,7 +42,7 @@ const TakePictureScreen = () => {
                 const data = await cameraRef.current.takePictureAsync()
                 console.log(data)
                 setImage(data.uri)
-                // savePicture()
+
                 try {
                     await MediaLibrary.createAssetAsync(data.uri)
                     Alert.alert("사진이 저장되었습니다.")
@@ -51,136 +56,57 @@ const TakePictureScreen = () => {
         }
     }
 
-    const savePicture = async () => {
-        if (image) {
-            try {
-                await MediaLibrary.createAssetAsync(image)
-                Alert.alert("사진이 저장되었습니다")
-                setImage(null)
-            } catch (e) {
-                console.log("사진 저장 오류", e)
-            }
-        }
+    const closeCamera = () => {
+        navigation.goBack()
     }
 
-    return cameraMode === "CAMERA" ? (
-        <SafeAreaView style={containers.container}>
-            <View style={containers.cameraContainer}>
-                <Camera
-                    ref={cameraRef}
-                    type={cameraType}
-                    style={containers.camera}
-                >
-                    <View style={containers.cameraType}>
-                        <TouchableOpacity style={contents.button} onPress={toggleCameraType} hitSlop={30}>
-                            <Ionicons name="camera-reverse-outline" size={32} color="#FFFFFF" />
+    return (
+        <View style={styles.cameraContainer}>
+            <CameraView
+                ref={cameraRef}
+                facing={cameraType}
+                style={styles.camera}
+            >
+                <View style={styles.buttonContainer}>
+                    <View style={styles.button}>
+                        <TouchableOpacity onPress={() => closeCamera()} hitSlop={30}>
+                            <Ionicons name="close" size={35} color="#FFFFFF90" />
                         </TouchableOpacity>
                     </View>
 
-                </Camera>
-            </View>
-
-            <View style={containers.bottom}>
-                <View style={contents.horizontalLine} />
-
-                <View style={contents.dot}>
-                    <Entypo name="dot-single" size={27} color="#FFFFFF" />
-                </View>
-
-                <View style={containers.modeContainer}>
-                    <View style={containers.cameraModeBtn}>
-                        <TouchableOpacity onPress={() => setCameraMode("CAMERA")}>
-                            <Text style={contents.text}>사진</Text>
-                        </TouchableOpacity>
-                    </View>
-
-                    <View style={containers.videoModeBtn}>
-                        <TouchableOpacity onPress={() => setCameraMode("VIDEO")}>
-                            <Text style={contents.text}>비디오</Text>
+                    <View style={styles.button}>
+                        <TouchableOpacity onPress={() => toggleCameraType()} hitSlop={30}>
+                            <Ionicons name="camera-reverse-outline" size={35} color="#FFFFFF90" />
                         </TouchableOpacity>
                     </View>
                 </View>
 
-                <View style={containers.buttonContainer}>
-                    <TouchableOpacity style={contents.button} onPress={takePictureHandler}>
-                        <Foundation name="record" size={110} color="#FFFFFF99" />
-                    </TouchableOpacity>
-                </View>
-            </View>
-        </SafeAreaView>
-    ) : <RecordScreen />
+                <TouchableOpacity style={{ marginBottom: "10%" }} onPress={() => takePictureHandler()}>
+                    <MaterialCommunityIcons name="camera-iris" size={90} color="#FFFFFF90" />
+                </TouchableOpacity>
+            </CameraView>
+        </View>
+    )
 }
 
 export default TakePictureScreen
 
-const containers = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#222222",
-        alignItems: "center",
-        width: "100%"
-    },
+const styles = StyleSheet.create({
     cameraContainer: {
-        width: "100%",
-        height: "80%"
-    },
-    camera: {
         flex: 1
     },
-    cameraType: {
-        position: "absolute",
-        top: 20,
-        right: 20
+    camera: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "space-between"
     },
     buttonContainer: {
-        flex: 1,
         flexDirection: "row",
-        // backgroundColor: "transparent",
-        // margin: 50
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginTop: "13%"
     },
-    modeContainer: {
-        flexDirection: "row",
-        alignContent: "center",
-        paddingTop: 25,
-        justifyContent: "center"
-    },
-    cameraModeBtn: {
-        alignSelf: "center",
-        justifyContent: "center",
-        marginRight: 20
-    },
-    videoModeBtn: {
-
-    },
-    bottom: {
-        backgroundColor: "#222222",
-        width: "100%",
-        height: "20%"
-    }
-})
-
-const contents = StyleSheet.create({
     button: {
-        flex: 1,
-        alignSelf: "flex-end",
-        alignItems: "center"
-    },
-    text: {
-        fontSize: 20,
-        fontWeight: "bold",
-        color: "#FFFFFF"
-    },
-    horizontalLine: {
-        height: 1,
-        width: "96%",
-        backgroundColor: "#FFFFFF",
-        position: "absolute",
-        bottom: 168,
-        left: 9
-    },
-    dot: {
-        position: "absolute",
-        bottom: 145,
-        left: 200
+        marginHorizontal: "37%"
     }
 })

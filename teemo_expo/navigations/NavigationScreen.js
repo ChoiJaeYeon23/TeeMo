@@ -20,14 +20,6 @@ const NavigationScreen = () => {
         navigation.navigate("UserListScreen")
     }
 
-    const togoCamera = () => {
-        navigation.navigate("CameraScreen")
-    }
-
-    const togoLogin = () => {
-        navigation.navigate("KakaoLoginScreen")
-    }
-
     const togoSignin = () => {
         navigation.navigate("SignInScreen")
     }
@@ -57,14 +49,6 @@ const NavigationScreen = () => {
 
                 <TouchableOpacity onPress={togoUserList} style={containers.buttonContainer}>
                     <Text style={contents.text}>사용자리스트화면</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={togoCamera} style={containers.buttonContainer}>
-                    <Text style={contents.text}>카메라화면</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={togoLogin} style={containers.buttonContainer}>
-                    <Text style={contents.text}>카카오로그인화면</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={togoSignin} style={containers.buttonContainer}>
