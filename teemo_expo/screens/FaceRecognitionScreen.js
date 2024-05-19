@@ -1,5 +1,12 @@
 import { useRef, useState, useCallback } from "react"
-import { SafeAreaView, View, StyleSheet, Text, Image, TouchableOpacity } from "react-native"
+import {
+    SafeAreaView,
+    View,
+    StyleSheet,
+    Text,
+    Image,
+    TouchableOpacity
+} from "react-native"
 import { Camera, CameraType } from "expo-camera"
 import { Feather } from "@expo/vector-icons"
 import { useNavigation } from "@react-navigation/native"
@@ -17,18 +24,68 @@ const FaceRecognitionScreen = ({ route }) => {
     const navigation = useNavigation()
 
     // 정면, 상, 하, 좌, 우 이미지 uri
-    const front = "../images/front.jpg"
-    const top = "../images/top.jpg"
-    const bottom = "../images/bottom.jpg"
-    const left = "../images/left.jpg"
-    const right = "../images/right.jpg"
+    const front = require("../images/front.jpg")
+    const top = require("../images/top.jpg")
+    const bottom = require("../images/bottom.jpg")
+    const left = require("../images/left.jpg")
+    const right = require("../images/right.jpg")
+
+    const [images, setImages] = useState({
+        front,
+        top,
+        bottom,
+        left,
+        right
+    })
 
     // 사용자가 찍은 정면, 상, 하, 좌, 우 사진 URI set
-    const [frontFace, setFrontFace] = useState(null)
-    const [topFace, setTopFace] = useState(null)
-    const [bottomFace, setBottomFace] = useState(null)
-    const [leftFace, setLeftFace] = useState(null)
-    const [rightFace, setRightFace] = useState(null)
+    const [frontFace, setFrontFace] = useState(front)
+    const [topFace, setTopFace] = useState(top)
+    const [bottomFace, setBottomFace] = useState(bottom)
+    const [leftFace, setLeftFace] = useState(left)
+    const [rightFace, setRightFace] = useState(right)
+
+    const [currentPosition, setCurrentPosition] = useState("front")
+
+    const takePicture = async () => {
+        if (cameraRef) {
+            try {
+                const uri = await cameraRef.current.takePictureAsync()
+
+                switch (currentPosition) {
+                    case "front":
+                        setFrontFace(uri)
+                        break
+                    case "top":
+                        setTopFace(uri)
+                        break
+                    case "bottom":
+                        setBottomFace(uri)
+                        break
+                    case "left":
+                        setLeftFace(uri)
+                        break
+                    case "right":
+                        setRightFace(uri)
+                        break
+                    default:
+                        break
+                }
+
+                setImages(prevImages => ({
+                    ...prevImages,
+                    [currentPosition]: uri
+                }))
+            } catch (error) {
+                console.error("사진찍기 오류:", error)
+            }
+        }
+    }
+
+    const switchPosition = useCallback(position => {
+        setCurrentPosition(position)
+        console.log(`position ${position} 으로 바뀜`)
+    }, [])
 
     /**
      * 서버로 사진을 업로드합니다.
@@ -42,7 +99,7 @@ const FaceRecognitionScreen = ({ route }) => {
             name: userName,
             front: frontFace,
             top: topFace,
-            bot: bottom,
+            bot: bottomFace,
             left: leftFace,
             right: rightFace
         }
@@ -51,7 +108,7 @@ const FaceRecognitionScreen = ({ route }) => {
         // 서버랑 디비 연결 되면 밑에 두 줄 지우고 밑에 주석 활성화시키기
         addUserHandler(userName);
         navigation.goBack();
-        // fetch("http://13.209.77.184/api/upload_my_face", {
+        // fetch("http://13.209.77.184/api/upload_user_face", {
         //     method: "POST",
         //     headers: {
         //         "Content-Type": "application/json",
@@ -68,93 +125,44 @@ const FaceRecognitionScreen = ({ route }) => {
         //     .catch((error) => {
         //         alert("업로드 실패: " + error.message);
         //     });
-    }, [userName, addUserHandler, navigation])
+    }, [userName, addUserHandler, navigation, images])
 
     return (
-        <SafeAreaView style={containers.container}>
-            <View style={containers.titleContainer}>
-                <Text style={texts.title}>사용자 인식</Text>
+        <SafeAreaView style={styles.container}>
+            <View style={styles.titleContainer}>
+                <Text style={styles.titleText}>사용자 인식</Text>
             </View>
 
-            <View style={containers.cameraContainer}>
+            <View style={styles.cameraContainer}>
                 <Camera
                     ref={cameraRef}
                     type={cameraType}
-                    style={containers.camera}
-                />
+                    style={styles.camera}
+                >
+                    <Text style={styles.guideText}>얼굴 위치를 프레임에 맞춰주세요</Text>
+                    <View style={[styles.frame, styles.center]} />
+                </Camera>
             </View>
 
-            <View style={containers.guideTxtContainer}>
-                <Text style={texts.guide}>얼굴 위치를 프레임에 맞춰주세요</Text>
+            <View style={styles.guideImgContainer}>
+                {
+                    Object.entries(images).map(([position, image]) => (
+                        <TouchableOpacity key={position} onPress={() => switchPosition(position)} style={styles.boxContainer}>
+                            <Image source={image} style={styles.box} />
+                        </TouchableOpacity>
+                    ))
+                }
             </View>
 
-            <View style={containers.guideImgContainer}>
-                {/* 정면 */}
-                <View style={containers.boxContainer}>
-                    <TouchableOpacity>
-                        {
-                            !frontFace ? (
-                                <Image source={require(front)} style={contents.box} />
-                            ) : (
-                                <Image />
-                            )
-                        }
-                    </TouchableOpacity>
-                </View>
-                {/* 상 */}
-                <View style={containers.boxContainer}>
-                    <TouchableOpacity>
-                        {
-                            !topFace ? (
-                                <Image source={require(top)} style={contents.box} />
-                            ) : (
-                                <Image />
-                            )
-                        }
-                    </TouchableOpacity>
-                </View>
-                {/* 하 */}
-                <View style={containers.boxContainer}>
-                    <TouchableOpacity>
-                        {
-                            !bottomFace ? (
-                                <Image source={require(bottom)} style={contents.box} />
-                            ) : (
-                                <Image />
-                            )
-                        }
-                    </TouchableOpacity>
-                </View>
-                {/* 좌 */}
-                <View style={containers.boxContainer}>
-                    <TouchableOpacity>
-                        {
-                            !leftFace ? (
-                                <Image source={require(left)} style={contents.box} />
-                            ) : (
-                                <Image />
-                            )
-                        }
-                    </TouchableOpacity>
-                </View>
-                {/* 우 */}
-                <View>
-                    <TouchableOpacity>
-                        {
-                            !rightFace ? (
-                                <Image source={require(right)} style={contents.box} />
-                            ) : (
-                                <Image />
-                            )
-                        }
-                    </TouchableOpacity>
-                </View>
-            </View>
+            <View style={styles.buttonContainer}>
+                <TouchableOpacity style={styles.button} onPress={() => uploadHandler()}>
+                    <Feather name="upload" size={40} color="#555555" />
+                    <Text style={styles.buttonText}>업로드</Text>
+                </TouchableOpacity>
 
-            <View style={containers.buttonContainer}>
-                <TouchableOpacity style={containers.upload} onPress={() => uploadHandler()}>
-                    <Feather name="upload" size={40} color="#333333" />
-                    <Text style={texts.upload}>업로드</Text>
+                <TouchableOpacity style={styles.button} onPress={() => takePicture()}>
+                    <Feather name="camera" size={40} color="#555555" />
+                    <Text style={styles.buttonText}>촬영</Text>
                 </TouchableOpacity>
             </View>
         </SafeAreaView>
@@ -163,22 +171,33 @@ const FaceRecognitionScreen = ({ route }) => {
 
 export default FaceRecognitionScreen
 
-const containers = StyleSheet.create({
+const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: "center",
     },
     titleContainer: {
+        marginTop: 30,
+        marginBottom: 10,
         padding: 30
     },
-    guideTxtContainer: {
-        padding: 20
+    frame: {
+        borderWidth: 2,
+        borderColor: "#FFFFFF70",
+        zIndex: 1
+    },
+    center: {
+        borderRadius: 10,
+        width: "70%",
+        height: "70%",
+        borderWidth: 3,
     },
     guideImgContainer: {
+        marginTop: "5%",
         flexDirection: "row",
     },
     boxContainer: {
-        paddingRight: 10
+        paddingRight: 7
     },
     cameraContainer: {
         alignItems: "center",
@@ -188,42 +207,41 @@ const containers = StyleSheet.create({
     camera: {
         flex: 1,
         aspectRatio: 1,
-        width: "100%"
+        width: "100%",
+        alignItems: "center",
+        justifyContent: "center"
     },
     buttonContainer: {
         flex: 1,
         alignItems: "center",
         justifyContent: "center",
-        width: "100%"
+        width: "100%",
+        flexDirection: "row"
     },
-    upload: {
-        flex: 1,
+    button: {
+        marginHorizontal: 70,
         alignItems: "center",
         justifyContent: "center"
-    }
-})
-
-const texts = StyleSheet.create({
-    title: {
+    },
+    titleText: {
         fontSize: 30,
         fontWeight: "bold",
         color: "#333333"
     },
-    guide: {
-        fontSize: 22,
+    guideText: {
+        fontSize: 20,
         fontWeight: "600",
-        color: "red"
+        marginBottom: 10,
+        color: "#FFFFFF"
     },
-    upload: {
-        fontSize: 22,
-        color: "#333333",
+    buttonText: {
+        fontSize: 18,
+        color: "#555555",
+        fontWeight: "600",
         paddingTop: 5
-    }
-})
-
-const contents = StyleSheet.create({
+    },
     box: {
-        width: 60,
-        height: 60,
+        width: 70,
+        height: 70,
     }
 })
