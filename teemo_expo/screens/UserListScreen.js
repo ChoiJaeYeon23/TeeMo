@@ -263,7 +263,7 @@ const containers = StyleSheet.create({
     container: {
         flex: 1,
         width: "100%",
-        padding: 10,
+        padding: "10%",
         alignItems: "center",
     },
     top: {
@@ -271,7 +271,7 @@ const containers = StyleSheet.create({
         width: "100%",
         alignItems: "center",
         justifyContent: "center",
-        marginTop: 10
+        marginTop: "2%"
     },
     middle: {
         height: "75%",
@@ -287,12 +287,12 @@ const containers = StyleSheet.create({
     },
     addButtonContainer: {
         position: "absolute",
-        bottom: 10,
-        right: 10,
+        bottom: "2%",
+        right: "3%",
         alignItems: "center",
         justifyContent: "center",
         borderRadius: 50,
-        padding: 10,
+        padding: "2%",
     },
     shadow: {
         shadowColor: "#333333",
@@ -307,20 +307,20 @@ const containers = StyleSheet.create({
 
 const texts = StyleSheet.create({
     title: {
-        fontSize: 30,
+        fontSize: "30%",
         fontWeight: "bold",
         color: "#333333",
     },
     delButton: {
-        fontSize: 20,
+        fontSize: "20%",
         color: "#333333"
     },
     addButton: {
-        fontSize: 30,
+        fontSize: "30%",
         color: "#333333",
     },
     startButton: {
-        fontSize: 25,
+        fontSize: "25%",
         fontWeight: "bold",
         color: "#333333",
     }
@@ -336,8 +336,8 @@ const modal = StyleSheet.create({
     modalContent: {
         width: "60%",
         backgroundColor: "#FFF",
-        paddingVertical: 20,
-        paddingHorizontal: 10,
+        paddingVertical: "5%",
+        paddingHorizontal: "3%",
         borderRadius: 25
     },
     input: {
@@ -345,36 +345,36 @@ const modal = StyleSheet.create({
         borderColor: "#555555",
         borderRadius: 100,
         color: "#555555",
-        padding: 10,
-        fontSize: 20,
-        marginHorizontal: 10,
-        marginTop: 10,
-        marginBottom: 25
+        padding: "4%",
+        fontSize: "20%",
+        marginHorizontal: "5%",
+        marginTop: "5%",
+        marginBottom: "13%"
     },
     optionButton: {
-        padding: 15,
+        padding: "7%",
         backgroundColor: "#CCCCCC80",
         borderRadius: 100,
-        margin: 10,
+        margin: "5%",
         flexDirection: "row",
         alignItems: "center"
     },
     closeButton: {
-        marginTop: 20,
-        marginHorizontal: 10,
-        padding: 15,
+        marginTop: "10%",
+        marginHorizontal: "5%",
+        padding: "7%",
         backgroundColor: "#777777",
         borderRadius: 100,
         alignItems: "center"
     },
     text: {
-        fontSize: 18,
+        fontSize: "18%",
         color: "#555555",
         fontWeight: "600"
     },
     closeButtonText: {
         color: "#FFFFFF",
         fontWeight: "600",
-        fontSize: 18
+        fontSize: "18%"
     }
 }) 

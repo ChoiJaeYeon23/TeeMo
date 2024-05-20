@@ -147,11 +147,11 @@ const styles = StyleSheet.create({
         height: "30%",
         alignItems: "center",
         justifyContent: "flex-start",
-        marginBottom: 50
+        marginBottom: "15%"
     },
     logo: {
-        width: 250,
-        height: 250
+        width: "65%",
+        height: "105%"
     },
     inputContainer: {
         width: "100%",
@@ -159,33 +159,33 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     input: {
-        fontSize: 18,
+        fontSize: "18%",
         color: "#444444",
         width: "50%",
         borderWidth: 1,
         borderColor: "#33333340",
-        padding: 8,
-        marginBottom: 10,
+        padding: "2%",
+        marginBottom: "2.5%",
         borderRadius: 100
     },
     signinContainer: {
         backgroundColor: "#33333340",
-        padding: 10,
+        padding: "3%",
         borderRadius: 100,
         width: "50%",
         alignItems: "center",
-        marginBottom: 5
+        marginBottom: "1%"
     },
     signin: {
-        fontSize: 18,
+        fontSize: "18%",
         color: "#FFF",
         fontWeight: "600"
     },
     signupContainer: {
-        padding: 5
+        padding: "1%"
     },
     signup: {
-        fontSize: 15,
+        fontSize: "15%",
         color: "#444444"
     }
 })

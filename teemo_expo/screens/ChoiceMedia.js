@@ -1,11 +1,5 @@
 import React from "react";
-import {
-    SafeAreaView,
-    View,
-    Text,
-    TouchableOpacity,
-    StyleSheet
-} from "react-native";
+import { SafeAreaView, View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 const ChoiceMedia = () => {
@@ -37,15 +31,17 @@ const ChoiceMedia = () => {
                     </TouchableOpacity>
                 </View>
 
-            <View style={containers.buttonContainer}>
-                <View style={styles.time}>
-                    <Text style={[texts.subTitle2]}>실시간</Text>
-                    <TouchableOpacity onPress={addUser} style={containers.rectButton}>
-                        <Text style={texts.buttonText}>인물 추가</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={recordVideo} style={containers.rectButton}>
-                        <Text style={texts.buttonText}>녹화 시작</Text>
-                    </TouchableOpacity>
+                <View style={containers.buttonContainer}>
+                    <View style={styles.time}>
+                        <Text style={[texts.subTitle2]}>실시간</Text>
+                        <TouchableOpacity onPress={addUser} style={containers.rectButton}>
+                            <Text style={texts.buttonText}>인물 추가</Text>
+                        </TouchableOpacity>
+                        <View style={{ marginTop: "3%" }}>
+                            <TouchableOpacity onPress={recordVideo} style={containers.rectButton}>
+                                <Text style={texts.buttonText}>녹화 시작</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </View>
             </View>
@@ -66,7 +62,7 @@ const containers = StyleSheet.create({
         width: "100%",
         alignItems: "center",
         justifyContent: "center",
-        marginTop: 10,
+        marginTop: "3%",
     },
     middle: {
         height: "50%",
@@ -84,52 +80,52 @@ const containers = StyleSheet.create({
     },
     buttonContainer: {
         flexDirection: "row",
-        justifyContent: "space-around",
+        justifyContent: "center",
         width: "100%",
-        marginTop: 20,
+        marginBottom: "5%",
     },
     circleButton: {
         backgroundColor: "#FFF",
-        borderWidth: 1,
+        borderWidth: "1%",
         borderColor: "#000",
-        padding: 20,
-        margin: 10,
+        padding: "7%",
         alignItems: "center",
         justifyContent: "center",
-        width: 100,
-        height: 100,
+        width: "35%",
+        height: "35%",
     },
     rectButton: {
         backgroundColor: "#FFF",
-        borderWidth: 1,
+        borderWidth: "1%",
         borderColor: "#000",
-        paddingVertical: 20,
-        paddingHorizontal: 40,
-        margin: 10,
+        paddingVertical: "7%",
+        paddingHorizontal: "23%",
+        marginHorizontal: "7%",
         alignItems: "center",
-        justifyContent: "center",
+        justifyContent: "center"
     },
 });
 
 const texts = StyleSheet.create({
     title: {
-        fontSize: 35,
+        fontSize: "35%",
         fontWeight: "bold",
         color: "#333",
     },
     subTitle: {
-        fontSize: 22,
+        fontSize: "22%",
         color: "#FF0000",
         textAlign: "center",
     },
     subTitle2: {
-        fontSize: 20,
+        fontSize: "20%",
         color: "#000",
         textAlign: "center",
-        marginTop: 35,
+        marginTop: "15%",
+        padding: "1%"
     },
     buttonText: {
-        fontSize: 24,
+        fontSize: "24%",
         color: "#000",
     },
 });

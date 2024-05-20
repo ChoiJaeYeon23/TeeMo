@@ -183,45 +183,45 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     idInput: {
-        fontSize: 18,
+        fontSize: "18%",
         color: "#444444",
         width: "54%",
         borderWidth: 1,
         borderColor: "#33333330",
-        padding: 10,
-        marginBottom: 5,
-        borderRadius: 25
+        padding: "3%",
+        marginBottom: "1%",
+        borderRadius: "25%"
     },
     checkContainer: {
         alignItems: "center",
         justifyContent: "center",
         backgroundColor: "#33333330",
-        marginBottom: 5,
-        borderRadius: 40,
-        paddingHorizontal: 15,
-        paddingVertical: 10,
-        marginLeft: 7
+        marginBottom: "1%",
+        borderRadius: "40%",
+        paddingHorizontal: "4%",
+        paddingVertical: "3%",
+        marginLeft: "2%"
     },
     input: {
-        fontSize: 18,
+        fontSize: "18%",
         color: "#444444",
         width: "70%",
         borderWidth: 1,
         borderColor: "#33333330",
-        padding: 10,
-        marginBottom: 20,
-        borderRadius: 25
+        padding: "3%",
+        marginBottom: "5%",
+        borderRadius: "25%"
     },
     signupContainer: {
         backgroundColor: "#33333330",
-        padding: 10,
-        borderRadius: 20,
+        padding: "2.5%",
+        borderRadius: "20%",
         width: "70%",
         alignItems: "center",
-        marginBottom: 5
+        marginBottom: "1%"
     },
     text: {
-        fontSize: 18,
+        fontSize: "18%",
         color: "#444444"
     }
 });

@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
     },
     guideLine: {
         color: "#FFFFFFBB",
-        fontSize: 50,
+        fontSize: "50%",
         marginHorizontal: "25%"
     },
     center: {
@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
     },
     boxContainer: {
-        paddingRight: 7
+        paddingRight: "1.6%"
     },
     cameraContainer: {
         alignItems: "center",
@@ -238,26 +238,26 @@ const styles = StyleSheet.create({
         flexDirection: "row"
     },
     button: {
-        marginHorizontal: 70,
+        marginHorizontal: "70%",
         alignItems: "center",
         justifyContent: "center"
     },
     titleText: {
-        fontSize: 25,
+        fontSize: "25%",
         fontWeight: "bold",
         color: "#333333"
     },
     guideText: {
-        fontSize: 20,
+        fontSize: "20%",
         fontWeight: "600",
         marginBottom: "5%",
         color: "#FFFFFFBB"
     },
     buttonText: {
-        fontSize: 18,
+        fontSize: "18%",
         color: "#555555",
         fontWeight: "600",
-        paddingTop: 5
+        paddingTop: "5%"
     },
     box: {
         width: 70,

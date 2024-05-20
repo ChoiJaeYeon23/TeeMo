@@ -14,6 +14,7 @@ import {
 import MediaDisplay from "./MediaDisplay"
 import * as ImagePicker from "expo-image-picker"
 import { Entypo, Feather } from "@expo/vector-icons"
+import { useNavigation } from "@react-navigation/native"
 
 const { width } = Dimensions.get("window")
 
@@ -43,6 +44,8 @@ const MediaUploadScreen = () => {
     ]
     const [selectedFaceObj, setSelectedFaceObj] = useState(Array(temp.length).fill(false))  // 선택된 얼굴 객체 이미지의 인덱스값을 초기화할 배열
     const animation = useRef(new Animated.Value(1)).current
+
+    const navigation = useNavigation()
 
     /**
      * 하단 가로 스크롤 뷰에 렌더링할 이미지
@@ -184,6 +187,7 @@ const MediaUploadScreen = () => {
             .then((data) => {
                 alert("업로드 완료!");
                 console.log("업로드성공함(DB서버)");
+                navigation.navigate("ResultMediaScreen")
             })
             .catch((error) => {
                 alert("업로드 실패: " + error.message);
@@ -209,7 +213,7 @@ const MediaUploadScreen = () => {
                         renderImages()
                     }
                 </ScrollView>
-                <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => uploadSelectedFace()}>
+                <TouchableOpacity style={{ marginLeft: "1%" }} onPress={() => uploadSelectedFace()}>
                     <Feather name="check-square" size={30} color="#777777" />
                 </TouchableOpacity>
             </View>
@@ -223,7 +227,7 @@ const MediaUploadScreen = () => {
                     <Entypo name="video" size={28} color="#777777" />
                 </TouchableOpacity>
 
-                <TouchableOpacity style={[styles.uploadButton, { marginLeft: 100 }]} onPress={() => uploadMedia()}>
+                <TouchableOpacity style={[styles.uploadButton, { marginLeft: "30%" }]} onPress={() => uploadMedia()}>
                     <Feather name="upload" size={24} color="#777777" />
                 </TouchableOpacity>
             </View>
@@ -240,23 +244,23 @@ const styles = StyleSheet.create({
         justifyContent: "center"
     },
     titleContainer: {
-        marginTop: 30
+        marginTop: "8%"
     },
     title: {
-        fontSize: 24,
+        fontSize: "24%",
         fontWeight: "bold",
         color: "#333333",
-        marginBottom: 20
+        marginBottom: "10%"
     },
     previewContainer: {
         width: width - 40,
         height: "65%",
         alignItems: "center",
         justifyContent: "center",
-        marginBottom: 10
+        marginBottom: "1%"
     },
     scrollContainer: {
-        height: 70,
+        height: "10%",
         width: width - 40,
         justifyContent: "center"
     },
@@ -264,19 +268,19 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-around",
         borderRadius: 5,
-        marginTop: 20,
-        paddingHorizontal: 20
+        marginTop: "7%",
+        paddingHorizontal: "20%"
     },
     uploadButton: {
-        paddingVertical: 12,
-        paddingHorizontal: 20,
-        marginHorizontal: 10,
-        borderRadius: 100
+        paddingVertical: "5%",
+        paddingHorizontal: "3%",
+        marginHorizontal: "20%",
+        borderRadius: "100%"
     },
     uploadText: {
         color: "#333333",
         fontWeight: "bold",
-        fontSize: 18
+        fontSize: "18%"
     },
     thumbnail: {
         width: 70,
