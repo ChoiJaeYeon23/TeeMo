@@ -1,6 +1,5 @@
 import { createStackNavigator } from "@react-navigation/stack"
 
-import NavigationScreen from "./NavigationScreen"
 import TakePictureScreen from "../screens/TakePictureScreen"
 import RecordScreen from "../screens/RecordScreen"
 import UserListScreen from "../screens/UserListScreen"
@@ -10,20 +9,13 @@ import SignInScreen from "../screens/SignInScreen"
 import SignUpScreen from "../screens/SignUpScreen"
 import MediaUploadScreen from "../screens/MediaUploadScreen"
 import ResultMediaScreen from "../screens/ResultMediaScreen"
+import ChoiceMedia from "../screens/ChoiceMedia"
 
 const Stack = createStackNavigator()
 
 const Navigation = () => {
     return (
-        <Stack.Navigator initialRouteName="NavigationScreen">
-            <Stack.Screen
-                name="NavigationScreen"
-                component={NavigationScreen}
-                options={{
-                    headerShown: false,
-                    // gestureEnabled: false
-                }}
-            />
+        <Stack.Navigator initialRouteName="SignInScreen">
             <Stack.Screen
                 name="TakePictureScreen"
                 component={TakePictureScreen}
@@ -91,6 +83,14 @@ const Navigation = () => {
             <Stack.Screen
                 name="ResultMediaScreen"
                 component={ResultMediaScreen}
+                options={{
+                    headerShown: false,
+                    // gestureEnabled: false
+                }}
+            />
+            <Stack.Screen
+                name="ChoiceMedia"
+                component={ChoiceMedia}
                 options={{
                     headerShown: false,
                     // gestureEnabled: false

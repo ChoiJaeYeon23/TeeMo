@@ -1,80 +1,96 @@
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef, useEffect } from "react";
 import {
     View,
     TouchableOpacity,
     StyleSheet,
     Alert
-} from "react-native"
-import { Camera, CameraView } from "expo-camera"
-import * as MediaLibrary from "expo-media-library"
-import { useNavigation } from "@react-navigation/native"
-import { Ionicons, FontAwesome6 } from "@expo/vector-icons"
+} from "react-native";
+import { Camera, CameraView } from "expo-camera";
+import * as MediaLibrary from "expo-media-library";
+import { useNavigation } from "@react-navigation/native";
+import { Ionicons, FontAwesome6 } from "@expo/vector-icons";
+import io from "socket.io-client";
 
-/**
- * 동영상 녹화 페이지입니다.
- * 사진 모드로 전환 시 TakePictureScreen 화면을 반환합니다.
- */
 const RecordScreen = () => {
-    const navigation = useNavigation()
+    const navigation = useNavigation();
+    const socketRef = useRef(null);
 
-    const cameraRef = useRef(null)
-    const [cameraType, setCameraType] = useState("front")
-    const [hasCameraPermission, setHasCameraPermission] = useState(null)
-    const [hasMicrophonePermission, setHasMicrophonePermission] = useState(null)
-    const [isRecording, setIsRecording] = useState(false)
-    const [video, setVideo] = useState(null)
-    const cameraMode = "video"
+    // 웹 소켓 서버에 연결
+    useEffect(() => {
+        socketRef.current = io("ws://13.209.77.184:5000");
+
+        socketRef.current.on("connect", () => {
+            console.log("Connected to server");
+        });
+
+        socketRef.current.on("disconnect", () => {
+            console.log("Disconnected from server");
+        });
+
+        return () => {
+            socketRef.current.disconnect();
+        };
+    }, []);
+
+    const cameraRef = useRef(null);
+    const [cameraType, setCameraType] = useState("front");
+    const [hasCameraPermission, setHasCameraPermission] = useState(null);
+    const [hasMicrophonePermission, setHasMicrophonePermission] = useState(null);
+    const [isRecording, setIsRecording] = useState(false);
+    const [video, setVideo] = useState(null);
+    const cameraMode = "video";
+
     // 페이지 로드 시 카메라, 녹음, 갤러리 접근 권한 허용 여부 확인
     useEffect(() => {
         (async () => {
-            MediaLibrary.requestPermissionsAsync()
-            const cameraStatus = await Camera.requestCameraPermissionsAsync()
-            const microphoneStatus = await Camera.requestMicrophonePermissionsAsync()
+            MediaLibrary.requestPermissionsAsync();
+            const cameraStatus = await Camera.requestCameraPermissionsAsync();
+            const microphoneStatus = await Camera.requestMicrophonePermissionsAsync();
 
-            setHasCameraPermission(cameraStatus.status === "granted")
-            setHasMicrophonePermission(microphoneStatus.status === "granted")
-        })()
-    }, [])
+            setHasCameraPermission(cameraStatus.status === "granted");
+            setHasMicrophonePermission(microphoneStatus.status === "granted");
+        })();
+    }, []);
 
     // 카메라 타입(전면, 후면) 전환 함수
     const toggleCameraType = () => {
         setCameraType(current => (
             current === "front" ? "back" : "front"
-        ))
-    }
+        ));
+    };
 
     const closeCamera = () => {
-        navigation.goBack()
-    }
+        navigation.goBack();
+    };
 
     // 녹화 시작 함수
     const recordVideo = async () => {
         if (cameraRef) {
-            console.log(cameraRef)
+            console.log(cameraRef);
             try {
-                setIsRecording(true)
-                const data = await cameraRef.current.recordAsync()
-                console.log(data)
-                setVideo(data.uri)
-                setIsRecording(false)
+                setIsRecording(true);
+                const data = await cameraRef.current.recordAsync();
+                console.log(data);
+                setVideo(data.uri);
+                setIsRecording(false);
                 try {
-                    await MediaLibrary.createAssetAsync(data.uri)
-                    Alert.alert("영상이 저장되었습니다")
-                    setVideo(null)
+                    await MediaLibrary.createAssetAsync(data.uri);
+                    Alert.alert("영상이 저장되었습니다");
+                    setVideo(null);
                 } catch (e) {
-                    console.log("영상 저장 오류", e)
+                    console.log("영상 저장 오류", e);
                 }
             } catch (e) {
-                console.log("영상 녹화 오류", e)
+                console.log("영상 녹화 오류", e);
             }
         }
-    }
+    };
 
     // 녹화 종료 함수
     const stopRecording = () => {
-        setIsRecording(false)
-        cameraRef.current.stopRecording()
-    }
+        setIsRecording(false);
+        cameraRef.current.stopRecording();
+    };
 
     return (
         <View style={styles.cameraContainer}>
@@ -114,10 +130,10 @@ const RecordScreen = () => {
                 </View>
             </CameraView>
         </View>
-    )
-}
+    );
+};
 
-export default RecordScreen
+export default RecordScreen;
 
 const styles = StyleSheet.create({
     cameraContainer: {
@@ -148,4 +164,4 @@ const styles = StyleSheet.create({
         alignSelf: "flex-end",
         alignItems: "center"
     }
-})
+});
