@@ -9,6 +9,10 @@ const ChoiceMedia = () => {
         navigation.navigate("MediaUploadScreen");
     };
 
+    const test = () => {
+        navigation.navigate("Test");
+    };
+
     const recordVideo = () => {
         navigation.navigate("RecordScreen");
     };
@@ -28,6 +32,9 @@ const ChoiceMedia = () => {
                     <Text style={[texts.subTitle2]}>비실시간</Text>
                     <TouchableOpacity onPress={uploadImage} style={containers.circleButton}>
                         <Text style={texts.buttonText}>이미지</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={test} style={containers.circleButton}>
+                        <Text style={texts.buttonText}>testtesttesttest</Text>
                     </TouchableOpacity>
                 </View>
 
