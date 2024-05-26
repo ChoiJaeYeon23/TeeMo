@@ -10,6 +10,8 @@ import SignUpScreen from "../screens/SignUpScreen"
 import MediaUploadScreen from "../screens/MediaUploadScreen"
 import ResultMediaScreen from "../screens/ResultMediaScreen"
 import ChoiceMedia from "../screens/ChoiceMedia"
+import Test from "../screens/Test"
+import MosaicTest from "../screens/MosaicTest"
 
 const Stack = createStackNavigator()
 
@@ -91,6 +93,22 @@ const Navigation = () => {
             <Stack.Screen
                 name="ChoiceMedia"
                 component={ChoiceMedia}
+                options={{
+                    headerShown: false,
+                    // gestureEnabled: false
+                }}
+            />
+            <Stack.Screen
+                name="Test"
+                component={Test}
+                options={{
+                    headerShown: false,
+                    // gestureEnabled: false
+                }}
+            />
+            <Stack.Screen
+                name="MosaicTest"
+                component={MosaicTest}
                 options={{
                     headerShown: false,
                     // gestureEnabled: false
