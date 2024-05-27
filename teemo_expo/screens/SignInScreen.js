@@ -97,34 +97,39 @@ const SignInScreen = () => {
                     />
                 </View>
 
-                <View style={styles.inputContainer}>
+                <View style={styles.signinContainer}>
+                    <View style={styles.inputContainer}>
+                        <TextInput
+                            value={id}
+                            onChangeText={setId}
+                            placeholder="아이디"
+                            style={styles.input}
+                            placeholderTextColor="#A0C49D"
+                            returnKeyType="next"
+                            onSubmitEditing={() => { passwordInput.focus() }}
+                            onFocus={() => clearId()}
+                        />
 
-                    <TextInput
-                        value={id}
-                        onChangeText={setId}
-                        placeholder="  아이디"
-                        style={styles.input}
-                        returnKeyType="next"
-                        onSubmitEditing={() => { passwordInput.focus() }}
-                        onFocus={() => clearId()}
-                    />
+                        <View style={styles.separator} />
 
-                    <TextInput
-                        ref={(input) => { passwordInput = input }}
-                        value={password}
-                        onChangeText={setPassword}
-                        placeholder="  비밀번호"
-                        secureTextEntry={true}
-                        style={styles.input}
-                        returnKeyType="done"
-                        onFocus={() => clearPassword()}
-                    />
+                        <TextInput
+                            ref={(input) => { passwordInput = input }}
+                            value={password}
+                            onChangeText={setPassword}
+                            placeholder="비밀번호"
+                            placeholderTextColor="#A0C49D"
+                            secureTextEntry={true}
+                            style={styles.input}
+                            returnKeyType="done"
+                            onFocus={() => clearPassword()}
+                        />
+                    </View>
 
-                    <TouchableOpacity onPress={signInButtonHandler} style={styles.signinContainer} activeOpacity={0.9}>
+                    <TouchableOpacity onPress={signInButtonHandler} style={styles.signinButton} activeOpacity={0.9}>
                         <Text style={styles.signin}>로그인</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={signUpButtonHandler} style={styles.signupContainer} activeOpacity={0.9}>
+                    <TouchableOpacity onPress={signUpButtonHandler} style={styles.signupButton} activeOpacity={0.9}>
                         <Text style={styles.signup}>회원가입</Text>
                     </TouchableOpacity>
 
@@ -140,52 +145,63 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "space-around"
     },
     logoContainer: {
         width: "100%",
-        height: "30%",
+        height: "50%",
         alignItems: "center",
-        justifyContent: "flex-start",
-        marginBottom: "15%"
+        justifyContent: "flex-end",
+        paddingBottom: "10%"
     },
     logo: {
-        width: "65%",
-        height: "105%"
+        width: "40%",
+        height: "40%"
+    },
+    signinContainer: {
+        width: "100%",
+        height: "50%",
+        alignItems: "center",
+        justifyContent: "flex-start"
     },
     inputContainer: {
+        width: "70%",
+        height: "21%",
+        borderRadius: 15,
+        borderWidth: 1.5,
+        borderColor: "#C4D7B2",
+        marginBottom: "8%"
+    },
+    separator: {
+        height: 1.8,
         width: "100%",
-        height: "20%",
-        alignItems: "center"
+        backgroundColor: "#C4D7B2",
     },
     input: {
         fontSize: "18%",
+        width: "100%",
+        height: "50%",
         color: "#444444",
-        width: "50%",
-        borderWidth: 1,
-        borderColor: "#33333340",
-        padding: "2%",
-        marginBottom: "2.5%",
-        borderRadius: 100
+        paddingHorizontal: "5%"
     },
-    signinContainer: {
-        backgroundColor: "#33333340",
+    signinButton: {
+        backgroundColor: "#A0C49D",
         padding: "3%",
-        borderRadius: 100,
-        width: "50%",
+        borderRadius: 15,
+        width: "70%",
         alignItems: "center",
-        marginBottom: "1%"
+        marginBottom: "1.5%"
     },
     signin: {
         fontSize: "18%",
-        color: "#FFF",
+        color: "#FFFFFF",
         fontWeight: "600"
     },
-    signupContainer: {
+    signupButton: {
         padding: "1%"
     },
     signup: {
         fontSize: "15%",
-        color: "#444444"
+        color: "#A0C49D"
     }
 })

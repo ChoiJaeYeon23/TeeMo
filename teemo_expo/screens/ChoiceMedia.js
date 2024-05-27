@@ -1,144 +1,77 @@
 import React from "react";
-import { SafeAreaView, View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { SafeAreaView, View, Text, TouchableOpacity, StyleSheet } from "react-native"
+import { useNavigation } from "@react-navigation/native"
 
 const ChoiceMedia = () => {
-    const navigation = useNavigation();
-
-    const uploadImage = () => {
-        navigation.navigate("MediaUploadScreen");
-    };
-
-    const test = () => {
-        navigation.navigate("Test");
-    };
-
-    const recordVideo = () => {
-        navigation.navigate("RecordScreen");
-    };
-
-    const addUser = () => {
-        navigation.navigate("UserListScreen");
-    };
+    const navigation = useNavigation()
 
     return (
-        <SafeAreaView style={containers.container}>
-            <View style={containers.top}>
-                <Text style={texts.title}>처리 방식 선택</Text>
+        <SafeAreaView style={styles.container}>
+            <View style={styles.headerContainer}>
+                <Text style={styles.titleText}>시작하기</Text>
             </View>
-            <View style={containers.middle}>
-                <Text style={texts.subTitle}>모자이크 처리를 하고 싶은 방식을 선택해주세요.</Text>
-                <View style={styles.time}>
-                    <Text style={[texts.subTitle2]}>비실시간</Text>
-                    <TouchableOpacity onPress={uploadImage} style={containers.circleButton}>
-                        <Text style={texts.buttonText}>이미지</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={test} style={containers.circleButton}>
-                        <Text style={texts.buttonText}>testtesttesttest</Text>
-                    </TouchableOpacity>
-                </View>
 
-                <View style={containers.buttonContainer}>
-                    <View style={styles.time}>
-                        <Text style={[texts.subTitle2]}>실시간</Text>
-                        <TouchableOpacity onPress={addUser} style={containers.rectButton}>
-                            <Text style={texts.buttonText}>인물 추가</Text>
-                        </TouchableOpacity>
-                        <View style={{ marginTop: "3%" }}>
-                            <TouchableOpacity onPress={recordVideo} style={containers.rectButton}>
-                                <Text style={texts.buttonText}>녹화 시작</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
+            <View style={styles.exContainer}>
+                <View style={{backgroundColor: "#E1ECC8", width: "100%", height: "100%"}}>
+                    <Text></Text>
                 </View>
+                {/** */}
+            </View>
+
+            <View style={styles.buttonContainer}>
+                <TouchableOpacity onPress={() => navigation.navigate("NavigationScreen")} style={styles.button}>
+                    <Text style={styles.buttonText}>미디어 촬영하기</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={() => navigation.navigate("Test")} style={styles.button}>
+                    <Text style={styles.buttonText}>미디어 업로드하기</Text>
+                </TouchableOpacity>
             </View>
         </SafeAreaView>
-    );
-};
+    )
+}
 
 export default ChoiceMedia;
 
-const containers = StyleSheet.create({
+const styles = StyleSheet.create({
     container: {
         flex: 1,
+        alignItems: "center"
+    },
+    headerContainer: {
         width: "100%",
-        alignItems: "center",
-    },
-    top: {
-        height: "25%",
-        width: "100%",
-        alignItems: "center",
-        justifyContent: "center",
-        marginTop: "3%",
-    },
-    middle: {
-        height: "50%",
-        width: "100%",
-        alignItems: "center",
-        justifyContent: "center",
-    },
-    bottom: {
-        height: "30%",
-        width: "100%",
-        alignItems: "center",
-        justifyContent: "center",
-        flexDirection: "row",
-        justifyContent: "space-around",
-    },
-    buttonContainer: {
-        flexDirection: "row",
-        justifyContent: "center",
-        width: "100%",
-        marginBottom: "5%",
-    },
-    circleButton: {
-        backgroundColor: "#FFF",
-        borderWidth: "1%",
-        borderColor: "#000",
-        padding: "7%",
-        alignItems: "center",
-        justifyContent: "center",
-        width: "35%",
-        height: "35%",
-    },
-    rectButton: {
-        backgroundColor: "#FFF",
-        borderWidth: "1%",
-        borderColor: "#000",
-        paddingVertical: "7%",
-        paddingHorizontal: "23%",
-        marginHorizontal: "7%",
-        alignItems: "center",
+        height: "13%",
         justifyContent: "center"
     },
-});
-
-const texts = StyleSheet.create({
-    title: {
-        fontSize: "35%",
-        fontWeight: "bold",
-        color: "#333",
+    exContainer: {
+        width: "100%",
+        height: "67%",
+        paddingHorizontal: "3%",
+        paddingBottom: "3%"
     },
-    subTitle: {
-        fontSize: "22%",
-        color: "#FF0000",
-        textAlign: "center",
+    buttonContainer: {
+        width: "100%",
+        height: "20%",
+        paddingVertical: "4%",
+        alignItems: "center"
     },
-    subTitle2: {
-        fontSize: "20%",
-        color: "#000",
-        textAlign: "center",
-        marginTop: "15%",
-        padding: "1%"
+    titleText: {
+        fontSize: "30%",
+        fontWeight: "900",
+        color: "#A0C49D",
+        marginLeft: "7%"
+    },
+    button: {
+        width: "80%",
+        backgroundColor: "#A0C49D",
+        padding: "5%",
+        borderRadius: 15,
+        alignItems: "center",
+        marginBottom: "4%"
     },
     buttonText: {
-        fontSize: "24%",
-        color: "#000",
-    },
-});
-
-const styles = StyleSheet.create({
-    time: {
-        alignItems: "center",
-    },
-});
+        fontSize: "20%",
+        color: "#FFFFFF",
+        fontWeight: "600"
+    }
+})
