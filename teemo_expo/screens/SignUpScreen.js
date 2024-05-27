@@ -175,7 +175,6 @@ const SignUpScreen = () => {
                                 onSubmitEditing={() => { passwordInput.focus() }}
                                 onFocus={() => clearInput("id")}
                             />
-
                             <TouchableOpacity onPress={checkID} style={styles.checkContainer}>
                                 <Text style={styles.text}>확인</Text>
                             </TouchableOpacity>
@@ -260,13 +259,14 @@ const styles = StyleSheet.create({
         paddingHorizontal: "4%"
     },
     checkContainer: {
-        width: "13%",
+        width: "15%",
         height: "100%",
+        alignItems: "center",
         justifyContent: "center",
         marginBottom: 1,
         paddingHorizontal: 4,
         paddingVertical: 3,
-        marginLeft: 2
+        marginRight:"10%"
     },
     separator: {
         height: 1.8,
