@@ -12,12 +12,17 @@ import ResultMediaScreen from "../screens/ResultMediaScreen"
 import ChoiceMedia from "../screens/ChoiceMedia"
 import Test from "../screens/Test"
 import MosaicTest from "../screens/MosaicTest"
+import NavigationScreen from "./NavigationScreen"
 
 const Stack = createStackNavigator()
 
 const Navigation = () => {
     return (
-        <Stack.Navigator initialRouteName="SignInScreen">
+        <Stack.Navigator initialRouteName="NavigationScreen">
+            <Stack.Screen
+                name="NavigationScreen"
+                component={NavigationScreen}
+            />
             <Stack.Screen
                 name="TakePictureScreen"
                 component={TakePictureScreen}
