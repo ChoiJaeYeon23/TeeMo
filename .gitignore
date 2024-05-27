@@ -1,5 +1,6 @@
-# app.py
+# 플라스크 코드(app.py는 ec2서버코드, applocal.py는 로컬서버코드)
 app.py
+applocal.py
 
 # sql
 server.sql
