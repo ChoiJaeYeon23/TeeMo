@@ -54,6 +54,9 @@ const SignInScreen = () => {
                 id: id,
                 pw: password
             }
+
+            const loginNow = true;
+
             // 서버로 로그인 요청을 보내는 함수
             fetch("http://3.34.125.163:5001/api/signin", {
                 method: "POST",
@@ -71,10 +74,10 @@ const SignInScreen = () => {
                     return response.json();
                 })
                 .then((data) => {
-                    alert(data.message); // 로그인 성공 알림
+                    // alert(data.message); // 로그인 성공 알림
                     console.log("로그인 성공(DB 서버)");
                     clearAll();
-                    navigation.navigate("ChoiceMedia"); // 미디어 선택 화면으로 이동
+                    navigation.navigate("ChoiceMedia", { id }); // 미디어 선택 화면으로 이동
                 })
                 .catch((error) => {
                     alert("로그인 실패: " + error.message);
@@ -104,20 +107,20 @@ const SignInScreen = () => {
                             onChangeText={setId}
                             placeholder="아이디"
                             style={styles.input}
-                            placeholderTextColor="#A0C49D"
+                            placeholderTextColor="#AAAAAA"
                             returnKeyType="next"
                             onSubmitEditing={() => { passwordInput.focus() }}
                             onFocus={() => clearId()}
                         />
+                    </View>
 
-                        <View style={styles.separator} />
-
+                    <View style={styles.inputContainer}>
                         <TextInput
                             ref={(input) => { passwordInput = input }}
                             value={password}
                             onChangeText={setPassword}
                             placeholder="비밀번호"
-                            placeholderTextColor="#A0C49D"
+                            placeholderTextColor="#AAAAAA"
                             secureTextEntry={true}
                             style={styles.input}
                             returnKeyType="done"
@@ -164,36 +167,45 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "flex-start"
     },
-    inputContainer: {
-        width: "70%",
-        height: "21%",
-        borderRadius: 15,
-        borderWidth: 1.5,
-        borderColor: "#C4D7B2",
-        marginBottom: "8%"
-    },
     separator: {
         height: 1.8,
         width: "100%",
         backgroundColor: "#C4D7B2",
     },
+    inputContainer: {
+        width: "80%",
+        marginBottom: "3%",
+        shadowColor: "#000", // 그림자 색상
+        shadowOffset: { width: 0, height: 3 }, // 그림자 오프셋
+        shadowOpacity: 0.2, // 그림자 투명도
+        shadowRadius: 3, // 그림자 반경
+        elevation: 5, // 그림자 높이 (Android용)
+    },
     input: {
         fontSize: "18%",
         width: "100%",
-        height: "50%",
         color: "#444444",
-        paddingHorizontal: "5%"
+        paddingVertical: "3%",
+        paddingHorizontal: "5%",
+        borderRadius: 10,
+        borderColor: "#AAAAAA",
+        backgroundColor: "#fff"
     },
     signinButton: {
         backgroundColor: "#A0C49D",
-        padding: "3%",
-        borderRadius: 15,
-        width: "70%",
+        padding: "4%",
+        borderRadius: 10,
+        width: "80%",
         alignItems: "center",
-        marginBottom: "1.5%"
+        marginBottom: "1.5%",
+        shadowColor: "#000", // 그림자 색상
+        shadowOffset: { width: 0, height: 3 }, // 그림자 오프셋
+        shadowOpacity: 0.3, // 그림자 투명도
+        shadowRadius: 3, // 그림자 반경
+        elevation: 5, // 그림자 높이 (Android용)
     },
     signin: {
-        fontSize: "18%",
+        fontSize: "20%",
         color: "#FFFFFF",
         fontWeight: "600"
     },
@@ -201,7 +213,7 @@ const styles = StyleSheet.create({
         padding: "1%"
     },
     signup: {
-        fontSize: "15%",
+        fontSize: "17%",
         color: "#A0C49D"
     }
 })

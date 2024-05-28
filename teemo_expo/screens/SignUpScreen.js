@@ -18,11 +18,12 @@ import { SimpleLineIcons } from "@expo/vector-icons"
 
 const SignUpScreen = () => {
     const navigation = useNavigation();
+    const [nickname, setNickname] = useState("")
     const [id, setId] = useState("");
     const [password, setPassword] = useState("");
     const [profilePic, setProfilePic] = useState(null);
     const [availableIDText, setAvailableIDText] = useState("아이디 중복 여부를 확인해주세요.");
-    const [availableIDColor, setAvailableIDColor] = useState("#A0C49D");
+    const [availableIDColor, setAvailableIDColor] = useState("#AAAAAA");
 
     const keyboardOff = () => {
         Keyboard.dismiss();
@@ -30,6 +31,9 @@ const SignUpScreen = () => {
 
     const clearInput = (inputType) => {
         switch (inputType) {
+            case "nickname":
+                setNickname("")
+                break
             case "id":
                 setId("");
                 break;
@@ -96,6 +100,7 @@ const SignUpScreen = () => {
 
         if (!result.canceled && result.assets) {
             setProfilePic(result.assets[0].uri)
+            console.log(result.assets[0].uri)
         }
     };
 
@@ -153,7 +158,7 @@ const SignUpScreen = () => {
                             </View>
                         ) : (
                             <View style={styles.imageContainer}>
-                                <SimpleLineIcons name="user" size={130} color="#F7FFE5" />
+                                <SimpleLineIcons name="user" size={130} color="#fff" />
                             </View>
                         )
                     }
@@ -162,32 +167,46 @@ const SignUpScreen = () => {
                     </TouchableOpacity>
                 </View>
 
+                <View style={[styles.inputContainer, {marginBottom: "10%"}]}>
+                    <TextInput
+                        value={nickname}
+                        onChangeText={setNickname}
+                        placeholder="닉네임"
+                        placeholderTextColor="#AAAAAA"
+                        style={styles.input}
+                        returnKeyType="next"
+                        onSubmitEditing={() => { idInput.focus() }}
+                        onFocus={() => clearInput("nickname")}
+                    />
+                </View>
+
                 <View style={styles.signupContainer}>
+                    <View style={styles.idInputContainer}>
+                        <TextInput
+                            ref={(input) => { idInput = input }}
+                            value={id}
+                            onChangeText={setId}
+                            placeholder="아이디"
+                            placeholderTextColor="#AAAAAA"
+                            style={styles.idInput}
+                            returnKeyType="next"
+                            onSubmitEditing={() => { passwordInput.focus() }}
+                            onFocus={() => clearInput("id")}
+                        />
+
+                        <TouchableOpacity onPress={checkID} style={styles.checkContainer}>
+                            <Text style={{ fontSize: "16%", color: "#A0C49D" }}>확인</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <Text style={{ fontSize: "14%", color: availableIDColor, marginBottom: "3%" }}>{availableIDText}</Text>
+
                     <View style={styles.inputContainer}>
-                        <View style={{ flexDirection: "row", alignItems: "center", height: "50%" }}>
-                            <TextInput
-                                value={id}
-                                onChangeText={setId}
-                                placeholder={availableIDText}
-                                placeholderTextColor={availableIDColor}
-                                style={styles.idInput}
-                                returnKeyType="next"
-                                onSubmitEditing={() => { passwordInput.focus() }}
-                                onFocus={() => clearInput("id")}
-                            />
-                            <TouchableOpacity onPress={checkID} style={styles.checkContainer}>
-                                <Text style={styles.text}>확인</Text>
-                            </TouchableOpacity>
-                        </View>
-
-                        <View style={styles.separator} />
-
                         <TextInput
                             ref={(input) => { passwordInput = input }}
                             value={password}
                             onChangeText={setPassword}
                             placeholder="비밀번호"
-                            placeholderTextColor="#A0C49D"
+                            placeholderTextColor="#AAAAAA"
                             secureTextEntry={true}
                             style={styles.input}
                             returnKeyType="done"
@@ -230,70 +249,90 @@ const styles = StyleSheet.create({
         height: "60%",
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "#E1ECC8",
-        marginBottom: "3%"
+        backgroundColor: "#C4D7B2",
+        marginBottom: "3%",
+        shadowColor: "#A0C49D", // 그림자 색상
+        shadowOffset: { width: 0, height: 3 }, // 그림자 오프셋
+        shadowOpacity: 0.6, // 그림자 투명도
+        shadowRadius: 4, // 그림자 반경
+        elevation: 5, // 그림자 높이 (Android용)
     },
     profilePic: {
-        width: "98%",
-        height: "98%"
+        width: "100%",
+        height: "100%"
     },
     signupContainer: {
         width: "100%",
         height: "50%",
         alignItems: "center",
-        justifyContent: "flex-start"
+        justifyContent: "flex-start",
     },
     inputContainer: {
-        width: "70%",
-        height: "21%",
-        borderRadius: 15,
-        borderWidth: 1.5,
-        borderColor: "#C4D7B2",
-        marginBottom: "8%"
+        width: "80%",
+        marginBottom: "3%",
+        shadowColor: "#000", // 그림자 색상
+        shadowOffset: { width: 0, height: 3 }, // 그림자 오프셋
+        shadowOpacity: 0.2, // 그림자 투명도
+        shadowRadius: 3, // 그림자 반경
+        elevation: 5, // 그림자 높이 (Android용)
+    },
+    idInputContainer: {
+        width: "80%",
+        marginBottom: "3%",
+        flexDirection: "row",
+        backgroundColor: "#fff",
+        borderRadius: 10,
+        shadowColor: "#000", // 그림자 색상
+        shadowOffset: { width: 0, height: 3 }, // 그림자 오프셋
+        shadowOpacity: 0.2, // 그림자 투명도
+        shadowRadius: 3, // 그림자 반경
+        elevation: 5, // 그림자 높이 (Android용)
     },
     idInput: {
         fontSize: "18%",
-        color: "#A0C49D",
-        width: "86%",
-        height: "100%",
-        paddingHorizontal: "4%"
+        width: "87%",
+        color: "#444444",
+        paddingVertical: "3%",
+        paddingHorizontal: "5%"
     },
     checkContainer: {
-        width: "15%",
-        height: "100%",
+        width: "13%",
         alignItems: "center",
         justifyContent: "center",
         marginBottom: 1,
         paddingHorizontal: 4,
         paddingVertical: 3,
-        marginRight:"10%"
-    },
-    separator: {
-        height: 1.8,
-        width: "100%",
-        backgroundColor: "#C4D7B2",
+        marginRight: "10%"
     },
     input: {
-        fontSize: 18,
-        color: "#444444",
+        fontSize: "18%",
         width: "100%",
-        height: "50%",
-        paddingHorizontal: "5%"
+        color: "#444444",
+        paddingVertical: "3%",
+        paddingHorizontal: "5%",
+        borderRadius: 10,
+        borderColor: "#AAAAAA",
+        backgroundColor: "#fff"
     },
     signupButton: {
         backgroundColor: "#A0C49D",
-        padding: "3%",
-        borderRadius: 15,
-        width: "70%",
-        alignItems: "center"
+        padding: "4%",
+        borderRadius: 10,
+        width: "80%",
+        alignItems: "center",
+        shadowColor: "#000", // 그림자 색상
+        shadowOffset: { width: 0, height: 3 }, // 그림자 오프셋
+        shadowOpacity: 0.3, // 그림자 투명도
+        shadowRadius: 3, // 그림자 반경
+        elevation: 5, // 그림자 높이 (Android용)
     },
     signup: {
-        fontSize: "18%",
+        fontSize: "20%",
         color: "#FFFFFF",
         fontWeight: "600"
     },
     text: {
-        fontSize: 18,
+        fontSize: "18%",
         color: "#A0C49D"
     }
 });

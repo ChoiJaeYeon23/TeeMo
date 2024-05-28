@@ -7,10 +7,13 @@ import {
     StyleSheet,
     TouchableOpacity,
     Alert,
-    Modal
+    Modal,
+    Animated,
+    TouchableWithoutFeedback,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from '@react-navigation/native';
+import { Video } from "expo-av"
 
 const MosaicTest = ({ route }) => {
     const { userList } = route.params;
@@ -19,7 +22,18 @@ const MosaicTest = ({ route }) => {
 
     const navigation = useNavigation()
     const [modalVisible, setModalVisible] = useState(false)
-    const [isPhoto, setIsPhoto] = useState(true)
+
+    const [mediaType, setMediaType] = useState("PHOTO")
+    const [media, setMedia] = useState({
+        fileName: "",
+        height: "",
+        width: "",
+        mimeType: "",
+        type: "",
+        duration: "",
+        uri: ""
+    })
+    const [mediaUri, setMediaUri] = useState("")
 
     // 사용자가 미디어를 추가로 업로드하는 함수
     const handleUploadMedia = async () => {
@@ -114,39 +128,124 @@ const MosaicTest = ({ route }) => {
         }
     };
 
+    const openModal = () => {
+        setModalVisible(true)
+    }
+
+    const closeModal = () => {
+        setModalVisible(false)
+    }
+
+    // 갤러리에서 사진을 선택합니다
+    const pickPhoto = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: false,   // 선택 시 편집 여부
+            allowsMultipleSelection: false, // 선택 여러 개 여부
+            selectionLimit: 1,  // 선택 개수 제한(숫자 형식, 지금은 1개)
+            quality: 1, // 품질 (0~1까지의 값)
+            exif: false,    // 메타데이터 포함 여부
+        })
+
+        console.log(result)
+
+        setMedia({
+            fileName: result.assets[0].fileName,
+            height: result.assets[0].height,
+            width: result.assets[0].width,
+            mimeType: result.assets[0].mimeType,    // 미디어 유형/타입 (ex. video/mp4)
+            type: result.assets[0].type,    // 미디어 타입 (ex. jpg)
+            duration: result.assets[0].duration,    // 동영상 재생시간
+            uri: result.assets[0].uri
+        })
+
+        if (!result.canceled) {
+            setMediaType("PHOTO")
+            setMediaUri(result.assets[0].uri)
+            setModalVisible(false)
+        } else {
+            Alert.alert("사진 선택이 취소되었습니다.")
+        }
+    }
+
+    // 갤러리에서 동영상을 선택합니다
+    const pickVideo = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Videos,
+            allowsEditing: false,   // 선택 시 편집 여부
+            allowsMultipleSelection: false, // 선택 여러 개 여부
+            selectionLimit: 1,  // 선택 개수 제한(숫자 형식, 지금은 1개)
+            quality: 1, // 품질 (0~1까지의 값)
+            exif: false,    // 메타데이터 포함 여부
+        })
+
+        console.log(result)
+
+        // 선택한 미디어(사진, 동영상)의 정보를 저장
+        setMedia({
+            fileName: result.assets[0].fileName,
+            height: result.assets[0].height,
+            width: result.assets[0].width,
+            mimeType: result.assets[0].mimeType,    // 미디어 유형/타입 (ex. video/mp4)
+            type: result.assets[0].type,    // 미디어 타입 (ex. jpg)
+            duration: result.assets[0].duration,    // 동영상 재생시간 (사진의 경우 null)
+            uri: result.assets[0].uri
+        })
+
+        if (!result.canceled) {
+            setMediaType("VIDEO")
+            setMediaUri(result.assets[0].uri)
+            setModalVisible(false)
+        } else {
+            Alert.alert("동영상 선택이 취소되었습니다.")
+        }
+    }
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.headerContainer}>
                 <Text style={styles.titleText}>제작하기</Text>
-                <Text style={styles.guideText}>모자이크하고 싶은 사진/동영상을 선택해주세요.</Text>
             </View>
-
-            {/* <View style={styles.exContainer}>
-                <View style={styles.imageContainer}>
-                    {
-                        userList.map(({ id, imageUrl }, index) => (
-                            <View key={index} style={styles.userItem}>
-                                <Text style={styles.userId}>{id}</Text>
-                                <Image source={{ uri: imageUrl }} style={styles.image} />
-                            </View>
-                        ))
-                    }
-                </View>
-            </View> */}
 
             <View style={styles.exContainer}>
                 {
-                    additionalMedia ? (
-                        <Image source={{ uri: additionalMedia }} style={styles.image} />
+                    mediaUri ? (
+                        // <Image source={{ uri: additionalMedia }} style={styles.image} />
+                        mediaType === "PHOTO" ? (
+                            mediaUri != "" ? (
+                                <Image
+                                    source={{ uri: mediaUri }}
+                                    style={styles.media}
+                                    resizeMode="contain"
+                                />
+                            ) : (
+                                <Text>아나</Text>
+                            )
+                        ) : (
+                            mediaUri != "" ? (
+                                <Video
+                                    source={{ uri: mediaUri }}
+                                    style={styles.media}
+                                    shouldPlay={true}
+                                    useNativeControls={true}
+                                />
+                            ) : (
+                                <View></View>
+                            )
+                        )
                     ) : (
                         <Text>이미지를</Text>
                     )
                 }
             </View>
 
-            <TouchableOpacity onPress={handleUploadMedia} style={styles.uploadButton}>
-                <Text style={styles.uploadText}>사진 / 동영상 선택하기</Text>
-            </TouchableOpacity>
+            <View style={styles.uploadButtonContainer}>
+                <TouchableOpacity onPress={handleUploadMedia} style={styles.uploadButton}>
+                    <Text style={styles.uploadText}>사진 / 동영상 선택하기</Text>
+                </TouchableOpacity>
+            </View>
+
+            <Text style={styles.guideText}>모자이크하고 싶은 사진/동영상을 선택해주세요.</Text>
 
             <View style={styles.buttonContainer}>
                 <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
@@ -158,7 +257,7 @@ const MosaicTest = ({ route }) => {
                 </TouchableOpacity>
             </View>
 
-            {
+            {/* {
                 resultImage &&
                 (
                     <View style={styles.resultContainer}>
@@ -166,47 +265,41 @@ const MosaicTest = ({ route }) => {
                         <Image source={{ uri: resultImage }} style={styles.resultImage} />
                     </View>
                 )
-            }
+            } */}
 
-<Modal
-                animationType="slide"
+            <Modal
+                animationType="fade"
                 transparent={true}
                 visible={modalVisible}
-                onRequestClose={() => {
-                    setModalVisible(!modalVisible);
-                }}
             >
-                <View style={styles.modalView}>
-                    <TouchableOpacity
-                        style={styles.modalButton}
-                        onPress={() => setIsPhoto(true)}
-                    >
-                        <Text style={styles.textStyle}>사진 선택하기</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={styles.modalButton}
-                        onPress={() => setIsPhoto(false)}
-                    >
-                        <Text style={styles.textStyle}>동영상 선택하기</Text>
-                    </TouchableOpacity>
-                    <View style={styles.modalActions}>
-                        <TouchableOpacity
-                            style={[styles.button, styles.buttonClose]}
-                            onPress={() => {
-                                setModalVisible(!modalVisible);
-                                isPhoto ? imagePick() : videoPick();
-                            }}
-                        >
-                            <Text style={styles.textStyle}>확인</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={[styles.button, styles.buttonClose]}
-                            onPress={() => setModalVisible(!modalVisible)}
-                        >
-                            <Text style={styles.textStyle}>취소</Text>
-                        </TouchableOpacity>
+                <TouchableWithoutFeedback onPress={closeModal}>
+
+                    <View style={styles.modalView}>
+                        <View style={styles.modalContentContainer}>
+                            <TouchableOpacity
+                                style={styles.modalButton}
+                                onPress={pickPhoto}
+                            >
+                                <Text style={styles.modalText}>사진 선택하기</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={styles.modalButton}
+                                onPress={pickVideo}
+                            >
+                                <Text style={styles.modalText}>동영상 선택하기</Text>
+                            </TouchableOpacity>
+                            <View style={styles.modalActions}>
+
+                                <TouchableOpacity
+                                    style={[styles.button, styles.buttonClose]}
+                                    onPress={() => setModalVisible(false)}
+                                >
+                                    <Text style={styles.modalText}>닫기</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
                     </View>
-                </View>
+                </TouchableWithoutFeedback>
             </Modal>
         </SafeAreaView>
     );
@@ -221,15 +314,15 @@ const styles = StyleSheet.create({
     },
     headerContainer: {
         width: "100%",
-        height: "13%",
+        height: "20%",
         justifyContent: "center"
     },
     exContainer: {
         width: "100%",
-        height: "60%",
+        height: "40%",
         paddingHorizontal: "3%",
         paddingBottom: "3%",
-        backgroundColor: "#E1ECC8"
+        backgroundColor: "#e5e5e5"
     },
     titleText: {
         fontSize: "30%",
@@ -240,7 +333,6 @@ const styles = StyleSheet.create({
     guideText: {
         fontSize: "17%",
         marginLeft: "7%",
-        marginTop: "3%",
         color: "#A0C49D"
     },
     imageContainer: {
@@ -260,14 +352,24 @@ const styles = StyleSheet.create({
         width: 100,
         height: 100,
     },
+    uploadButtonContainer: {
+        width: "90%",
+        height: "10%",
+        alignItems: "center",
+        justifyContent: "center"
+    },
     uploadButton: {
-        width: "80%",
-        borderRadius: 15,
-        height: "8%",
-        backgroundColor: "#F7FFE5",
+        width: "90%",
+        height: "55%",
+        backgroundColor: "#FFFFFF",
         alignItems: "center",
         justifyContent: "center",
-        marginTop: "4%"
+        borderRadius: 10,
+        shadowColor: "#000", // 그림자 색상
+        shadowOffset: { width: 0, height: 1 }, // 그림자 오프셋
+        shadowOpacity: 0.2, // 그림자 투명도
+        shadowRadius: 1, // 그림자 반경
+        elevation: 5, // 그림자 높이 (Android용)
     },
     uploadText: {
         fontSize: "20%",
@@ -285,11 +387,15 @@ const styles = StyleSheet.create({
     backButton: {
         width: "46%",
         height: "40%",
-        borderWidth: 1,
-        borderColor: "#A0C49D",
+        backgroundColor: "#FFFFFF",
         borderRadius: 15,
         alignItems: "center",
         justifyContent: "center",
+        shadowColor: "#000", // 그림자 색상
+        shadowOffset: { width: 0, height: 3 }, // 그림자 오프셋
+        shadowOpacity: 0.3, // 그림자 투명도
+        shadowRadius: 3, // 그림자 반경
+        elevation: 5, // 그림자 높이 (Android용)
     },
     nextButton: {
         width: "46%",
@@ -298,6 +404,11 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         alignItems: "center",
         justifyContent: "center",
+        shadowColor: "#000", // 그림자 색상
+        shadowOffset: { width: 0, height: 3 }, // 그림자 오프셋
+        shadowOpacity: 0.3, // 그림자 투명도
+        shadowRadius: 3, // 그림자 반경
+        elevation: 5, // 그림자 높이 (Android용)
     },
     back: {
         fontSize: "18%",
@@ -308,6 +419,11 @@ const styles = StyleSheet.create({
         fontSize: "18%",
         color: "#FFFFFF",
         fontWeight: "bold"
+    },
+    media: {
+        width: "100%",
+        height: "100%",
+        resizeMode: "contain"
     },
     resultContainer: {
         marginTop: 20,
@@ -325,24 +441,27 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
+        backgroundColor: "#00000030",
+    },
+    modalContentContainer: {
+        width: "70%",
+        height: "20%",
+        backgroundColor: "#FFFFFF"
     },
     modalButton: {
         backgroundColor: "#F7FFE5",
-        padding: 10,
+        padding: "3%",
         marginVertical: 10,
         borderRadius: 10,
         width: "80%",
         alignItems: "center",
     },
     modalText: {
-        fontSize: 20,
+        fontSize: "20%",
         color: "#A0C49D",
         fontWeight: "bold"
     },
     modalButtonContainer: {
-        flexDirection: "row",
-        justifyContent: "space-around",
         width: "100%",
         marginTop: 20,
     },
