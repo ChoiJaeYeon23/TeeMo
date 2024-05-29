@@ -104,48 +104,47 @@ const SignUpScreen = () => {
         }
     };
 
-    const signupButtonHandler = (assets) => {
-        for (const asset of assets) {
-            const formData = new FormData();
-            formData.append('image_uri', {
-                uri: asset.uri,
-                type: 'image/jpeg',
-                name: 'profile.jpg'
+   const signupButtonHandler = async () => {
+        if (!id || !password || !nickname || !profilePic) {
+            Alert.alert("모든 필드를 입력해주세요.");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('image_uri', {
+            uri: profilePic,
+            type: 'image/jpeg',
+            name: 'profile.jpg'
+        });
+        formData.append('id', id);
+        formData.append('pw', password);
+        formData.append('nickname', nickname);
+
+        try {
+            const response = await fetch("http://3.34.125.163:5001/api/sign_up", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+                body: formData,
             });
 
-            if (asset) {
-
-                // 기타 사용자 데이터 추가
-                formData.append('id', id);
-                formData.append('pw', password);
-
-                fetch("http://3.34.125.163:5001/api/sign_up", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: formData,
-                })
-                    .then((response) => {
-                        if (!response.ok) {
-                            return response.json().then((data) => {
-                                throw new Error(data.message || '회원가입 실패');
-                            });
-                        }
-                        return response.json();
-                    })
-                    .then((data) => {
-                        alert(data.message); // 회원가입 성공 알림
-                        console.log("회원가입 완료 했습니다.");
-                        clearAll();
-                        navigation.navigate("SignInScreen"); // 로그인 화면으로 이동
-                    })
-                    .catch((error) => {
-                        alert("회원가입 실패: " + error.message);
-                    });
+            if (!response.ok) {
+                const data = await response.json();
+                throw new Error(data.message || '회원가입 실패');
             }
+
+            const data = await response.json();
+            Alert.alert(data.message);
+            console.log("회원가입 완료")
+            clearAll();
+            navigation.navigate("SignInScreen");
+
+        } catch (error) {
+            Alert.alert("회원가입 실패: " + error.message);
         }
-    }
+    };
+
 
     return (
         <TouchableWithoutFeedback onPress={keyboardOff}>
@@ -167,7 +166,7 @@ const SignUpScreen = () => {
                     </TouchableOpacity>
                 </View>
 
-                <View style={[styles.inputContainer, {marginBottom: "10%"}]}>
+                <View style={[styles.inputContainer, { marginBottom: "10%" }]}>
                     <TextInput
                         value={nickname}
                         onChangeText={setNickname}

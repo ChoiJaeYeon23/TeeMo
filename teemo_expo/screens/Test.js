@@ -43,21 +43,26 @@ const TestScreen = ({ navigation }) => {
                 },
                 body: JSON.stringify({ id: userId }),
             });
-
+    
             if (!response.ok) {
                 throw new Error(`이미지를 찾을 수 없습니다. (ID: ${userId})`);
             }
-
+    
             const imageBlob = await response.blob();
-            const imageUrl = URL.createObjectURL(imageBlob);
-
-            // 새로운 사용자 정보를 추가하고 이미지 URL을 업데이트합니다.
-            setUserList((prevList) => [...prevList, { id: userId, imageUrl }]);
+            const reader = new FileReader();
+    
+            reader.onload = () => {
+                const imageUrl = reader.result;
+                setUserList((prevList) => [...prevList, { id: userId, imageUrl }]);
+            };
+    
+            reader.readAsDataURL(imageBlob); // Blob을 base64 문자열로 변환하여 읽음
         } catch (error) {
             console.error(`에러 발생: ${error.message}`);
             Alert.alert("에러 발생", error.message);
         }
     };
+    
 
     const addUser = async () => {
         if (!id) {
@@ -143,8 +148,8 @@ const TestScreen = ({ navigation }) => {
         }).start()
     }
 
-    const openModal = (imageUri) => {
-        setSelectedImageUri(imageUri)
+    const openModal = (imageUrl) => {
+        setSelectedImageUri(imageUrl)
         setModalVisible(true)
     }
 
@@ -171,7 +176,7 @@ const TestScreen = ({ navigation }) => {
                                         style={[styles.userItem, { transform: [{ scale: scaleValues[index] }] }]}
                                         onPressIn={() => startUserItemPressAnimation(index)}
                                         onPressOut={() => endUserItemPressAnimation(index)}
-                                        onPress={() => set(item.imageUri)}
+                                        onPress={() => [openModal(item.imageUrl)]}
                                     >
                                         <Text style={styles.userId}>{"닉네임 ( "}{item.id}{" )"}</Text>
                                         {/* <Image source={{ uri: imageUrl }} style={styles.image} /> */}

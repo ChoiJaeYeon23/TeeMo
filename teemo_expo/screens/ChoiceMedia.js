@@ -5,24 +5,44 @@ import Toast from "react-native-toast-message"
 
 const ChoiceMedia = ({ route }) => {
     const navigation = useNavigation()
-    // const id = route.params.id
+    const id = route.params.id
     const [loginNow, setLoginNow] = useState(true)
 
-    const showToast = (id) => {
+    const fetchNickname = () => {
+        fetch("http://3.34.125.163:5001/api/get_nickname", {
+            method: "POST", // POST 요청으로 변경
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ id: id }) // id를 서버에 전송
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log("받아온 닉네임: ", data.nickname);
+                showToast(data.nickname); // 닉네임으로 showToast 함수 호출
+            })
+            .catch(error => {
+                console.error("에러:", error);
+            });
+    };
+
+    const showToast = (nickname) => {
         Toast.show({
             type: 'success',
-            text1: `${id}님, 어서오세요!`,
+            text1: `${nickname}님, 어서오세요!`,
             visibilityTime: 2000,
             autoHide: true,
         })
     }
 
-    // useEffect(() => {
-    //     if (loginNow) {
-    //         showToast(id);
-    //         setLoginNow(false);
-    //     }
-    // }, []);
+    useEffect(() => {
+        if (loginNow) {
+            fetchNickname()
+            setLoginNow(false);
+        }
+    }, []);
+
+
 
     return (
         <>
