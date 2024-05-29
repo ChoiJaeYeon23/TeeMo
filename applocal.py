@@ -11,6 +11,7 @@ CORS(app)
 @app.route('/process_images', methods=['POST'])
 def process_images():
     start_time = time.time()
+    print("시작시작시작시작")
 
     reference_files = request.files.getlist('reference_images')
     reference_encodings = []
@@ -42,14 +43,18 @@ def process_images():
         else:
             unblurred_count += 1
             for j, distance in enumerate(distances):
-                if distance < 0.47:
+                if distance < 0.4:
                     if j == 0:
-                        label += 'jaeyeon'
+                        label += 'haneul'
                     elif j == 1:
+                        label += 'suji'
+                    elif j == 2:
                         label += 'jiyeon'
+                    elif j == 3:
+                        label += 'jaeyeon'
 
-            cv2.rectangle(group_image, (left, top), (right, bottom), (0, 0, 255), 2)
-            cv2.putText(group_image, label, (left, top - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255), 2)
+            cv2.rectangle(group_image, (left, top), (right, bottom), (0, 255, 0), 2)
+            cv2.putText(group_image, label, (left, top - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
 
     end_time = time.time()
 
