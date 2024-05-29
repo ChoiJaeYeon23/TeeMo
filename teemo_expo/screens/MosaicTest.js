@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import {
     SafeAreaView,
     View,
@@ -7,18 +7,22 @@ import {
     StyleSheet,
     TouchableOpacity,
     Alert,
-    Modal,
     Animated,
     TouchableWithoutFeedback,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from '@react-navigation/native';
 import { Video } from "expo-av"
+import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet'
+import Toast from "react-native-toast-message"
+import { Ionicons } from "@expo/vector-icons"
 
 const MosaicTest = ({ route }) => {
     const { userList } = route.params;
     const [additionalMedia, setAdditionalMedia] = useState(null);
     const [resultImage, setResultImage] = useState(null);
+
+    const [buttonText, setButtonText] = useState("사진 / 동영상 선택하기")
 
     const navigation = useNavigation()
     const [modalVisible, setModalVisible] = useState(false)
@@ -35,9 +39,11 @@ const MosaicTest = ({ route }) => {
     })
     const [mediaUri, setMediaUri] = useState("")
 
-    // 사용자가 미디어를 추가로 업로드하는 함수
+    const bottomSheetRef = useRef(null)
+    const snapPoints = useMemo(() => ['5.5%', '20%'], [])
+
     const handleUploadMedia = async () => {
-        setModalVisible(true)
+        bottomSheetRef.current?.expand()
     }
 
     const handlePhotoPick = async () => {
@@ -81,6 +87,25 @@ const MosaicTest = ({ route }) => {
         }
     }
 
+    const showToast = (mediaType) => {
+        if (mediaType === "PHOTO") {
+            Toast.show({
+                type: "info",
+                text1: "모자이크 사진 제작을 취소하였습니다.",
+                visibilityTime: 2000,
+                autoHide: true,
+            })
+        } else if (mediaType === "VIDEO") {
+            Toast.show({
+                type: "info",
+                text1: "모자이크 영상 제작을 취소하였습니다.",
+                visibilityTime: 2000,
+                autoHide: true,
+            })
+        }
+        console.log("제작 취소")
+    }
+
     // 서버로 미디어 업로드
     const handleUploadToServer = async () => {
         if (!additionalMedia) {
@@ -88,53 +113,63 @@ const MosaicTest = ({ route }) => {
             return;
         }
 
-        const formData = new FormData();
+        const uploadToServer = async () => {
+            const formData = new FormData();
 
-        // 기준 이미지 추가
-        userList.forEach((user, index) => {
-            formData.append('reference_images', {
-                uri: user.imageUrl,
-                name: `reference_image_${index}.jpg`,
+            // 기준 이미지 추가
+            userList.forEach((user, index) => {
+                formData.append('reference_images', {
+                    uri: user.imageUrl,
+                    name: `reference_image_${index}.jpg`,
+                    type: 'image/jpeg'
+                });
+            });
+
+            // 그룹 이미지 추가
+            formData.append('group_image', {
+                uri: additionalMedia,
+                name: 'group_image.jpg',
                 type: 'image/jpeg'
             });
-        });
 
-        // 그룹 이미지 추가
-        formData.append('group_image', {
-            uri: additionalMedia,
-            name: 'group_image.jpg',
-            type: 'image/jpeg'
-        });
+            try {
+                const response = await fetch("http://localhost:5001/process_images", {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
 
-        try {
-            const response = await fetch("http://localhost:5001/process_images", {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
+                if (!response.ok) {
+                    throw new Error('이미지 처리에 실패했습니다.');
+                }
 
-            if (!response.ok) {
-                throw new Error('이미지 처리에 실패했습니다.');
+                const resultBlob = await response.blob();
+                const resultUrl = URL.createObjectURL(resultBlob);
+                setResultImage(resultUrl);
+            } catch (error) {
+                console.error(`에러 발생: ${error.message}`);
+                Alert.alert("에러 발생", error.message);
             }
-
-            const resultBlob = await response.blob();
-            const resultUrl = URL.createObjectURL(resultBlob);
-            setResultImage(resultUrl);
-        } catch (error) {
-            console.error(`에러 발생: ${error.message}`);
-            Alert.alert("에러 발생", error.message);
         }
+
+        Alert.alert(
+            "모자이크 시작",
+            "이전 페이지에서 선택한 인물들을 제외하고 모자이크 처리합니다.\n이 작업은 시간이 걸릴 수 있습니다.\n계속해서 진행하시겠습니까?",
+            [
+                {
+                    text: "취소",
+                    style: "cancel",
+                    onPress: () => showToast(mediaType)
+                },
+                {
+                    text: "시작하기",
+                    onPress: () => uploadToServer()
+                }
+            ]
+        )
     };
-
-    const openModal = () => {
-        setModalVisible(true)
-    }
-
-    const closeModal = () => {
-        setModalVisible(false)
-    }
 
     // 갤러리에서 사진을 선택합니다
     const pickPhoto = async () => {
@@ -196,6 +231,7 @@ const MosaicTest = ({ route }) => {
             setMediaType("VIDEO")
             setMediaUri(result.assets[0].uri)
             setModalVisible(false)
+            setButtonText("다시 선택하기")
         } else {
             Alert.alert("동영상 선택이 취소되었습니다.")
         }
@@ -241,7 +277,7 @@ const MosaicTest = ({ route }) => {
 
             <View style={styles.uploadButtonContainer}>
                 <TouchableOpacity onPress={handleUploadMedia} style={styles.uploadButton}>
-                    <Text style={styles.uploadText}>사진 / 동영상 선택하기</Text>
+                    <Text style={styles.uploadText}>{buttonText}</Text>
                 </TouchableOpacity>
             </View>
 
@@ -267,40 +303,36 @@ const MosaicTest = ({ route }) => {
                 )
             } */}
 
-            <Modal
-                animationType="fade"
-                transparent={true}
-                visible={modalVisible}
+            <BottomSheet
+                ref={bottomSheetRef}
+                index={-1}
+                snapPoints={snapPoints}
+                enableContentPanningGesture={true}
+                enableHandlePanningGesture={true}
+                backdropComponent={(props) => (
+                    <BottomSheetBackdrop {...props} pressBehavior="none" />
+                )}
+                style={{
+                    shadowColor: "#000000", // 그림자 색상
+                    shadowOffset: { width: 0, height: 3 }, // 그림자 오프셋
+                    shadowOpacity: 0.3, // 그림자 투명도
+                    shadowRadius: 7, // 그림자 반경
+                    elevation: 5, // 그림자 높이 (Android용)
+                }}
+                backgroundStyle={{
+                    borderTopLeftRadius: 20,
+                    borderTopRightRadius: 20
+                }}
             >
-                <TouchableWithoutFeedback onPress={closeModal}>
-
-                    <View style={styles.modalView}>
-                        <View style={styles.modalContentContainer}>
-                            <TouchableOpacity
-                                style={styles.modalButton}
-                                onPress={pickPhoto}
-                            >
-                                <Text style={styles.modalText}>사진 선택하기</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={styles.modalButton}
-                                onPress={pickVideo}
-                            >
-                                <Text style={styles.modalText}>동영상 선택하기</Text>
-                            </TouchableOpacity>
-                            <View style={styles.modalActions}>
-
-                                <TouchableOpacity
-                                    style={[styles.button, styles.buttonClose]}
-                                    onPress={() => setModalVisible(false)}
-                                >
-                                    <Text style={styles.modalText}>닫기</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                    </View>
-                </TouchableWithoutFeedback>
-            </Modal>
+                <View style={styles.sheetContainer}>
+                    <TouchableOpacity style={[styles.sheetButton, {marginTop: "1%"}]} onPress={pickPhoto}>
+                        <Text style={styles.sheetText}>사진 선택하기</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.sheetButton} onPress={pickVideo}>
+                        <Text style={styles.sheetText}>동영상 선택하기</Text>
+                    </TouchableOpacity>
+                </View>
+            </BottomSheet>
         </SafeAreaView>
     );
 };
@@ -437,56 +469,38 @@ const styles = StyleSheet.create({
         width: 300,
         height: 300,
     },
-    modalView: {
+    sheetContainer: {
         flex: 1,
-        justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#00000030",
+        justifyContent: "flex-start",
+        padding: "4%",
+        backgroundColor: '#FFFFFF',
+        borderRadius: 100
     },
-    modalContentContainer: {
-        width: "70%",
-        height: "20%",
-        backgroundColor: "#FFFFFF"
-    },
-    modalButton: {
-        backgroundColor: "#F7FFE5",
-        padding: "3%",
-        marginVertical: 10,
+    sheetButton: {
+        width: '90%',
+        paddingVertical: "4%",
+        backgroundColor: '#FFFFFF',
+        alignItems: 'center',
+        justifyContent: 'center',
         borderRadius: 10,
-        width: "80%",
-        alignItems: "center",
+        marginBottom: "3%",
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.2,
+        shadowRadius: 1,
+        elevation: 5,
     },
-    modalText: {
+    sheetText: {
         fontSize: "20%",
-        color: "#A0C49D",
-        fontWeight: "bold"
+        color: '#A0C49D',
+        fontWeight: 'bold',
     },
-    modalButtonContainer: {
-        width: "100%",
-        marginTop: 20,
+    sheetActions: {
+        alignItems: 'center',
+        justifyContent: 'center',
     },
-    modalCancelButton: {
-        backgroundColor: "#FFCCCC",
-        padding: 10,
-        borderRadius: 10,
-        width: "40%",
-        alignItems: "center",
-    },
-    modalCancelText: {
-        fontSize: 18,
-        color: "#FF0000",
-        fontWeight: "bold"
-    },
-    modalConfirmButton: {
-        backgroundColor: "#CCE5FF",
-        padding: 10,
-        borderRadius: 10,
-        width: "40%",
-        alignItems: "center",
-    },
-    modalConfirmText: {
-        fontSize: 18,
-        color: "#007BFF",
-        fontWeight: "bold"
+    buttonClose: {
+        backgroundColor: '#CCCCCC',
     }
 });

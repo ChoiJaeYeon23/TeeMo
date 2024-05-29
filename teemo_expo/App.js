@@ -1,5 +1,6 @@
 import { NavigationContainer } from "@react-navigation/native"
 import Navigation from "./navigations/Navigation"
+import 'react-native-reanimated'
 
 const App = () => {
   return (

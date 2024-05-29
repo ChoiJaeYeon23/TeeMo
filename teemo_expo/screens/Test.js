@@ -87,7 +87,8 @@ const TestScreen = ({ navigation }) => {
             setUserList(newUsersArr)
         }
 
-        Alert.alert("사용자 삭제",
+        Alert.alert(
+            "사용자 삭제",
             "모자이크를 제외할 사용자가 삭제됩니다.\n이 작업을 실행하시겠습니까?",
             [
                 {
