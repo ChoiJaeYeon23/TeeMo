@@ -1,62 +1,99 @@
-import React, { useEffect, useState } from "react";
-import { SafeAreaView, View, Text, TouchableOpacity, StyleSheet } from "react-native"
+import React, { useEffect, useState, useRef } from "react";
+import {
+    SafeAreaView,
+    View,
+    Text,
+    TouchableOpacity,
+    StyleSheet,
+    Image
+} from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import Toast from "react-native-toast-message"
+import Carousel from "react-native-reanimated-carousel"
+import CustomProgressBar from "./CustomProgressBar"
 
 const ChoiceMedia = ({ route }) => {
     const navigation = useNavigation()
-    const id = route.params.id
+    // const id = route.params.id
     const [loginNow, setLoginNow] = useState(true)
+    const currentStep = 1
+    const ref = useRef(null)
 
-    const fetchNickname = () => {
-        fetch("http://3.34.125.163:5001/api/get_nickname", {
-            method: "POST", // POST 요청으로 변경
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ id: id }) // id를 서버에 전송
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log("받아온 닉네임: ", data.nickname);
-                showToast(data.nickname); // 닉네임으로 showToast 함수 호출
-            })
-            .catch(error => {
-                console.error("에러:", error);
-            });
-    };
+    // const fetchNickname = () => {
+    //     fetch("http://3.34.125.163:5001/api/get_nickname", {
+    //         method: "POST", // POST 요청으로 변경
+    //         headers: {
+    //             "Content-Type": "application/json"
+    //         },
+    //         body: JSON.stringify({ id: id }) // id를 서버에 전송
+    //     })
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             console.log("받아온 닉네임: ", data.nickname);
+    //             showToast(data.nickname); // 닉네임으로 showToast 함수 호출
+    //         })
+    //         .catch(error => {
+    //             console.error("에러:", error);
+    //         });
+    // };
 
-    const showToast = (nickname) => {
-        Toast.show({
-            type: 'success',
-            text1: `${nickname}님, 어서오세요!`,
-            visibilityTime: 2000,
-            autoHide: true,
-        })
-    }
+    // const showToast = (nickname) => {
+    //     Toast.show({
+    //         type: 'success',
+    //         text1: `${nickname}님, 어서오세요!`,
+    //         visibilityTime: 2000,
+    //         autoHide: true,
+    //     })
+    // }
 
-    useEffect(() => {
-        if (loginNow) {
-            fetchNickname()
-            setLoginNow(false);
-        }
-    }, []);
-
-
+    // useEffect(() => {
+    //     if (loginNow) {
+    //         fetchNickname()
+    //         setLoginNow(false);
+    //     }
+    // }, []);
 
     return (
         <>
             <SafeAreaView style={styles.container}>
+
+                <CustomProgressBar currentStep={currentStep} />
+{/* 
                 <View style={styles.headerContainer}>
                     <Text style={styles.titleText}>시작하기</Text>
-                </View>
+                </View> */}
 
                 <View style={styles.exContainer}>
-                    {/** */}
+                    <Carousel
+                        ref={ref}
+                        mode="parallax"
+                        autoPlay={true}
+                        data={[
+                            require("../images/top.jpg"),
+                            require("../images/app_logo.png"),
+                            require("../images/bottom.jpg"),
+                            require("../images/kakao_login.png"),
+                            require("../images/front.jpg"),
+                            require("../images/01.gif"),
+                        ]}
+                        modeConfig={{
+                            parallaxScrollingScale: 0.9,
+                            parallaxScrollingOffset: 50,
+                        }}
+                        renderItem={({ item }) => (
+                            <Image source={item} style={styles.carouselImage} resizeMode="contain" />
+                        )}
+                        width={400}
+                        height={350}
+                        loop={true}
+                        snapEnabled={true}
+                        autoPlayInterval={1500}
+                    />
                 </View>
 
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity onPress={() => navigation.navigate("NavigationScreen")} style={[styles.button, { marginLeft: "2%" }]} activeOpacity={1}>
+                        <Image source={require("../images/live.png")} style={{ width: 150, height: 150 }} />
                         <Text style={styles.buttonText}>미디어 촬영하기</Text>
                     </TouchableOpacity>
 
@@ -83,11 +120,18 @@ const styles = StyleSheet.create({
         justifyContent: "center"
     },
     exContainer: {
+        // width: "100%",
+        // height: "50%",
+        // backgroundColor: "#e5e5e5",
+        width: 400,
+        height: 350,
+        marginVertical: 20,
+        overflow: "hidden",
+    },
+    carouselImage: {
         width: "100%",
-        height: "50%",
-        backgroundColor: "#e5e5e5",
-        paddingHorizontal: "3%",
-        paddingBottom: "3%"
+        height: "100%",
+        borderRadius: 10
     },
     buttonContainer: {
         width: "100%",

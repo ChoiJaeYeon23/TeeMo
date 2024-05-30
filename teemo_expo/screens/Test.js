@@ -14,10 +14,12 @@ import {
     Animated,
     Modal
 } from 'react-native'
+import CustomProgressBar from "./CustomProgressBar"
 
 const TestScreen = ({ navigation }) => {
     const [id, setId] = useState('');
     const [userList, setUserList] = useState([]); // ui 확인용 배열
+    const currentStep = 2
 
     const [modalVisible, setModalVisible] = useState(false)
     // ui 확인용 임시 uri
@@ -43,26 +45,26 @@ const TestScreen = ({ navigation }) => {
                 },
                 body: JSON.stringify({ id: userId }),
             });
-    
+
             if (!response.ok) {
                 throw new Error(`이미지를 찾을 수 없습니다. (ID: ${userId})`);
             }
-    
+
             const imageBlob = await response.blob();
             const reader = new FileReader();
-    
+
             reader.onload = () => {
                 const imageUrl = reader.result;
                 setUserList((prevList) => [...prevList, { id: userId, imageUrl }]);
             };
-    
+
             reader.readAsDataURL(imageBlob); // Blob을 base64 문자열로 변환하여 읽음
         } catch (error) {
             console.error(`에러 발생: ${error.message}`);
             Alert.alert("에러 발생", error.message);
         }
     };
-    
+
 
     const addUser = async () => {
         if (!id) {
@@ -160,6 +162,9 @@ const TestScreen = ({ navigation }) => {
     return (
         <TouchableWithoutFeedback onPress={keyboardOff}>
             <SafeAreaView style={styles.container}>
+
+            <CustomProgressBar currentStep={currentStep} />
+
                 <View style={styles.headerContainer}>
                     <Text style={styles.titleText}>인물 추가</Text>
                 </View>
