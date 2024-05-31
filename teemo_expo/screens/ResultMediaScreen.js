@@ -10,10 +10,10 @@ import {
     ActivityIndicator
 } from "react-native"
 import * as MediaLibrary from "expo-media-library"
+import { Video } from "expo-av"
 import { Feather } from "@expo/vector-icons"
-import MediaDisplay from "./MediaDisplay"
-
-const { width } = Dimensions.get("window")
+import CustomProgressBar from "./CustomProgressBar"
+import { useNavigation } from "@react-navigation/native"
 
 /**
  * 모자이크 처리된 결과물(사진 혹은 동영상)을 화면에 출력하고 저장할 수 있는 화면입니다.
@@ -23,7 +23,8 @@ const ResultMediaScreen = ({ route }) => {
     const [mediaUri, setMediaUri] = useState("")    // 결과물 미디어(사진 or 동영상)의 URI
     const [loading, setLoading] = useState(true)    // 로딩 중인지 아닌지 여부
     const [saving, setSaving] = useState(false)     //저장 중인지 아닌지 여부
-
+    const currentStep = 4
+    const navigation = useNavigation()
     /**
      * 서버로부터 전달된 미디어(사진 or 동영상) uri를 초기화합니다.
      * 미디어의 type과 uri를 전달받아야 합니다.
@@ -57,25 +58,56 @@ const ResultMediaScreen = ({ route }) => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <View style={styles.titleContainer}>
-                <Text style={styles.title}>사진/동영상 결과물 화면</Text>
+
+            <View style={styles.progressbarWrapper}>
+                <CustomProgressBar currentStep={currentStep} />
             </View>
 
-            <View style={styles.resultContainer}>
-                <MediaDisplay loading={loading} mediaType={mediaType} mediaUri={mediaUri} />
+            <View style={styles.headerContainer}>
+                <Text style={styles.titleText}>결과보기</Text>
+            </View>
+
+            <View style={styles.exContainer}>
+                {
+                    mediaUri ? (
+                        mediaType === "PHOTO" ? (
+                            mediaUri != "" ? (
+                                <Image
+                                    source={{ uri: mediaUri }}
+                                    style={styles.media}
+                                    resizeMode="contain"
+                                />
+                            ) : (
+                                <View />
+                            )
+                        ) : (
+                            mediaUri != "" ? (
+                                <Video
+                                    source={{ uri: mediaUri }}
+                                    style={styles.media}
+                                    shouldPlay={true}
+                                    useNativeControls={true}
+                                />
+                            ) : (
+                                <View />
+                            )
+                        )
+                    ) : (
+                        <View />
+                    )
+                }
+            </View>
+
+            <View style={styles.downloadButtonContainer}>
+                <TouchableOpacity onPress={saveButtonHandler} style={styles.downloadButton}>
+                    <Text style={styles.downloadText}>다운로드</Text>
+                </TouchableOpacity>
             </View>
 
             <View style={styles.bottomContainer}>
-                <TouchableOpacity onPress={() => saveButtonHandler()} style={styles.saveButton} >
-                    <Feather name="download" size={30} color="#333333" />
+                <TouchableOpacity onPress={() => navigation.navigate("ChoiceMedia")}>
+                    <Text style={styles.homeText}>홈으로</Text>
                 </TouchableOpacity>
-                {
-                    saving &&
-                    <ActivityIndicator
-                        size={Platform.OS === "ios" ? "small" : 20}
-                        color="#005AC1"
-                    />
-                }
             </View>
         </SafeAreaView>
     )
@@ -89,39 +121,66 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center"
     },
-    titleContainer: {
-        marginTop: 30
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: "bold",
-        color: "#333333",
-        marginBottom: 20
-    },
-    resultContainer: {
-        width: width - 40,
-        height: "65%",
+    progressbarWrapper: {
+        width: "100%",
+        height: "8%",
         alignItems: "center",
         justifyContent: "center",
-        marginBottom: 10
+    },
+    headerContainer: {
+        width: "100%",
+        height: "15%",
+        justifyContent: "center"
+    },
+    exContainer: {
+        width: "95%",
+        height: "60%",
+        alignItems: "center",
+        justifyContent: "center",
+        marginTop: "3%",
+        padding: "1%",
+        backgroundColor: "#e5e5e5"
+    },
+    titleText: {
+        fontSize: "30%",
+        fontWeight: "900",
+        color: "#66CDAA",
+        marginLeft: "7%"
+    },
+    downloadButtonContainer: {
+        width: "90%",
+        height: "10%",
+        alignItems: "center",
+        justifyContent: "center"
+    },
+    downloadButton: {
+        width: "90%",
+        height: "55%",
+        backgroundColor: "#FFFFFF",
+        alignItems: "center",
+        justifyContent: "center",
+        borderRadius: 10,
+        shadowColor: "#000", // 그림자 색상
+        shadowOffset: { width: 0, height: 1 }, // 그림자 오프셋
+        shadowOpacity: 0.2, // 그림자 투명도
+        shadowRadius: 1, // 그림자 반경
+        elevation: 5, // 그림자 높이 (Android용)
+    },
+    downloadText: {
+        fontSize: "20%",
+        color: "#66CDAA",
+        fontWeight: "bold"
     },
     bottomContainer: {
+        width: "90%",
+        height: "5.5%",
         flexDirection: "row",
-        justifyContent: "space-around",
-        borderRadius: 5,
-        marginVertical: 20,
-        paddingHorizontal: 20
+        paddingHorizontal: "1%",
+        justifyContent: "space-around"
     },
-    saveButton: {
-        paddingVertical: 10,
-        paddingHorizontal: 30,
-        marginTop: 10,
-        marginHorizontal: 25,
-        borderRadius: 100
-    },
-    saveText: {
-        color: "#333333",
-        fontWeight: "bold",
-        fontSize: 18
+    homeText: {
+        fontSize: 16,
+        fontWeight: "500",
+        color: "#555555"
     }
 })

@@ -10,9 +10,10 @@ import SignUpScreen from "../screens/SignUpScreen"
 import MediaUploadScreen from "../screens/MediaUploadScreen"
 import ResultMediaScreen from "../screens/ResultMediaScreen"
 import ChoiceMedia from "../screens/ChoiceMedia"
-import Test from "../screens/Test"
+import NRTAddUserScreen from "../screens/NRTAddUserScreen"
 import MosaicTest from "../screens/MosaicTest"
 import RealTimeMosaic from "../screens/RealTimeMosaic"
+import RTAddUserScreen from "../screens/RTAddUserScreen"
 import NavigationScreen from "./NavigationScreen"
 
 const Stack = createStackNavigator()
@@ -113,8 +114,16 @@ const Navigation = () => {
                 }}
             />
             <Stack.Screen
-                name="Test"
-                component={Test}
+                name="NRTAddUserScreen"
+                component={NRTAddUserScreen}
+                options={{
+                    headerShown: false,
+                    // gestureEnabled: false
+                }}
+            />
+            <Stack.Screen
+                name="RTAddUserScreen"
+                component={RTAddUserScreen}
                 options={{
                     headerShown: false,
                     // gestureEnabled: false

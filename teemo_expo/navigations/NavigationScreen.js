@@ -23,7 +23,7 @@ const NavigationScreen = () => {
 
             <Button
                 title="[2.1.1] 기준 이미지 추가 화면(비실시간 [1])"
-                onPress={() => navigation.navigate("Test")}
+                onPress={() => navigation.navigate("NRTAddUserScreen")}
             />
 
             <Button
@@ -31,6 +31,11 @@ const NavigationScreen = () => {
                 onPress={() => navigation.navigate("MosaicTest")}
             />
 
+            <Button
+                title="[2.2.1] 기준 이미지 추가 화면(실시간 [1])"
+                onPress={() => navigation.navigate("RTAddUserScreen")}
+            />
+            
             <Button
                 title="[2.2.2] 실시간 모자이크 웹뷰 화면"
                 onPress={() => navigation.navigate("RealTimeMosaic")}

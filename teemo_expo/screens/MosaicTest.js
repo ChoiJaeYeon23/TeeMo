@@ -243,7 +243,9 @@ const MosaicTest = ({ route }) => {
     return (
         <SafeAreaView style={styles.container}>
 
-            <CustomProgressBar currentStep={currentStep} />
+            <View style={styles.progressbarWrapper}>
+                <CustomProgressBar currentStep={currentStep} />
+            </View>
 
             <View style={styles.headerContainer}>
                 <Text style={styles.titleText}>제작하기</Text>
@@ -252,7 +254,6 @@ const MosaicTest = ({ route }) => {
             <View style={styles.exContainer}>
                 {
                     additionalMedia ? (
-                        // <Image source={{ uri: additionalMedia }} style={styles.image} />
                         mediaType === "PHOTO" ? (
                             additionalMedia != "" ? (
                                 <Image
@@ -270,6 +271,7 @@ const MosaicTest = ({ route }) => {
                                     style={styles.media}
                                     shouldPlay={true}
                                     useNativeControls={true}
+                                    
                                 />
                             ) : (
                                 <View />
@@ -298,16 +300,6 @@ const MosaicTest = ({ route }) => {
                     <Text style={styles.next}>다음 단계</Text>
                 </TouchableOpacity>
             </View>
-
-            {/* {
-                resultImage &&
-                (
-                    <View style={styles.resultContainer}>
-                        <Text style={styles.resultTitle}>처리된 이미지</Text>
-                        <Image source={{ uri: resultImage }} style={styles.resultImage} />
-                    </View>
-                )
-            } */}
 
             <BottomSheet
                 ref={bottomSheetRef}
@@ -350,18 +342,24 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: "center"
     },
+    progressbarWrapper: {
+        width: "100%",
+        height: "8%",
+        alignItems: "center",
+        justifyContent: "center",
+    },
     headerContainer: {
         width: "100%",
-        height: "20%",
+        height: "15%",
         justifyContent: "center"
     },
     exContainer: {
-        width: "100%",
+        width: "95%",
         height: "40%",
         alignItems: "center",
         justifyContent: "center",
-        paddingHorizontal: "3%",
-        paddingBottom: "3%",
+        marginTop: "3%",
+        padding: "1%",
         backgroundColor: "#e5e5e5"
     },
     titleText: {

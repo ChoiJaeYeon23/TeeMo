@@ -63,8 +63,7 @@ const CustomProgressBar = ({ currentStep }) => {
 const styles = StyleSheet.create({
     container: {
         width: "90%",
-        height: "6%",
-        marginTop: "5%",
+        height: "60%",
         borderRadius: 50,
         backgroundColor: '#eeeeee',
         overflow: 'hidden',
@@ -92,7 +91,7 @@ const styles = StyleSheet.create({
     },
     stepText: {
         fontSize: "15%",
-        color: '#999999',
+        color: '#00000090',
         fontWeight: 'bold',
     },
     currentStepText: {
