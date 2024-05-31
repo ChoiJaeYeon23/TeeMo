@@ -16,7 +16,11 @@ import {
 } from 'react-native'
 import CustomProgressBar from "./CustomProgressBar"
 
-const TestScreen = ({ navigation }) => {
+/**
+ * NON-Real Time
+ * 비실시간 인물 추가 화면입니다.
+ */
+const NRTAddUserScreen = ({ navigation }) => {
     const [id, setId] = useState('');
     const [userList, setUserList] = useState([]); // ui 확인용 배열
     const currentStep = 2
@@ -163,7 +167,9 @@ const TestScreen = ({ navigation }) => {
         <TouchableWithoutFeedback onPress={keyboardOff}>
             <SafeAreaView style={styles.container}>
 
-            <CustomProgressBar currentStep={currentStep} />
+                <View style={styles.progressbarWrapper}>
+                    <CustomProgressBar currentStep={currentStep} />
+                </View>
 
                 <View style={styles.headerContainer}>
                     <Text style={styles.titleText}>인물 추가</Text>
@@ -245,23 +251,30 @@ const TestScreen = ({ navigation }) => {
     );
 };
 
-export default TestScreen;
+export default NRTAddUserScreen;
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
     },
+    progressbarWrapper: {
+        width: "100%",
+        height: "8%",
+        alignItems: "center",
+        justifyContent: "center",
+    },
     headerContainer: {
         width: "100%",
-        height: "20%",
-        justifyContent: "center"
+        height: "15%",
+        justifyContent: "center",
     },
     exContainer: {
         width: "95%",
         height: "40%",
         paddingHorizontal: "3%",
         paddingBottom: "3%",
+        marginTop: "3%",
         backgroundColor: "#e5e5e5"
     },
     flatListContainer: {

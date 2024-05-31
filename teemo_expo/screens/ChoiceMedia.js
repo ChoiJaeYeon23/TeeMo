@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, Component } from "react";
 import {
     SafeAreaView,
     View,
@@ -6,11 +6,13 @@ import {
     TouchableOpacity,
     StyleSheet,
     Image,
-    Dimensions
+    Dimensions,
+    AppRegistry
 } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import Toast from "react-native-toast-message"
 import Carousel from "react-native-reanimated-carousel"
+import Swiper from "react-native-swiper"
 import CustomProgressBar from "./CustomProgressBar"
 
 const ChoiceMedia = ({ route }) => {
@@ -59,7 +61,9 @@ const ChoiceMedia = ({ route }) => {
         <>
             <SafeAreaView style={styles.container}>
 
-                <CustomProgressBar currentStep={currentStep} />
+                <View style={styles.progressbarWrapper}>
+                    <CustomProgressBar currentStep={currentStep} />
+                </View>
 
                 <View style={styles.exContainer}>
                     <Carousel
@@ -81,7 +85,7 @@ const ChoiceMedia = ({ route }) => {
                         }}
                         renderItem={({ item }) => (
                             <View style={styles.carouselItemContainer}>
-                                <Image source={item} style={styles.carouselImage} resizeMode="stretch" />
+                                <Image source={item} style={styles.carouselImage} resizeMode="contain" />
                             </View>
                         )}
                         width={screenWidth * 0.97}
@@ -89,33 +93,61 @@ const ChoiceMedia = ({ route }) => {
                         loop={true}
                         snapEnabled={true}
                         autoPlayInterval={1500}
+                        style={{
+                            flex: 1,
+                            alignItems: "center",
+                            justifyContent: "center"
+                        }}
                     />
                 </View>
 
-                <Carousel
-                        ref={ref}
-                        data={[
-                            require("../images/guidebanner.png"),
-                            require("../images/guidebanner.png")
-                        ]}
-                        renderItem={({ item }) => (
-                            <View style={{width: "100%", height: "10%",}}>
-                                <Image source={item} style={{width: 400, height: 100}} resizeMode="contain" />
+                <View style={styles.swiperWrapper}>
+                    <Swiper
+                        style={styles.swiper}
+                        showsPagination={true}
+                        autoplay={false}
+                        dotStyle={styles.dot}
+                        activeDotStyle={styles.activeDot}
+                        paginationStyle={styles.pagination}
+                    >
+                        <View style={styles.swiperSlide}>
+                            <Image source={require("../images/takePicture.png")} style={{ width: 80, height: 80, marginRight: "8%" }} />
+                            <View>
+                                <Text style={styles.guideTitle}>실시간 모자이크 촬영물 제작 가이드</Text>
+                                <Text style={styles.guideText}>
+                                    {"1. 실시간 버튼을 눌러주세요."}
+                                    {"\n"}
+                                    {"2. 모자이크를 제외할 인물을 추가해주세요."}
+                                    {"\n"}
+                                    {"3. 사진이나 동영상을 촬영해주세요."}
+                                    {"\n"}
+                                </Text>
                             </View>
-                        )}
-                        width={400}
-                        height={100}
-                        loop={false}
-                        snapEnabled={true}
-                    />
+                        </View>
+                        <View style={styles.swiperSlide}>
+                            <Image source={require("../images/uploadImage.png")} style={{ width: 80, height: 80, marginRight: "5%" }} />
+                            <View>
+                                <Text style={styles.guideTitle}>비실시간 모자이크 촬영물 제작 가이드</Text>
+                                <Text style={styles.guideText}>
+                                    {"1. 비실시간 버튼을 눌러주세요."}
+                                    {"\n"}
+                                    {"2. 모자이크를 제외할 인물을 추가해주세요."}
+                                    {"\n"}
+                                    {"3. 모자이크 하고싶은 사진이나 동영상을 추가해주세요."}
+                                    {"\n"}
+                                </Text>
+                            </View>
+                        </View>
+                    </Swiper>
+                </View>
 
                 <View style={styles.buttonContainer}>
-                    <TouchableOpacity onPress={() => navigation.navigate("NavigationScreen")} style={[styles.button, { marginLeft: "2%" }]} activeOpacity={1}>
+                    <TouchableOpacity onPress={() => navigation.navigate("RTAddUserScreen")} style={[styles.button, { marginLeft: "2%" }]} activeOpacity={1}>
                         {/* <Image source={require("../images/takePicture.png")} style={{ width: 160, height: 110, marginBottom: "10%" }} /> */}
                         <Text style={styles.buttonText}>실시간</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={() => navigation.navigate("Test")} style={[styles.button, { marginRight: "2%" }]} activeOpacity={1}>
+                    <TouchableOpacity onPress={() => navigation.navigate("NRTAddUserScreen")} style={[styles.button, { marginRight: "2%" }]} activeOpacity={1}>
                         {/* <Image source={require("../images/uploadImage.png")} style={{ width: 100, height: 130, marginBottom: "10%" }} /> */}
                         <Text style={styles.buttonText}>비실시간</Text>
                     </TouchableOpacity>
@@ -133,15 +165,18 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: "center"
     },
-    exContainer: {
+    progressbarWrapper: {
         width: "100%",
-        height: "60%",
+        height: "8%",
         alignItems: "center",
         justifyContent: "center",
-        marginTop: "5%",
-        // marginBottom: "10%",
+    },
+    exContainer: {
+        width: "100%",
+        height: "62%",
+        alignItems: "center",
+        justifyContent: "center",
         overflow: "hidden",
-        // backgroundColor: "red"
     },
     carouselImage: {
         width: "97%",
@@ -149,20 +184,61 @@ const styles = StyleSheet.create({
         borderRadius: 10
     },
     carouselItemContainer: {
+        flex: 1,
         alignItems: "center",
         justifyContent: "center"
     },
+    swiperWrapper: {
+        width: "100%",
+        height: "15%",
+        paddingVertical: "3%",
+    },
+    swiper: {
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    swiperSlide: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        flexDirection: "row",
+    },
+    guideTitle: {
+        fontSize: 18,
+        fontWeight: "bold",
+        marginBottom: "3%",
+        color: "#333333"
+    },
+    guideText: {
+        fontSize: 16,
+        color: "#565656"
+    },
+    dot: {
+        backgroundColor: "#99999950",
+        width: 6,
+        height: 6,
+        borderRadius: 4,
+    },
+    activeDot: {
+        backgroundColor: "#999999EE",
+        width: 6,
+        height: 6,
+        borderRadius: 4,
+    },
+    pagination: {
+        bottom: "-3%", // Adjust this value as needed
+    },
     buttonContainer: {
         width: "90%",
-        height: "20%",
+        height: "8%",
         paddingHorizontal: "1%",
         flexDirection: "row",
-        marginTop: "27%",
+        marginTop: "7%",
         justifyContent: "space-around",
     },
     button: {
         width: "46%",
-        height: "30%",
+        height: "80%",
         backgroundColor: "#66CDAA",
         borderRadius: 10,
         alignItems: "center",
@@ -174,7 +250,7 @@ const styles = StyleSheet.create({
         elevation: 5, // 그림자 높이 (Android용)
     },
     buttonText: {
-        fontSize: "18%",
+        fontSize: 18,
         color: "#FFFFFF",
         fontWeight: "bold"
     }
