@@ -108,69 +108,127 @@ const MosaicTest = ({ route }) => {
 
     // 서버로 미디어 업로드
     const handleUploadToServer = async () => {
+        console.log("미디어타입:",mediaType)
         if (!additionalMedia) {
             Alert.alert("그룹 이미지를 업로드하세요.");
             return;
         }
+        if (mediaType === "PHOTO") {
+            const uploadToServer = async () => {
+                const formData = new FormData();
 
-        const uploadToServer = async () => {
-            const formData = new FormData();
+                // 기준 이미지 추가
+                userList.forEach((user, index) => {
+                    formData.append('reference_images', {
+                        uri: user.imageUrl,
+                        name: `reference_image_${index}.jpg`
+                    });
+                });
 
-            // 기준 이미지 추가
-            userList.forEach((user, index) => {
-                formData.append('reference_images', {
-                    uri: user.imageUrl,
-                    name: `reference_image_${index}.jpg`,
+                // 그룹 이미지 추가
+                formData.append('group_image', {
+                    uri: additionalMedia,
+                    name: 'group_image.jpg',
                     type: 'image/jpeg'
                 });
-            });
 
-            // 그룹 이미지 추가
-            formData.append('group_image', {
-                uri: additionalMedia,
-                name: 'group_image.jpg',
-                type: 'image/jpeg'
-            });
+                try {
+                    const response = await fetch("http://192.168.219.101:8080/process_media", {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                        },
+                    });
 
-            try {
-                const response = await fetch("http://192.168.219.105:8080/process_images", {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
+                    if (!response.ok) {
+                        throw new Error('이미지 처리에 실패했습니다.');
+                    }
+
+                    const resultBlob = await response.blob();
+                    const resultUrl = URL.createObjectURL(resultBlob);
+                    // setResultImage(resultUrl);
+                    console.log(resultUrl)
+                    navigation.navigate("ResultMediaScreen", { mediaType, resultUrl });
+                } catch (error) {
+                    console.error(`에러 발생: ${error.message}`);
+                    Alert.alert("에러 발생", error.message);
+                }
+            }
+            Alert.alert(
+                "모자이크 시작",
+                "이전 페이지에서 선택한 인물들을 제외하고 모자이크 처리합니다.\n이 작업은 시간이 걸릴 수 있습니다.\n계속해서 진행하시겠습니까?",
+                [
+                    {
+                        text: "취소",
+                        style: "cancel",
+                        onPress: () => showToast(mediaType)
                     },
+                    {
+                        text: "시작하기",
+                        onPress: () => uploadToServer()
+                    }
+                ]
+            )
+        } else if (mediaType === "VIDEO") {
+
+            const uploadToServer = async () => {
+                const formData = new FormData();
+
+                // 기준 이미지 추가
+                userList.forEach((user, index) => {
+                    formData.append('reference_images', {
+                        uri: user.imageUrl,
+                        name: `reference_image_${index}.jpg`,
+                        type: 'image/jpeg'
+                    });
                 });
 
-                if (!response.ok) {
-                    throw new Error('이미지 처리에 실패했습니다.');
-                }
+                // 그룹 동영상 추가
+                formData.append('group_video', {
+                    uri: additionalMedia,
+                    name: 'group_video.mp4'
+                });
 
-                const resultBlob = await response.blob();
-                const resultUrl = URL.createObjectURL(resultBlob);
-                // setResultImage(resultUrl);
-                console.log(resultUrl)
-                navigation.navigate("ResultMediaScreen", { mediaType, resultUrl });
-            } catch (error) {
-                console.error(`에러 발생: ${error.message}`);
-                Alert.alert("에러 발생", error.message);
+                try {
+                    const response = await fetch("http://192.168.219.101:8080/process_media", {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                        },
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('동영상 처리에 실패했습니다.');
+                    }
+
+                    const resultBlob = await response.blob();
+                    const resultUrl = URL.createObjectURL(resultBlob);
+                    // setResultImage(resultUrl);
+                    console.log(resultUrl)
+                    navigation.navigate("ResultMediaScreen", { mediaType, resultUrl });
+                } catch (error) {
+                    console.error(`에러 발생: ${error.message}`);
+                    Alert.alert("에러 발생", error.message);
+                }
             }
+            Alert.alert(
+                "모자이크 시작",
+                "이전 페이지에서 선택한 인물들을 제외하고 모자이크 처리합니다.\n이 작업은 시간이 걸릴 수 있습니다.\n계속해서 진행하시겠습니까?",
+                [
+                    {
+                        text: "취소",
+                        style: "cancel",
+                        onPress: () => showToast(mediaType)
+                    },
+                    {
+                        text: "시작하기",
+                        onPress: () => uploadToServer()
+                    }
+                ]
+            )
         }
-
-        Alert.alert(
-            "모자이크 시작",
-            "이전 페이지에서 선택한 인물들을 제외하고 모자이크 처리합니다.\n이 작업은 시간이 걸릴 수 있습니다.\n계속해서 진행하시겠습니까?",
-            [
-                {
-                    text: "취소",
-                    style: "cancel",
-                    onPress: () => showToast(mediaType)
-                },
-                {
-                    text: "시작하기",
-                    onPress: () => uploadToServer()
-                }
-            ]
-        )
     };
 
     // 갤러리에서 사진을 선택합니다
