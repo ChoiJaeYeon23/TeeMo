@@ -18,7 +18,7 @@ const CustomProgressBar = ({ currentStep }) => {
         const backgroundColor = interpolateColor(
             progressWidth.value / 100,
             [0, 1],
-            ['#C4D7B2', '#C4D7B2']
+            ['#66CDAA', '#66CDAA']
         );
 
         return {
@@ -63,18 +63,17 @@ const CustomProgressBar = ({ currentStep }) => {
 const styles = StyleSheet.create({
     container: {
         width: "90%",
-        height: "4%",
+        height: "6%",
         marginTop: "5%",
-        borderRadius: 20,
+        borderRadius: 50,
         backgroundColor: '#eeeeee',
         overflow: 'hidden',
         justifyContent: 'center',
-        marginBottom: "5%",
     },
     progressBar: {
         position: 'absolute',
         height: '100%',
-        borderRadius: 20,
+        borderRadius: 50,
     },
     stepContainer: {
         flexDirection: 'row',
@@ -93,12 +92,12 @@ const styles = StyleSheet.create({
     },
     stepText: {
         fontSize: "15%",
-        color: '#FFFFFF',
+        color: '#999999',
         fontWeight: 'bold',
     },
     currentStepText: {
         fontSize: "18%",
-        color: '#777777',
+        color: '#FFFF00',
         fontWeight: "bold"
     }
 });

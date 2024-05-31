@@ -18,7 +18,7 @@ const { width } = Dimensions.get("window")
 /**
  * 모자이크 처리된 결과물(사진 혹은 동영상)을 화면에 출력하고 저장할 수 있는 화면입니다.
  */
-const ResultMediaScreen = () => {
+const ResultMediaScreen = ({ route }) => {
     const [mediaType, setMediaType] = useState("PHOTO")  // 미디어 타입 PHOTO(사진) 또는 VIDEO(동영상), 기본 값은 PHOTO로 초기화
     const [mediaUri, setMediaUri] = useState("")    // 결과물 미디어(사진 or 동영상)의 URI
     const [loading, setLoading] = useState(true)    // 로딩 중인지 아닌지 여부
@@ -29,15 +29,8 @@ const ResultMediaScreen = () => {
      * 미디어의 type과 uri를 전달받아야 합니다.
      */
     const loadMedia = async () => {
-        try {
-            const response = await fetch("http://13.209.77.184/api/load_media");
-            const data = await response.json();
-            setMediaType(data.type);
-            setMediaUri(data.uri);
-            setLoading(false);
-        } catch (error) {
-            console.error("미디어 불러오기 실패:", error);
-        }
+        setMediaType(route.params.mediaType)
+        setMediaUri(route.params.resultUrl)
     }
 
     useEffect(() => {

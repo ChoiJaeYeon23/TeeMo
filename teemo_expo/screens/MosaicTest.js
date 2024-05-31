@@ -133,7 +133,7 @@ const MosaicTest = ({ route }) => {
             });
 
             try {
-                const response = await fetch("http://localhost:5001/process_images", {
+                const response = await fetch("http://192.168.219.105:8080/process_images", {
                     method: 'POST',
                     body: formData,
                     headers: {
@@ -147,7 +147,9 @@ const MosaicTest = ({ route }) => {
 
                 const resultBlob = await response.blob();
                 const resultUrl = URL.createObjectURL(resultBlob);
-                setResultImage(resultUrl);
+                // setResultImage(resultUrl);
+                console.log(resultUrl)
+                navigation.navigate("ResultMediaScreen", { mediaType, resultUrl });
             } catch (error) {
                 console.error(`에러 발생: ${error.message}`);
                 Alert.alert("에러 발생", error.message);
@@ -237,10 +239,11 @@ const MosaicTest = ({ route }) => {
     useEffect(() => {
         setButtonText("사진 / 동영상 선택하기")
     }, [])
+
     return (
         <SafeAreaView style={styles.container}>
 
-<CustomProgressBar currentStep={currentStep} />
+            <CustomProgressBar currentStep={currentStep} />
 
             <View style={styles.headerContainer}>
                 <Text style={styles.titleText}>제작하기</Text>
@@ -364,12 +367,12 @@ const styles = StyleSheet.create({
     titleText: {
         fontSize: "30%",
         fontWeight: "900",
-        color: "#A0C49D",
+        color: "#66CDAA",
         marginLeft: "7%"
     },
     guideText: {
         fontSize: "17%",
-        color: "#A0C49D"
+        color: "#66CDAA"
     },
     imageContainer: {
         flexDirection: 'row',
@@ -410,7 +413,7 @@ const styles = StyleSheet.create({
     },
     uploadText: {
         fontSize: "20%",
-        color: "#A0C49D",
+        color: "#66CDAA",
         fontWeight: "bold"
     },
     buttonContainer: {
@@ -425,7 +428,7 @@ const styles = StyleSheet.create({
         width: "46%",
         height: "40%",
         backgroundColor: "#FFFFFF",
-        borderRadius: 15,
+        borderRadius: 10,
         alignItems: "center",
         justifyContent: "center",
         shadowColor: "#000", // 그림자 색상
@@ -437,8 +440,8 @@ const styles = StyleSheet.create({
     nextButton: {
         width: "46%",
         height: "40%",
-        backgroundColor: "#A0C49D",
-        borderRadius: 15,
+        backgroundColor: "#66CDAA",
+        borderRadius: 10,
         alignItems: "center",
         justifyContent: "center",
         shadowColor: "#000", // 그림자 색상
@@ -449,7 +452,7 @@ const styles = StyleSheet.create({
     },
     back: {
         fontSize: "18%",
-        color: "#A0C49D",
+        color: "#66CDAA",
         fontWeight: "bold"
     },
     next: {
@@ -498,7 +501,7 @@ const styles = StyleSheet.create({
     },
     sheetText: {
         fontSize: "20%",
-        color: '#A0C49D',
+        color: '#66CDAA',
         fontWeight: 'bold',
     },
     sheetActions: {

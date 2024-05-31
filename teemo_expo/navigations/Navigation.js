@@ -12,6 +12,7 @@ import ResultMediaScreen from "../screens/ResultMediaScreen"
 import ChoiceMedia from "../screens/ChoiceMedia"
 import Test from "../screens/Test"
 import MosaicTest from "../screens/MosaicTest"
+import RealTimeMosaic from "../screens/RealTimeMosaic"
 import NavigationScreen from "./NavigationScreen"
 
 const Stack = createStackNavigator()
@@ -58,6 +59,14 @@ const Navigation = () => {
             <Stack.Screen
                 name="FaceRecognitionScreen"
                 component={FaceRecognitionScreen}
+                options={{
+                    headerShown: false,
+                    // gestureEnabled: false
+                }}
+            />
+            <Stack.Screen
+                name="RealTimeMosaic"
+                component={RealTimeMosaic}
                 options={{
                     headerShown: false,
                     // gestureEnabled: false

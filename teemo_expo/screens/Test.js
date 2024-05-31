@@ -286,12 +286,12 @@ const styles = StyleSheet.create({
     titleText: {
         fontSize: "30%",
         fontWeight: "900",
-        color: "#A0C49D",
+        color: "#66CDAA",
         marginLeft: "7%"
     },
     guideText: {
         fontSize: "17%",
-        color: "#A0C49D"
+        color: "#66CDAA"
     },
     input: {
         fontSize: "18%",
@@ -316,7 +316,7 @@ const styles = StyleSheet.create({
         height: "55%",
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "#A0C49D",
+        backgroundColor: "#66CDAA",
         marginLeft: "3%",
         borderRadius: 10,
         shadowColor: "#000", // 그림자 색상
@@ -341,7 +341,7 @@ const styles = StyleSheet.create({
     nextButton: {
         width: "46%",
         height: "40%",
-        backgroundColor: "#A0C49D",
+        backgroundColor: "#66CDAA",
         borderRadius: 10,
         alignItems: "center",
         justifyContent: "center",
@@ -353,7 +353,7 @@ const styles = StyleSheet.create({
     },
     back: {
         fontSize: "18%",
-        color: "#A0C49D",
+        color: "#66CDAA",
         fontWeight: "bold"
     },
     next: {

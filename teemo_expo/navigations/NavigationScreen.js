@@ -1,8 +1,6 @@
 import { SafeAreaView, Button } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 
-
-
 const NavigationScreen = () => {
     const navigation = useNavigation()
 
@@ -33,6 +31,10 @@ const NavigationScreen = () => {
                 onPress={() => navigation.navigate("MosaicTest")}
             />
 
+            <Button
+                title="[2.2.2] 실시간 모자이크 웹뷰 화면"
+                onPress={() => navigation.navigate("RealTimeMosaic")}
+            />
             <Button
                 title="동영상 녹화 화면"
                 onPress={() => navigation.navigate("RecordScreen")}
