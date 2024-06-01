@@ -16,6 +16,8 @@ import { Video } from "expo-av"
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet'
 import Toast from "react-native-toast-message"
 import CustomProgressBar from "./CustomProgressBar"
+import { Ubuntu_server, Local_Server } from '@env' 
+
 
 const MosaicTest = ({ route }) => {
     const { userList } = route.params;
@@ -128,12 +130,11 @@ const MosaicTest = ({ route }) => {
                 // 그룹 이미지 추가
                 formData.append('group_image', {
                     uri: additionalMedia,
-                    name: 'group_image.jpg',
-                    type: 'image/jpeg'
+                    name: 'group_image.jpg'
                 });
 
                 try {
-                    const response = await fetch("http://192.168.219.101:8080/process_media", {
+                    const response = await fetch(`${Local_Server}/process_media`, {
                         method: 'POST',
                         body: formData,
                         headers: {
@@ -191,7 +192,7 @@ const MosaicTest = ({ route }) => {
                 });
 
                 try {
-                    const response = await fetch("http://192.168.219.101:8080/process_media", {
+                    const response = await fetch(`${Local_Server}/process_media`, {
                         method: 'POST',
                         body: formData,
                         headers: {

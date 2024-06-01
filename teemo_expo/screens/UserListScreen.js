@@ -15,6 +15,7 @@ import {
 import { useNavigation } from "@react-navigation/native"
 import { Entypo, Feather } from "@expo/vector-icons"
 import UserList from "../src/UserList"
+import { Ubuntu_Server } from '@env' // 환경 변수 import
 
 /**
  * 모자이크 처리를 하지 않을 인물들의 리스트를 출력하는 페이지입니다.
@@ -46,7 +47,7 @@ const UserListScreen = () => {
      */
     const setUser = async () => {
         try {
-            const response = await fetch("http://13.209.77.184/api/load_user_list");
+            const response = await fetch(`${Ubuntu_Server}/api/load_user_list`);
             const data = await response.json();
             setUserList(data);  // 사용자 리스트에 저장합니다. 배열형태가 아닌 경우 배열 형태로 변환 후 저장해야함!
         } catch (error) {
@@ -68,7 +69,7 @@ const UserListScreen = () => {
      * userList가 변경될 때마다 서버로 포스트
      */
     useEffect(() => {
-        fetch("http://13.209.77.184/api/post_user_list", {
+        fetch(`${Ubuntu_Server}/api/post_user_list`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

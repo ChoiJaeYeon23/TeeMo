@@ -1,6 +1,8 @@
 import { useState } from "react"
 import { SafeAreaView, View, Text, TouchableOpacity, TouchableWithoutFeedback, Image, StyleSheet, TextInput, Keyboard, Alert } from "react-native"
 import { useNavigation } from "@react-navigation/native"
+import { Ubuntu_Server } from '@env'
+
 
 /**
  * 로그인 화면 입니다.
@@ -37,6 +39,7 @@ const SignInScreen = () => {
      * 로그인 로직입니다.
      */
     const signInButtonHandler = () => {
+        console.log("ㅅㅂ?",Ubuntu_Server)
         if (id === "") {
             Alert.alert("아이디를 입력하세요.")
             return
@@ -58,7 +61,7 @@ const SignInScreen = () => {
             const loginNow = true;
 
             // 서버로 로그인 요청을 보내는 함수
-            fetch("http://3.34.125.163:5001/api/signin", {
+            fetch(`${Ubuntu_Server}/api/signin`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

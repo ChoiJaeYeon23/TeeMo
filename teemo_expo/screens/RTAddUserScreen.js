@@ -15,6 +15,7 @@ import {
     Modal
 } from 'react-native'
 import CustomProgressBar from "./CustomProgressBar"
+import { Ubuntu_Server } from '@env' // 환경 변수 import
 
 /**
  * Real Time
@@ -42,7 +43,7 @@ const RTAddUserScreen = ({ navigation }) => {
 
     const fetchUserImage = async (userId) => {
         try {
-            const response = await fetch("http://3.34.125.163:5001/api/get_user_image", {
+            const response = await fetch(`${Ubuntu_Server}/api/get_user_image`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

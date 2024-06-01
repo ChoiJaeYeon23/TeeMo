@@ -14,7 +14,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
 import { SimpleLineIcons } from "@expo/vector-icons"
-
+import { Ubuntu_Server } from '@env'
 
 const SignUpScreen = () => {
     const navigation = useNavigation();
@@ -58,7 +58,7 @@ const SignUpScreen = () => {
         }
 
         return new Promise((resolve, reject) => {
-            fetch("http://3.34.125.163:5001/api/check_id", {
+            fetch(`${Ubuntu_Server}/api/check_id`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -121,7 +121,7 @@ const SignUpScreen = () => {
         formData.append('nickname', nickname);
 
         try {
-            const response = await fetch("http://3.34.125.163:5001/api/sign_up", {
+            const response = await fetch(`${Ubuntu_Server}/api/sign_up`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "multipart/form-data",

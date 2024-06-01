@@ -15,6 +15,8 @@ import MediaDisplay from "./MediaDisplay"
 import * as ImagePicker from "expo-image-picker"
 import { Entypo, Feather } from "@expo/vector-icons"
 import { useNavigation } from "@react-navigation/native"
+import { Ubuntu_Server, Local_Server } from '@env'
+
 
 const { width } = Dimensions.get("window")
 
@@ -140,7 +142,7 @@ const MediaUploadScreen = () => {
      * 서버로 미디어(사진, 동영상) 업로드를 요청하는 함수입니다.
      */
     const uploadMedia = () => {
-        fetch("http://13.209.77.184/api/media_upload", {
+        fetch(`${Local_Server}/api/media_upload`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -163,7 +165,7 @@ const MediaUploadScreen = () => {
      */
     const loadImages = async () => {
         try {
-            const response = await fetch("http://13.209.77.184/api/load_recog_face");
+            const response = await fetch(`${Local_Server}/api/load_recog_face`);
             const data = await response.json();
             setRecogFaceObj(data);  // 얼굴 객체 배열에 저장합니다. 배열형태가 아닌 경우 배열 형태로 변환 후 저장해야함!
         } catch (error) {
@@ -176,7 +178,7 @@ const MediaUploadScreen = () => {
      * 사진 URI 배열을 전송합니다.(아니면 배열 인덱스?)
      */
     const uploadSelectedFace = () => {
-        fetch("http://13.209.77.184/api/upload_selected_face", {
+        fetch(`${Local_Server}/api/upload_selected_face`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
