@@ -1,5 +1,18 @@
 import { useState } from "react"
-import { SafeAreaView, View, Text, TouchableOpacity, TouchableWithoutFeedback, Image, StyleSheet, TextInput, Keyboard, Alert } from "react-native"
+import {
+    SafeAreaView,
+    View,
+    Text,
+    TouchableOpacity,
+    TouchableWithoutFeedback,
+    Image,
+    StyleSheet,
+    TextInput,
+    Keyboard,
+    Alert,
+    KeyboardAvoidingView,
+    Platform
+} from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import { Ubuntu_Server } from '@env'
 import LoadingModal from "./LoadingModal"
@@ -39,8 +52,6 @@ const SignInScreen = () => {
      * 로그인 로직입니다.
      */
     const signInButtonHandler = () => {
-        setIsLoading(true)
-        console.log("ㅅㅂ?", Ubuntu_Server)
         if (id === "") {
             Alert.alert("아이디를 입력하세요.")
             return
@@ -60,6 +71,7 @@ const SignInScreen = () => {
             }
 
             const loginNow = true;
+            setIsLoading(true);
 
             // 서버로 로그인 요청을 보내는 함수
             fetch(`${Ubuntu_Server}/api/signin`, {
@@ -98,55 +110,60 @@ const SignInScreen = () => {
 
     return (
         <TouchableWithoutFeedback onPress={keyboardOff}>
-            <SafeAreaView style={styles.container}>
-                <View style={styles.logoContainer}>
-                    <Image
-                        source={require("../images/app_logo.png")}
-                        style={styles.logo}
-                    />
-                </View>
-
-                <View style={styles.signinContainer}>
-                    <View style={styles.inputContainer}>
-                        <TextInput
-                            value={id}
-                            onChangeText={setId}
-                            placeholder="아이디"
-                            style={styles.input}
-                            placeholderTextColor="#AAAAAA"
-                            returnKeyType="next"
-                            onSubmitEditing={() => { passwordInput.focus() }}
-                            onFocus={() => clearId()}
+            <KeyboardAvoidingView
+                style={{ flex: 1 }}
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+            >
+                <SafeAreaView style={styles.container}>
+                    <View style={styles.logoContainer}>
+                        <Image
+                            source={require("../images/app_logo.png")}
+                            style={styles.logo}
                         />
                     </View>
 
-                    <View style={styles.inputContainer}>
-                        <TextInput
-                            ref={(input) => { passwordInput = input }}
-                            value={password}
-                            onChangeText={setPassword}
-                            placeholder="비밀번호"
-                            placeholderTextColor="#AAAAAA"
-                            secureTextEntry={true}
-                            style={styles.input}
-                            returnKeyType="done"
-                            onFocus={() => clearPassword()}
-                        />
+                    <View style={styles.signinContainer}>
+                        <View style={styles.inputContainer}>
+                            <TextInput
+                                value={id}
+                                onChangeText={setId}
+                                placeholder="아이디"
+                                style={styles.input}
+                                placeholderTextColor="#AAAAAA"
+                                returnKeyType="next"
+                                onSubmitEditing={() => { passwordInput.focus() }}
+                                onFocus={() => clearId()}
+                            />
+                        </View>
+
+                        <View style={styles.inputContainer}>
+                            <TextInput
+                                ref={(input) => { passwordInput = input }}
+                                value={password}
+                                onChangeText={setPassword}
+                                placeholder="비밀번호"
+                                placeholderTextColor="#AAAAAA"
+                                secureTextEntry={true}
+                                style={styles.input}
+                                returnKeyType="done"
+                                onFocus={() => clearPassword()}
+                            />
+                        </View>
+
+                        <TouchableOpacity onPress={signInButtonHandler} style={styles.signinButton} activeOpacity={0.9}>
+                            <Text style={styles.signin}>로그인</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity onPress={signUpButtonHandler} style={styles.signupButton} activeOpacity={0.9}>
+                            <Text style={styles.signup}>회원가입</Text>
+                        </TouchableOpacity>
+
                     </View>
 
-                    <TouchableOpacity onPress={signInButtonHandler} style={styles.signinButton} activeOpacity={0.9}>
-                        <Text style={styles.signin}>로그인</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity onPress={signUpButtonHandler} style={styles.signupButton} activeOpacity={0.9}>
-                        <Text style={styles.signup}>회원가입</Text>
-                    </TouchableOpacity>
-
-                </View>
-
-                <LoadingModal visible={isLoading} />
-            </SafeAreaView>
-        </TouchableWithoutFeedback>
+                    <LoadingModal visible={isLoading} />
+                </SafeAreaView>
+            </KeyboardAvoidingView>
+        </TouchableWithoutFeedback >
     )
 }
 
@@ -160,7 +177,7 @@ const styles = StyleSheet.create({
     },
     logoContainer: {
         width: "100%",
-        height: "50%",
+        height: "45%",
         alignItems: "center",
         justifyContent: "flex-end",
         paddingBottom: "10%"
@@ -171,7 +188,7 @@ const styles = StyleSheet.create({
     },
     signinContainer: {
         width: "100%",
-        height: "50%",
+        height: "55%",
         alignItems: "center",
         justifyContent: "flex-start"
     },
