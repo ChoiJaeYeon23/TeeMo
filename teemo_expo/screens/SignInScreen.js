@@ -175,11 +175,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "flex-start"
     },
-    separator: {
-        height: 1.8,
-        width: "100%",
-        backgroundColor: "#C4D7B2",
-    },
     inputContainer: {
         width: "80%",
         marginBottom: "3%",
@@ -200,7 +195,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff"
     },
     signinButton: {
-        backgroundColor: "#A0C49D",
+        backgroundColor: "#95ce67",
         padding: "4%",
         borderRadius: 10,
         width: "80%",
@@ -222,6 +217,7 @@ const styles = StyleSheet.create({
     },
     signup: {
         fontSize: "17%",
-        color: "#A0C49D"
+        color: "#95ce67",
+        fontWeight: "500"
     }
 })

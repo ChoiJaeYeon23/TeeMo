@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
     headerTitle: {
         fontSize: 40,
         fontWeight: "bold",
-        color: "#66CDAA"
+        color: "#95ce67"
     },
     headerSetting: {
         position: "absolute",
@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
     },
     buttonContainer: {
         flexDirection: "row",
-        backgroundColor: "#66CDAA",
+        backgroundColor: "#95ce67",
         alignItems: "center",
         justifyContent: "center",
         paddingHorizontal: "4%",

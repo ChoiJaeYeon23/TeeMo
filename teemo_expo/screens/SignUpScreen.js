@@ -198,7 +198,7 @@ const SignUpScreen = () => {
                         />
 
                         <TouchableOpacity onPress={checkID} style={styles.checkContainer}>
-                            <Text style={{ fontSize: "16%", color: "#A0C49D" }}>확인</Text>
+                            <Text style={{ fontSize: "16%", color: "#95ce67", fontWeight: "bold" }}>확인</Text>
                         </TouchableOpacity>
                     </View>
                     <Text style={{ fontSize: "14%", color: availableIDColor, marginBottom: "3%" }}>{availableIDText}</Text>
@@ -254,9 +254,9 @@ const styles = StyleSheet.create({
         height: "60%",
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "#C4D7B2",
+        backgroundColor: "#95ce6790",
         marginBottom: "3%",
-        shadowColor: "#A0C49D", // 그림자 색상
+        shadowColor: "#95ce67", // 그림자 색상
         shadowOffset: { width: 0, height: 3 }, // 그림자 오프셋
         shadowOpacity: 0.6, // 그림자 투명도
         shadowRadius: 4, // 그림자 반경
@@ -320,7 +320,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff"
     },
     signupButton: {
-        backgroundColor: "#A0C49D",
+        backgroundColor: "#95ce67",
         padding: "4%",
         borderRadius: 10,
         width: "80%",
@@ -338,6 +338,7 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: "18%",
-        color: "#A0C49D"
+        color: "#A0C49D",
+        fontWeight: "600"
     }
 });

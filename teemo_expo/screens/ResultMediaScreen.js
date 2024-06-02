@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
     titleText: {
         fontSize: "30%",
         fontWeight: "900",
-        color: "#66CDAA",
+        color: "#95ce67",
         marginLeft: "7%"
     },
     downloadButtonContainer: {
@@ -227,7 +227,7 @@ const styles = StyleSheet.create({
     },
     downloadText: {
         fontSize: "20%",
-        color: "#66CDAA",
+        color: "#95ce67",
         fontWeight: "bold"
     },
     bottomContainer: {

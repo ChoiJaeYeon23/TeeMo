@@ -322,7 +322,7 @@ const styles = StyleSheet.create({
     headerTitle: {
         fontSize: 30,
         fontWeight: "bold",
-        color: "#66CDAA"
+        color: "#95ce67"
     },
     mainContainer: {
         width: "100%",
@@ -376,8 +376,9 @@ const styles = StyleSheet.create({
     },
     itemText: {
         fontSize: 18,
-        color: "#333",
-        marginTop: "5%"
+        color: "#95ce67",
+        marginTop: "5%",
+        fontWeight: "500"
     },
     input: {
         fontSize: 18,
@@ -401,7 +402,7 @@ const styles = StyleSheet.create({
     button: {
         paddingVertical: "3%",
         paddingHorizontal: "5%",
-        backgroundColor: "#66CDAA",
+        backgroundColor: "#95ce67",
         borderRadius: 13,
         shadowColor: "#000", // 그림자 색상
         shadowOffset: { width: 0, height: 3 }, // 그림자 오프셋

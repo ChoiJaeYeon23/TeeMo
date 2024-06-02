@@ -295,12 +295,12 @@ const styles = StyleSheet.create({
     titleText: {
         fontSize: "30%",
         fontWeight: "900",
-        color: "#66CDAA",
+        color: "#95ce67",
         marginLeft: "7%"
     },
     guideText: {
         fontSize: "17%",
-        color: "#66CDAA"
+        color: "#95ce67"
     },
     backButton: {
         width: "46%",
@@ -318,7 +318,7 @@ const styles = StyleSheet.create({
     nextButton: {
         width: "46%",
         height: "40%",
-        backgroundColor: "#66CDAA",
+        backgroundColor: "#95ce67",
         borderRadius: 10,
         alignItems: "center",
         justifyContent: "center",
@@ -333,7 +333,7 @@ const styles = StyleSheet.create({
         height: "55%",
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "#66CDAA",
+        backgroundColor: "#95ce67",
         marginLeft: "3%",
         borderRadius: 10,
         shadowColor: "#000", // 그림자 색상
@@ -344,7 +344,7 @@ const styles = StyleSheet.create({
     },
     back: {
         fontSize: "18%",
-        color: "#66CDAA",
+        color: "#95ce67",
         fontWeight: "bold"
     },
     next: {
