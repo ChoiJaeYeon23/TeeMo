@@ -25,13 +25,13 @@ def process_media():
 
         for reference_file in reference_files:
             reference_image = face_recognition.load_image_file(reference_file)
-            reference_face_locations = face_recognition.face_locations(reference_image)
+            reference_face_locations = face_recognition.face_locations(reference_image, model='cnn')
             reference_face_encodings = face_recognition.face_encodings(reference_image, reference_face_locations)
             reference_encodings.extend(reference_face_encodings)
 
         group_file = request.files['group_image']
         group_image = face_recognition.load_image_file(group_file)
-        group_face_locations = face_recognition.face_locations(group_image)
+        group_face_locations = face_recognition.face_locations(group_image, model='cnn')
         group_face_encodings = face_recognition.face_encodings(group_image, group_face_locations)
 
         unblurred_count = 0
@@ -78,7 +78,7 @@ def process_media():
 
         for reference_file in reference_files:
             reference_image = face_recognition.load_image_file(reference_file)
-            reference_face_locations = face_recognition.face_locations(reference_image)
+            reference_face_locations = face_recognition.face_locations(reference_image, model='cnn')
             reference_face_encodings = face_recognition.face_encodings(reference_image, reference_face_locations)
             reference_encodings.extend(reference_face_encodings)
 
@@ -105,7 +105,7 @@ def process_media():
                 break
 
             # 프레임에서 얼굴 인식
-            group_face_locations = face_recognition.face_locations(frame)
+            group_face_locations = face_recognition.face_locations(frame, model='cnn')
             group_face_encodings = face_recognition.face_encodings(frame, group_face_locations)
 
             for i, group_encoding in enumerate(group_face_encodings):
