@@ -293,82 +293,119 @@ const styles = StyleSheet.create({
         justifyContent: "space-around"
     },
     titleText: {
-        fontSize: 30,
-        fontWeight: "600",
-        paddingLeft: "5%"
+        fontSize: "30%",
+        fontWeight: "900",
+        color: "#66CDAA",
+        marginLeft: "7%"
     },
     guideText: {
-        fontSize: 13,
-        paddingTop: "1%",
-        paddingLeft: "1%",
-        color: "#9f9f9f",
-        alignSelf: "flex-start",
+        fontSize: "17%",
+        color: "#66CDAA"
     },
     backButton: {
-        width: "40%",
-        height: "100%",
-        justifyContent: "center",
+        width: "46%",
+        height: "40%",
+        borderRadius: 10,
+        backgroundColor: "#FFFFFF",
         alignItems: "center",
-        borderWidth: 1,
-        borderColor: "#d6d6d6"
+        justifyContent: "center",
+        shadowColor: "#000", // 그림자 색상
+        shadowOffset: { width: 0, height: 3 }, // 그림자 오프셋
+        shadowOpacity: 0.3, // 그림자 투명도
+        shadowRadius: 3, // 그림자 반경
+        elevation: 5, // 그림자 높이 (Android용)
     },
     nextButton: {
-        width: "40%",
-        height: "100%",
-        justifyContent: "center",
+        width: "46%",
+        height: "40%",
+        backgroundColor: "#66CDAA",
+        borderRadius: 10,
         alignItems: "center",
-        backgroundColor: "#d6d6d6"
+        justifyContent: "center",
+        shadowColor: "#000", // 그림자 색상
+        shadowOffset: { width: 0, height: 3 }, // 그림자 오프셋
+        shadowOpacity: 0.3, // 그림자 투명도
+        shadowRadius: 3, // 그림자 반경
+        elevation: 5, // 그림자 높이 (Android용)
     },
     addButton: {
-        width: "18%",
-        height: "100%",
-        justifyContent: "center",
+        width: "13%",
+        height: "55%",
         alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#66CDAA",
         marginLeft: "3%",
-        backgroundColor: "#d6d6d6"
+        borderRadius: 10,
+        shadowColor: "#000", // 그림자 색상
+        shadowOffset: { width: 0, height: 1 }, // 그림자 오프셋
+        shadowOpacity: 0.2, // 그림자 투명도
+        shadowRadius: 1, // 그림자 반경
+        elevation: 5, // 그림자 높이 (Android용)
     },
     back: {
-        fontSize: 18
+        fontSize: "18%",
+        color: "#66CDAA",
+        fontWeight: "bold"
     },
     next: {
-        fontSize: 18,
-        fontWeight: "500"
+        fontSize: "18%",
+        color: "#FFFFFF",
+        fontWeight: "bold"
     },
     buttonText: {
-        fontSize: 18
+        fontSize: "20%",
+        color: "#FFFFFF",
+        fontWeight: "600"
     },
     input: {
-        width: "78%",
-        height: "100%",
-        paddingLeft: "3%",
-        backgroundColor: "#e5e5e5"
+        fontSize: "18%",
+        width: "80%",
+        height: "55%",
+        paddingHorizontal: "4%",
+        backgroundColor: "#fff",
+        borderRadius: 10,
+        shadowColor: "#000", // 그림자 색상
+        shadowOffset: { width: 0, height: 1 }, // 그림자 오프셋
+        shadowOpacity: 0.2, // 그림자 투명도
+        shadowRadius: 1, // 그림자 반경
+        elevation: 5, // 그림자 높이 (Android용)
+    },
+    imageContainer: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
     },
     itemContainer: {
-        width: "100%",
-        height: 50,
         flexDirection: "row",
-        justifyContent: "space-between",
-        borderBottomWidth: 1,
-        borderColor: "#d6d6d6"
+        alignItems: "center",
+        justifyContent: "center"
     },
     userItem: {
         width: "80%",
-        height: "100%",
-        justifyContent: "center",
-        paddingLeft: "5%",
+        backgroundColor: "#FFFFFF",
+        paddingVertical: "4%",
+        paddingHorizontal: "5%",
+        marginTop: "3%",
+        marginRight: "3%",
+        borderRadius: 10
     },
     userId: {
-        fontSize: 18,
+        fontSize: "18%",
+        fontWeight: "600",
+        color: "#888888"
     },
     delButton: {
-        width: "20%",
-        height: "100%",
-        justifyContent: "center",
+        marginTop: "3%",
+        paddingVertical: "4%",
+        paddingHorizontal: "3%",
         alignItems: "center",
-        backgroundColor: "#d6d6d6"
+        justifyContent: "center",
+        borderRadius: 15,
+        backgroundColor: "#E84A4A"
     },
     delText: {
-        fontSize: 18
+        fontSize: "18%",
+        fontWeight: "600",
+        color: "#FFFFFF"
     },
     modalContainer: {
         flex: 1,
@@ -381,10 +418,12 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap',
         justifyContent: 'center',
         alignItems: 'center',
+        width: "70%",
+        height: "40%"
     },
     image: {
-        width: 100,
-        height: 100,
-        margin: 5,
+        width: 50,
+        height: 50,
+        margin: 5
     }
 });
