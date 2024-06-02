@@ -18,7 +18,7 @@ const CustomProgressBar = ({ currentStep }) => {
         const backgroundColor = interpolateColor(
             progressWidth.value / 100,
             [0, 1],
-            ['#66CDAA', '#66CDAA']
+            ['#95ce67', '#95ce67']
         );
 
         return {
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     },
     currentStepText: {
         fontSize: "18%",
-        color: '#FFFF00',
+        color: '#FFEBA5',
         fontWeight: "bold"
     }
 });

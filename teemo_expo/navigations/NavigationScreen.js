@@ -49,35 +49,10 @@ const NavigationScreen = () => {
                 title="[2.2.2] 실시간 모자이크 웹뷰 화면"
                 onPress={() => navigation.navigate("RealTimeMosaic")}
             />
-            <Button
-                title="동영상 녹화 화면"
-                onPress={() => navigation.navigate("RecordScreen")}
-            />
 
             <Button
                 title="결과 이미지 보기"
                 onPress={() => navigation.navigate("ResultMediaScreen")}
-            />
-
-
-            <Button
-                title="사진 촬영 화면"
-                onPress={() => navigation.navigate("TakePictureScreen")}
-            />
-
-            <Button
-                title="사용자 리스트 화면(사용 안할듯)"
-                onPress={() => navigation.navigate("UserListScreen")}
-            />
-
-            <Button
-                title="미디어 업로드하기(사용 안할듯)"
-                onPress={() => navigation.navigate("MediaUploadScreen")}
-            />
-
-            <Button
-                title="기준 이미지 촬영(여기 들어가면 reload해야돼)"
-                onPress={() => navigation.navigate("FaceRecognitionScreen")}
             />
         </SafeAreaView>
     )

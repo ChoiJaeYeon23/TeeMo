@@ -9,7 +9,9 @@ import {
     TouchableWithoutFeedback,
     Keyboard,
     Alert,
-    Image
+    Image,
+    KeyboardAvoidingView,
+    Platform
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
@@ -26,7 +28,7 @@ const SignUpScreen = () => {
     const [availableIDText, setAvailableIDText] = useState("아이디 중복 여부를 확인해주세요.");
     const [availableIDColor, setAvailableIDColor] = useState("#AAAAAA");
     const [isLoading, setIsLoading] = useState(false)
-    
+
     const keyboardOff = () => {
         Keyboard.dismiss();
     };
@@ -106,7 +108,7 @@ const SignUpScreen = () => {
         }
     };
 
-   const signupButtonHandler = async () => {
+    const signupButtonHandler = async () => {
         if (!id || !password || !nickname || !profilePic) {
             Alert.alert("모든 필드를 입력해주세요.");
             return;
@@ -152,84 +154,90 @@ const SignUpScreen = () => {
 
     return (
         <TouchableWithoutFeedback onPress={keyboardOff}>
-            <SafeAreaView style={styles.container}>
-                <View style={styles.profileContainer}>
-                    {
-                        profilePic ? (
-                            <View style={styles.imageContainer}>
-                                <Image source={{ uri: profilePic }} style={styles.profilePic} />
-                            </View>
-                        ) : (
-                            <View style={styles.imageContainer}>
-                                <SimpleLineIcons name="user" size={130} color="#fff" />
-                            </View>
-                        )
-                    }
-                    <TouchableOpacity onPress={pickImage} style={styles.addPicButton}>
-                        <Text style={styles.text}>프로필 사진 추가</Text>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={[styles.inputContainer, { marginBottom: "10%" }]}>
-                    <TextInput
-                        value={nickname}
-                        onChangeText={setNickname}
-                        placeholder="닉네임"
-                        placeholderTextColor="#AAAAAA"
-                        style={styles.input}
-                        returnKeyType="next"
-                        onSubmitEditing={() => { idInput.focus() }}
-                        onFocus={() => clearInput("nickname")}
-                    />
-                </View>
-
-                <View style={styles.signupContainer}>
-                    <View style={styles.idInputContainer}>
-                        <TextInput
-                            ref={(input) => { idInput = input }}
-                            value={id}
-                            onChangeText={setId}
-                            placeholder="아이디"
-                            placeholderTextColor="#AAAAAA"
-                            style={styles.idInput}
-                            returnKeyType="next"
-                            onSubmitEditing={() => { passwordInput.focus() }}
-                            onFocus={() => clearInput("id")}
-                        />
-
-                        <TouchableOpacity onPress={checkID} style={styles.checkContainer}>
-                            <Text style={{ fontSize: "16%", color: "#A0C49D" }}>확인</Text>
+            <KeyboardAvoidingView
+                style={{ flex: 1 }}
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+            >
+                <SafeAreaView style={styles.container}>
+                    <View style={styles.profileContainer}>
+                        {
+                            profilePic ? (
+                                <View style={styles.imageContainer}>
+                                    <Image source={{ uri: profilePic }} style={styles.profilePic} />
+                                </View>
+                            ) : (
+                                <View style={styles.imageContainer}>
+                                    <SimpleLineIcons name="user" size={130} color="#fff" />
+                                </View>
+                            )
+                        }
+                        <TouchableOpacity onPress={pickImage} style={styles.addPicButton}>
+                            <Text style={styles.text}>프로필 사진 추가</Text>
                         </TouchableOpacity>
                     </View>
-                    <Text style={{ fontSize: "14%", color: availableIDColor, marginBottom: "3%" }}>{availableIDText}</Text>
 
-                    <View style={styles.inputContainer}>
+                    <View style={[styles.inputContainer, { marginBottom: "10%" }]}>
                         <TextInput
-                            ref={(input) => { passwordInput = input }}
-                            value={password}
-                            onChangeText={setPassword}
-                            placeholder="비밀번호"
+                            value={nickname}
+                            onChangeText={setNickname}
+                            placeholder="닉네임"
                             placeholderTextColor="#AAAAAA"
-                            secureTextEntry={true}
                             style={styles.input}
-                            returnKeyType="done"
-                            onFocus={() => clearInput("password")}
+                            returnKeyType="next"
+                            onSubmitEditing={() => { idInput.focus() }}
+                            onFocus={() => clearInput("nickname")}
                         />
                     </View>
 
-                    <TouchableOpacity
-                        onPress={
-                            async () => {
-                                signupButtonHandler(profilePic)
-                            }
-                        }
-                        style={styles.signupButton} activeOpacity={0.9}>
-                        <Text style={styles.signup}>회원가입</Text>
-                    </TouchableOpacity>
-                </View>
+                    <View style={styles.signupContainer}>
+                        <View style={styles.idInputContainer}>
+                            <TextInput
+                                ref={(input) => { idInput = input }}
+                                value={id}
+                                onChangeText={setId}
+                                placeholder="아이디"
+                                placeholderTextColor="#AAAAAA"
+                                style={styles.idInput}
+                                returnKeyType="next"
+                                onSubmitEditing={() => { passwordInput.focus() }}
+                                onFocus={() => clearInput("id")}
+                            />
 
-                <LoadingModal visible={isLoading} />
-            </SafeAreaView>
+                            <TouchableOpacity onPress={checkID} style={styles.checkContainer}>
+                                <Text style={{ fontSize: "16%", color: "#95ce67", fontWeight: "bold" }}>확인</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <Text style={{ fontSize: "14%", color: availableIDColor, marginBottom: "3%" }}>{availableIDText}</Text>
+
+                        <View style={styles.inputContainer}>
+                            <TextInput
+                                ref={(input) => { passwordInput = input }}
+                                value={password}
+                                onChangeText={setPassword}
+                                placeholder="비밀번호"
+                                placeholderTextColor="#AAAAAA"
+                                secureTextEntry={true}
+                                style={styles.input}
+                                returnKeyType="done"
+                                onFocus={() => clearInput("password")}
+                            />
+                        </View>
+
+                        <TouchableOpacity
+                            onPress={
+                                async () => {
+                                    signupButtonHandler(profilePic)
+                                }
+                            }
+                            style={styles.signupButton} activeOpacity={0.9}>
+                            <Text style={styles.signup}>회원가입</Text>
+                        </TouchableOpacity>
+                    </View>
+
+                    <LoadingModal visible={isLoading} />
+
+                </SafeAreaView>
+            </KeyboardAvoidingView>
         </TouchableWithoutFeedback>
     );
 }
@@ -251,12 +259,12 @@ const styles = StyleSheet.create({
     },
     imageContainer: {
         width: "60%",
-        height: "60%",
+        height: "63%",
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "#C4D7B2",
+        backgroundColor: "#95ce6790",
         marginBottom: "3%",
-        shadowColor: "#A0C49D", // 그림자 색상
+        shadowColor: "#95ce67", // 그림자 색상
         shadowOffset: { width: 0, height: 3 }, // 그림자 오프셋
         shadowOpacity: 0.6, // 그림자 투명도
         shadowRadius: 4, // 그림자 반경
@@ -320,7 +328,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff"
     },
     signupButton: {
-        backgroundColor: "#A0C49D",
+        backgroundColor: "#95ce67",
         padding: "4%",
         borderRadius: 10,
         width: "80%",
@@ -338,6 +346,7 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: "18%",
-        color: "#A0C49D"
+        color: "#A0C49D",
+        fontWeight: "600"
     }
 });

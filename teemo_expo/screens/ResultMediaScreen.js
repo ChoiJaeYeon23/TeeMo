@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import {
     SafeAreaView,
     View,
@@ -7,11 +7,11 @@ import {
     StyleSheet,
     Image,
     Alert,
-    Linking
+    Linking,
+    Animated
 } from "react-native"
 import * as MediaLibrary from "expo-media-library"
 import { Video } from "expo-av"
-import { Feather } from "@expo/vector-icons"
 import CustomProgressBar from "./CustomProgressBar"
 import { useNavigation } from "@react-navigation/native"
 import * as FileSystem from 'expo-file-system';
@@ -27,6 +27,7 @@ const ResultMediaScreen = ({ route }) => {
     const currentStep = 4
     const navigation = useNavigation()
     const [permissionResponse, setPermissionResponse] = MediaLibrary.usePermissions()
+    const scaleValue = useRef(new Animated.Value(1)).current
 
     const requestPermission = async () => {
         if (permissionResponse?.status !== 'granted') {
@@ -51,14 +52,30 @@ const ResultMediaScreen = ({ route }) => {
             }
         }
     }
-    
+
+    const startPressAnimation = () => {
+        Animated.timing(scaleValue, {
+            toValue: 0.9,
+            duration: 100,
+            useNativeDriver: true
+        }).start()
+    }
+
+    const endPressAnimation = () => {
+        Animated.timing(scaleValue, {
+            toValue: 1,
+            duration: 200,
+            useNativeDriver: true
+        }).start()
+    }
+
     /**
      * 서버로부터 전달된 미디어(사진 or 동영상) uri를 초기화합니다.
      * 미디어의 type과 uri를 전달받아야 합니다.
      */
     const loadMedia = async () => {
         setMediaType(route.params.mediaType)
-        
+
         // 서버로부터 받은 미디어 데이터를 가져와 로컬 파일로 저장합니다.
         const response = await fetch(route.params.resultUrl);
         const blob = await response.blob();
@@ -157,11 +174,17 @@ const ResultMediaScreen = ({ route }) => {
                 }
             </View>
 
-            <View style={styles.downloadButtonContainer}>
-                <TouchableOpacity onPress={saveButtonHandler} style={styles.downloadButton}>
+            <Animated.View style={[styles.downloadButtonContainer, { transform: [{ scale: scaleValue }] }]}>
+                <TouchableOpacity
+                    activeOpacity={1}
+                    onPressIn={() => startPressAnimation()}
+                    onPressOut={() => endPressAnimation()}
+                    onPress={saveButtonHandler}
+                    style={styles.downloadButton}
+                >
                     <Text style={styles.downloadText}>다운로드</Text>
                 </TouchableOpacity>
-            </View>
+            </Animated.View>
 
             <View style={styles.bottomContainer}>
                 <TouchableOpacity onPress={() => navigation.navigate("ChoiceMedia")}>
@@ -203,7 +226,7 @@ const styles = StyleSheet.create({
     titleText: {
         fontSize: "30%",
         fontWeight: "900",
-        color: "#66CDAA",
+        color: "#95ce67",
         marginLeft: "7%"
     },
     downloadButtonContainer: {
@@ -227,7 +250,7 @@ const styles = StyleSheet.create({
     },
     downloadText: {
         fontSize: "20%",
-        color: "#66CDAA",
+        color: "#95ce67",
         fontWeight: "bold"
     },
     bottomContainer: {

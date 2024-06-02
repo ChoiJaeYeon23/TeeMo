@@ -1,10 +1,7 @@
 import { createStackNavigator } from "@react-navigation/stack"
 
-import UserListScreen from "../screens/UserListScreen"
-import FaceRecognitionScreen from "../screens/FaceRecognitionScreen"
 import SignInScreen from "../screens/SignInScreen"
 import SignUpScreen from "../screens/SignUpScreen"
-import MediaUploadScreen from "../screens/MediaUploadScreen"
 import ResultMediaScreen from "../screens/ResultMediaScreen"
 import ChoiceMedia from "../screens/ChoiceMedia"
 import NRTAddUserScreen from "../screens/NRTAddUserScreen"
@@ -27,22 +24,6 @@ const Navigation = () => {
             <Stack.Screen
                 name="SettingScreen"
                 component={SettingScreen}
-                options={{
-                    headerShown: false,
-                    // gestureEnabled: false
-                }}
-            />
-            <Stack.Screen
-                name="UserListScreen"
-                component={UserListScreen}
-                options={{
-                    headerShown: false,
-                    // gestureEnabled: false
-                }}
-            />
-            <Stack.Screen
-                name="FaceRecognitionScreen"
-                component={FaceRecognitionScreen}
                 options={{
                     headerShown: false,
                     // gestureEnabled: false
@@ -75,14 +56,6 @@ const Navigation = () => {
             <Stack.Screen
                 name="HomeScreen"
                 component={HomeScreen}
-                options={{
-                    headerShown: false,
-                    // gestureEnabled: false
-                }}
-            />
-            <Stack.Screen
-                name="MediaUploadScreen"
-                component={MediaUploadScreen}
                 options={{
                     headerShown: false,
                     // gestureEnabled: false

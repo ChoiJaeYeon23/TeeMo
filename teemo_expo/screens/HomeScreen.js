@@ -6,7 +6,8 @@ import {
     StyleSheet,
     Dimensions,
     Text,
-    TouchableOpacity
+    TouchableOpacity,
+    Animated
 } from "react-native"
 import Toast from "react-native-toast-message"
 import Carousel from "react-native-reanimated-carousel"
@@ -21,6 +22,23 @@ const HomeScreen = ({ route }) => {
     const screenWidth = Dimensions.get("window").width
     const screenHeight = Dimensions.get("window").height
     const navigation = useNavigation()
+    const scaleValue = useRef(new Animated.Value(1)).current
+
+    const startPressAnimation = () => {
+        Animated.timing(scaleValue, {
+            toValue: 0.9,
+            duration: 100,
+            useNativeDriver: true
+        }).start()
+    }
+
+    const endPressAnimation = () => {
+        Animated.timing(scaleValue, {
+            toValue: 1,
+            duration: 200,
+            useNativeDriver: true
+        }).start()
+    }
 
     const fetchNickname = () => {
         fetch(`${Ubuntu_Server}/api/get_nickname`, {
@@ -63,7 +81,7 @@ const HomeScreen = ({ route }) => {
                     <Text style={styles.headerTitle}>TeeMo</Text>
                 </View>
 
-                <TouchableOpacity style={styles.headerSetting} onPress={() => navigation.navigate("SettingScreen", {id})}>
+                <TouchableOpacity style={styles.headerSetting} onPress={() => navigation.navigate("SettingScreen", { id })}>
                     <Feather name="settings" size={24} color="#767676" />
                 </TouchableOpacity>
 
@@ -103,11 +121,20 @@ const HomeScreen = ({ route }) => {
                     />
                 </View>
 
-                <TouchableOpacity style={styles.buttonContainer} activeOpacity={1} onPress={() => navigation.navigate("ChoiceMedia", { id })}>
-                    <Text style={styles.buttonText}>모자이크 시작하기</Text>
-                    <MaterialIcons name="navigate-next" size={30} color="#FFFFFF" />
-                </TouchableOpacity>
+                <Animated.View style={{ transform: [{ scale: scaleValue }] }}>
+                    <TouchableOpacity
+                        style={styles.buttonContainer}
+                        activeOpacity={1}
+                        onPressIn={() => startPressAnimation()}
+                        onPressOut={() => endPressAnimation()}
+                        onPress={() => navigation.navigate("ChoiceMedia", { id })}
+                    >
+                        <Text style={styles.buttonText}>모자이크 시작하기</Text>
+                        <MaterialIcons name="navigate-next" size={30} color="#FFFFFF" />
+                    </TouchableOpacity>
+                </Animated.View>
             </SafeAreaView>
+
             <Toast />
         </>
     )
@@ -130,7 +157,7 @@ const styles = StyleSheet.create({
     headerTitle: {
         fontSize: 40,
         fontWeight: "bold",
-        color: "#66CDAA"
+        color: "#95ce67"
     },
     headerSetting: {
         position: "absolute",
@@ -157,7 +184,7 @@ const styles = StyleSheet.create({
     },
     buttonContainer: {
         flexDirection: "row",
-        backgroundColor: "#66CDAA",
+        backgroundColor: "#95ce67",
         alignItems: "center",
         justifyContent: "center",
         paddingHorizontal: "4%",

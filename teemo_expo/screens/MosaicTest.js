@@ -7,8 +7,7 @@ import {
     StyleSheet,
     TouchableOpacity,
     Alert,
-    Animated,
-    TouchableWithoutFeedback,
+    Animated
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from '@react-navigation/native';
@@ -28,6 +27,9 @@ const MosaicTest = ({ route }) => {
     const [isLoading, setIsLoading] = useState(false)
     const navigation = useNavigation()
     const [modalVisible, setModalVisible] = useState(false)
+    const scaleValue = useRef(new Animated.Value(1)).current
+    const backScaleValue = useRef(new Animated.Value(1)).current
+    const nextScaleValue = useRef(new Animated.Value(1)).current
     const [mediaType, setMediaType] = useState("PHOTO")
     const [media, setMedia] = useState({
         fileName: "",
@@ -40,51 +42,59 @@ const MosaicTest = ({ route }) => {
     })
     
 
-    
+    const startPressAnimation = () => {
+        Animated.timing(scaleValue, {
+            toValue: 0.9,
+            duration: 100,
+            useNativeDriver: true
+        }).start()
+    }
+
+    const endPressAnimation = () => {
+        Animated.timing(scaleValue, {
+            toValue: 1,
+            duration: 200,
+            useNativeDriver: true
+        }).start()
+    }
+
+    const startBackPressAnimation = () => {
+        Animated.timing(backScaleValue, {
+            toValue: 0.9,
+            duration: 100,
+            useNativeDriver: true
+        }).start()
+    }
+
+    const endBackPressAnimation = () => {
+        Animated.timing(backScaleValue, {
+            toValue: 1,
+            duration: 200,
+            useNativeDriver: true
+        }).start()
+    }
+
+    const startNextPressAnimation = () => {
+        Animated.timing(nextScaleValue, {
+            toValue: 0.9,
+            duration: 100,
+            useNativeDriver: true
+        }).start()
+    }
+
+    const endNextPressAnimation = () => {
+        Animated.timing(nextScaleValue, {
+            toValue: 1,
+            duration: 200,
+            useNativeDriver: true
+        }).start()
+    }
+
     const bottomSheetRef = useRef(null)
     const snapPoints = useMemo(() => ['5.5%', '20%'], [])
 
     const handleUploadMedia = async () => {
         bottomSheetRef.current?.expand()
-    }
-
-    const handlePhotoPick = async () => {
-        const permission = await ImagePicker.requestMediaLibraryPermissionsAsync()
-
-        if (!permission.granted) {
-            Alert.alert("권한 필요", "갤러리에 접근하기 위한 권한이 필요합니다.")
-            return
-        }
-
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsMultipleSelection: false,
-            quality: 1,
-            exif: false
-        })
-
-        if (!result.canceled && result.assets) {
-            setAdditionalMedia(result.assets[0].uri)
-            // console.log(result.assets[0].uri)
-        }
-    }
-
-    const handleVideoPick = async () => {
-        const permission = await ImagePicker.requestMediaLibraryPermissionsAsync()
-        if (!permission.granted) {
-            Alert.alert("권한 필요", "갤러리에 접근하기 위한 권한이 필요합니다.")
-            return;
-        }
-
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Videos,
-            allowsMultipleSelection: false,
-        })
-
-        if (!result.canceled && result.assets) {
-            setAdditionalMedia(result.assets[0].uri)
-            // console.log(result.assets[0].uri)
-        }
     }
 
     const showToast = (mediaType) => {
@@ -253,18 +263,6 @@ const MosaicTest = ({ route }) => {
             exif: false,    // 메타데이터 포함 여부
         })
 
-        // console.log(result)
-
-        // setMedia({
-        //     fileName: result.assets[0].fileName,
-        //     height: result.assets[0].height,
-        //     width: result.assets[0].width,
-        //     mimeType: result.assets[0].mimeType,    // 미디어 유형/타입 (ex. video/mp4)
-        //     type: result.assets[0].type,    // 미디어 타입 (ex. jpg)
-        //     duration: result.assets[0].duration,    // 동영상 재생시간
-        //     uri: result.assets[0].uri
-        // })
-
         if (!result.canceled) {
             bottomSheetRef.current.close()
             setMediaType("PHOTO")
@@ -284,19 +282,6 @@ const MosaicTest = ({ route }) => {
             exif: false,    // 메타데이터 포함 여부
         })
 
-        // console.log(result)
-
-        // 선택한 미디어(사진, 동영상)의 정보를 저장
-        // setMedia({
-        //     fileName: result.assets[0].fileName,
-        //     height: result.assets[0].height,
-        //     width: result.assets[0].width,
-        //     mimeType: result.assets[0].mimeType,    // 미디어 유형/타입 (ex. video/mp4)
-        //     type: result.assets[0].type,    // 미디어 타입 (ex. jpg)
-        //     duration: result.assets[0].duration,    // 동영상 재생시간 (사진의 경우 null)
-        //     uri: result.assets[0].uri
-        // })
-
         if (!result.canceled) {
             bottomSheetRef.current.close()
             setMediaType("VIDEO")
@@ -310,98 +295,130 @@ const MosaicTest = ({ route }) => {
     }, [])
 
     return (
-        <SafeAreaView style={styles.container}>
+        <>
+            <SafeAreaView style={styles.container}>
 
-            <View style={styles.progressbarWrapper}>
-                <CustomProgressBar currentStep={currentStep} />
-            </View>
+                <View style={styles.progressbarWrapper}>
+                    <CustomProgressBar currentStep={currentStep} />
+                </View>
 
-            <View style={styles.headerContainer}>
-                <Text style={styles.titleText}>제작하기</Text>
-            </View>
+                <View style={styles.headerContainer}>
+                    <Text style={styles.titleText}>제작하기</Text>
+                </View>
 
-            <View style={styles.exContainer}>
-                {
-                    additionalMedia ? (
-                        mediaType === "PHOTO" ? (
-                            additionalMedia != "" ? (
-                                <Image
-                                    source={{ uri: additionalMedia }}
-                                    style={styles.media}
-                                    resizeMode="contain"
-                                />
+                <View style={styles.exContainer}>
+                    {
+                        additionalMedia ? (
+                            mediaType === "PHOTO" ? (
+                                additionalMedia != "" ? (
+                                    <Image
+                                        source={{ uri: additionalMedia }}
+                                        style={styles.media}
+                                        resizeMode="contain"
+                                    />
+                                ) : (
+                                    <View />
+                                )
                             ) : (
-                                <View />
+                                additionalMedia != "" ? (
+                                    <Video
+                                        source={{ uri: additionalMedia }}
+                                        style={styles.media}
+                                        shouldPlay={true}
+                                        useNativeControls={true}
+
+                                    />
+                                ) : (
+                                    <View />
+                                )
                             )
                         ) : (
-                            additionalMedia != "" ? (
-                                <Video
-                                    source={{ uri: additionalMedia }}
-                                    style={styles.media}
-                                    shouldPlay={true}
-                                    useNativeControls={true}
-
-                                />
-                            ) : (
-                                <View />
-                            )
+                            <View />
                         )
-                    ) : (
-                        <View />
-                    )
-                }
-            </View>
-
-            <View style={styles.uploadButtonContainer}>
-                <TouchableOpacity onPress={handleUploadMedia} style={styles.uploadButton}>
-                    <Text style={styles.uploadText}>{buttonText}</Text>
-                </TouchableOpacity>
-            </View>
-
-            <Text style={styles.guideText}>모자이크하고 싶은 사진이나 동영상을 선택해주세요.</Text>
-
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-                    <Text style={styles.back}>이전 단계</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={handleUploadToServer} style={styles.nextButton}>
-                    <Text style={styles.next}>다음 단계</Text>
-                </TouchableOpacity>
-            </View>
-
-            <BottomSheet
-                ref={bottomSheetRef}
-                index={-1}
-                snapPoints={snapPoints}
-                enableContentPanningGesture={true}
-                enableHandlePanningGesture={true}
-                backdropComponent={(props) => (
-                    <BottomSheetBackdrop {...props} pressBehavior="none" />
-                )}
-                style={{
-                    shadowColor: "#000000", // 그림자 색상
-                    shadowOffset: { width: 0, height: 3 }, // 그림자 오프셋
-                    shadowOpacity: 0.3, // 그림자 투명도
-                    shadowRadius: 7, // 그림자 반경
-                    elevation: 5, // 그림자 높이 (Android용)
-                }}
-                backgroundStyle={{
-                    borderTopLeftRadius: 20,
-                    borderTopRightRadius: 20
-                }}
-            >
-                <View style={styles.sheetContainer}>
-                    <TouchableOpacity style={[styles.sheetButton, { marginTop: "1%" }]} onPress={pickPhoto}>
-                        <Text style={styles.sheetText}>사진 선택하기</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.sheetButton} onPress={pickVideo}>
-                        <Text style={styles.sheetText}>동영상 선택하기</Text>
-                    </TouchableOpacity>
+                    }
                 </View>
-            </BottomSheet>
-            <ImageLoadingModal visible={isLoading} />
-        </SafeAreaView>
+
+                <Animated.View style={[styles.uploadButtonContainer, { transform: [{ scale: scaleValue }] }]}>
+                    <TouchableOpacity
+                        onPressIn={() => startPressAnimation()}
+                        onPressOut={() => endPressAnimation()}
+                        onPress={handleUploadMedia}
+                        activeOpacity={1}
+                        style={styles.uploadButton}>
+                        <Text style={styles.uploadText}>{buttonText}</Text>
+                    </TouchableOpacity>
+                </Animated.View>
+
+                <Text style={styles.guideText}>모자이크하고 싶은 사진이나 동영상을 선택해주세요.</Text>
+
+                <View style={styles.buttonContainer}>
+                    <Animated.View style={{ width: "46%", transform: [{ scale: backScaleValue }] }}>
+                        <TouchableOpacity
+                            onPressIn={() => startBackPressAnimation()}
+                            onPressOut={() => endBackPressAnimation()}
+                            onPress={() => navigation.goBack()}
+                            style={styles.backButton}
+                            activeOpacity={1}
+                        >
+                            <Text style={styles.back}>이전 단계</Text>
+                        </TouchableOpacity>
+                    </Animated.View>
+
+                    <Animated.View style={{ width: "46%", transform: [{ scale: nextScaleValue }] }}>
+                        <TouchableOpacity
+                            onPressIn={() => startNextPressAnimation()}
+                            onPressOut={() => endNextPressAnimation()}
+                            onPress={handleUploadToServer}
+                            style={styles.nextButton}
+                            activeOpacity={1}
+                        >
+                            <Text style={styles.next}>다음 단계</Text>
+                        </TouchableOpacity>
+                    </Animated.View>
+                </View>
+
+                <BottomSheet
+                    ref={bottomSheetRef}
+                    index={-1}
+                    snapPoints={snapPoints}
+                    enableContentPanningGesture={true}
+                    enableHandlePanningGesture={true}
+                    backdropComponent={(props) => (
+                        <BottomSheetBackdrop {...props} pressBehavior="none" />
+                    )}
+                    style={{
+                        shadowColor: "#000000", // 그림자 색상
+                        shadowOffset: { width: 0, height: 3 }, // 그림자 오프셋
+                        shadowOpacity: 0.3, // 그림자 투명도
+                        shadowRadius: 7, // 그림자 반경
+                        elevation: 5, // 그림자 높이 (Android용)
+                    }}
+                    backgroundStyle={{
+                        borderTopLeftRadius: 20,
+                        borderTopRightRadius: 20
+                    }}
+                >
+                    <View style={styles.sheetContainer}>
+                        <TouchableOpacity
+                            style={[styles.sheetButton, { marginTop: "1%" }]}
+                            onPress={pickPhoto}
+                            activeOpacity={0.8}
+                        >
+                            <Text style={styles.sheetText}>사진 선택하기</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.sheetButton}
+                            onPress={pickVideo}
+                            activeOpacity={0.8}
+                        >
+                            <Text style={styles.sheetText}>동영상 선택하기</Text>
+                        </TouchableOpacity>
+                    </View>
+                </BottomSheet>
+                <ImageLoadingModal visible={isLoading} />
+            </SafeAreaView>
+            <Toast />
+        </>
     );
 };
 
@@ -435,12 +452,12 @@ const styles = StyleSheet.create({
     titleText: {
         fontSize: "30%",
         fontWeight: "900",
-        color: "#66CDAA",
+        color: "#95ce67",
         marginLeft: "7%"
     },
     guideText: {
         fontSize: "17%",
-        color: "#66CDAA"
+        color: "#95ce67"
     },
     imageContainer: {
         flexDirection: 'row',
@@ -481,7 +498,7 @@ const styles = StyleSheet.create({
     },
     uploadText: {
         fontSize: "20%",
-        color: "#66CDAA",
+        color: "#95ce67",
         fontWeight: "bold"
     },
     buttonContainer: {
@@ -493,7 +510,7 @@ const styles = StyleSheet.create({
         justifyContent: "space-around"
     },
     backButton: {
-        width: "46%",
+        width: "100%",
         height: "40%",
         backgroundColor: "#FFFFFF",
         borderRadius: 10,
@@ -506,9 +523,9 @@ const styles = StyleSheet.create({
         elevation: 5, // 그림자 높이 (Android용)
     },
     nextButton: {
-        width: "46%",
+        width: "100%",
         height: "40%",
-        backgroundColor: "#66CDAA",
+        backgroundColor: "#95ce67",
         borderRadius: 10,
         alignItems: "center",
         justifyContent: "center",
@@ -520,7 +537,7 @@ const styles = StyleSheet.create({
     },
     back: {
         fontSize: "18%",
-        color: "#66CDAA",
+        color: "#95ce67",
         fontWeight: "bold"
     },
     next: {
@@ -569,7 +586,7 @@ const styles = StyleSheet.create({
     },
     sheetText: {
         fontSize: "20%",
-        color: '#66CDAA',
+        color: '#95ce67',
         fontWeight: 'bold',
     },
     sheetActions: {
