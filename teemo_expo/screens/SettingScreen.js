@@ -15,10 +15,10 @@ import {
 } from "react-native"
 import * as ImagePicker from "expo-image-picker"
 import { useNavigation } from "@react-navigation/native"
+import { Ubuntu_Server } from "@env"
 
-// 
 const SettingScreen = ({ route }) => {
-    // const id = route.params.id
+    const id = route.params.id
     const [nickname, setNickname] = useState("")
     const [currentPw, setCurrentPw] = useState("")
     const [newPw, setNewPw] = useState("")
@@ -27,11 +27,11 @@ const SettingScreen = ({ route }) => {
 
     // db에 저장돼있는 사진들(최소 1개 이상) 불러와서 set하는 로직 필요
     const [image, setImage] = useState({
-        정면: "",
-        상: "",
-        하: "",
-        좌: "",
-        우: "",
+        front: "",
+        top: "",
+        bottom: "",
+        left: "",
+        right: "",
     })
 
     const clearAll = () => {
@@ -41,47 +41,170 @@ const SettingScreen = ({ route }) => {
         setCheckNewPw("")
     }
 
-    const changeNickname = () => {
-        // 닉네임 변경 성공시 모든 textinput 초기화하고
-        clearAll()
-        // 이후 화면 전환
-        navigation.navigate("HomeScreen")
+    const fetchUserInfo = async () => {
+        try {
+            const response = await fetch(`${Ubuntu_Server}/api/get_user_info`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: id
+                })
+            });
+            const data = await response.json();
+            console.log("사용자의 모든 데이터 id 기준으로 불러온", data)
+            if (response.ok) {
+                // 이미지 설정
+                setImage({
+                    front: { uri: `data:image/png;base64,${data.front_image_path}` },
+                    top: { uri: `data:image/png;base64,${data.top_image_path}` },
+                    bottom: { uri: `data:image/png;base64,${data.bottom_image_path}` },
+                    left: { uri: `data:image/png;base64,${data.left_image_path}` },
+                    right: { uri: `data:image/png;base64,${data.right_image_path}` }
+                });
+            } else {
+                // 사용자 정보를 가져오는 데 실패한 경우에 대한 처리
+                console.error('Failed to fetch user info:', data.message);
+            }
+        } catch (error) {
+            console.error('Error fetching user info:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchUserInfo();
+    }, []);
+
+    const changeNickname = async () => {
+        try {
+            const response = await fetch(`${Ubuntu_Server}/api/change_nickname`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: id,
+                    newNickname: nickname // 기존 닉네임은 입력하지 않고, 새 닉네임만 전송
+                })
+            });
+            const data = await response.json();
+            if (response.ok) {
+                console.log("닉네임 변경 완료:", data.message);
+                // 닉네임 변경 성공 시, 모든 입력 필드 초기화
+                clearAll();
+                // 홈 화면으로 이동
+                navigation.navigate("HomeScreen", { id });
+            } else {
+                console.error('닉네임 변경 실패:', data.message);
+            }
+        } catch (error) {
+            console.error('Error changing nickname:', error);
+        }
     }
 
-    const changePassword = () => {
-        // 비밀번호 변경 성공시 모든 textinput 초기화하고
-        clearAll()
-        // 이후 화면 전환
-        navigation.navigate("HomeScreen")
+
+    const changePassword = async () => {
+        // 새 비밀번호와 확인용 비밀번호가 일치하는지 확인
+        if (newPw !== checkNewPw) {
+            console.error('비밀번호와 확인용 비밀번호가 일치하지 않습니다. 다시 입력해주세요.');
+            return;
+        }
+
+        try {
+            const response = await fetch(`${Ubuntu_Server}/api/change_password`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: id,
+                    pw: newPw // 비밀번호 변경 시, 해당 컬럼에 새 비밀번호 저장
+                })
+            });
+            const data = await response.json();
+            if (response.ok) {
+                console.log("비밀번호 변경 완료:", data.message);
+                // 비밀번호 변경 성공 시, 모든 입력 필드 초기화
+                clearAll();
+                // 로그인 화면으로 이동
+                navigation.navigate("SignInScreen");
+            } else {
+                console.error('비밀번호 변경 실패:', data.message);
+            }
+        } catch (error) {
+            console.error('Error changing password:', error);
+        }
     }
 
-    const changeProfile = () => {
-        // 프로필사진 변경 성공시 모든 textinput 초기화하고
-        clearAll()
-        // 이후 화면 전환
-        navigation.navigate("HomeScreen")
-    }
 
+    const changeProfile = async () => {
+        const formData = new FormData();
+        formData.append("id", id); // id를 FormData에 추가
+    
+        Object.keys(image).forEach((key) => {
+            if (image[key]) {
+                const uriParts = image[key].uri.split(".");
+                const fileType = uriParts[uriParts.length - 1];
+    
+                formData.append(key, {
+                    uri: image[key].uri,
+                    name: `photo.${fileType}`,
+                    type: `image/${fileType}`,
+                });
+            }
+        });
+    
+        console.log("FormData 내용:", formData);
+        try {
+            const response = await fetch(`${Ubuntu_Server}/api/update_profile_images`, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+    
+            const responseText = await response.text(); // 응답 본문을 텍스트로 읽기
+            console.log("Response Text:", responseText); // 응답 본문 출력
+    
+            const data = JSON.parse(responseText); // JSON 파싱 시도
+            if (response.ok) {
+                console.log("사진 업로드 성공:", data.message);
+                // 모든 입력 필드 초기화
+                clearAll();
+                // 홈 화면으로 이동
+                navigation.navigate("SignUpScreen");
+            } else {
+                console.error('사진 업로드 실패:', data.message);
+            }
+        } catch (error) {
+            console.error('Error uploading images:', error);
+        }
+    }
+    
+    
     const pickImage = async (text) => {
         const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync()
         if (!permissionResult.granted) {
             Alert.alert("권한 필요", "갤러리에 접근하기 위한 권한이 필요합니다.")
             return
         }
-
+    
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsMultipleSelection: false,
-            quality: 1,
+            quality: 0.5,
             exif: false
         })
-
-        if (!result.canceled) {
+    
+        if (!result.cancelled) {
             console.log(result.assets[0].uri)
             const source = { uri: result.assets[0].uri };
             setImage({ ...image, [text]: source })
         }
     }
+
 
     return (
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -105,7 +228,7 @@ const SettingScreen = ({ route }) => {
                         />
 
                         <View style={styles.buttonContainer}>
-                            <TouchableOpacity style={styles.button}>
+                            <TouchableOpacity onPress={changeNickname} style={styles.button}>
                                 <Text style={styles.buttonText}>확인</Text>
                             </TouchableOpacity>
                         </View>
@@ -134,7 +257,7 @@ const SettingScreen = ({ route }) => {
                         />
 
                         <View style={styles.buttonContainer}>
-                            <TouchableOpacity style={styles.button}>
+                            <TouchableOpacity onPress={changePassword} style={styles.button}>
                                 <Text style={styles.buttonText}>확인</Text>
                             </TouchableOpacity>
                         </View>
@@ -153,7 +276,7 @@ const SettingScreen = ({ route }) => {
                                         {
                                             image[item] ? (
                                                 <View style={styles.imageContainer}>
-                                                    <Image source={image[item]} style={styles.profileImage} />
+                                                    <Image source={{ uri: image[item].uri }} style={styles.profileImage} />
                                                 </View>
                                             ) : (
                                                 <View style={styles.imageContainer} />
@@ -170,7 +293,7 @@ const SettingScreen = ({ route }) => {
                         </View>
 
                         <View style={styles.buttonContainer}>
-                            <TouchableOpacity style={styles.button}>
+                            <TouchableOpacity onPress={changeProfile}style={styles.button}>
                                 <Text style={styles.buttonText}>확인</Text>
                             </TouchableOpacity>
                         </View>
@@ -206,7 +329,7 @@ const styles = StyleSheet.create({
     },
     profileSection: {
         width: "100%",
-        height: "45%",
+        height: "50%",
         padding: "5%",
         marginBottom: "2%"
     },
@@ -229,10 +352,11 @@ const styles = StyleSheet.create({
     list: {
         width: "100%",
         height: "80%",
-        justifyContent: "center",
+        justifyContent: "center"
     },
     itemContainer: {
         width: 150,
+        height: "100%",
         marginRight: "1%",
         alignItems: "center",
         paddingHorizontal: "3%",
