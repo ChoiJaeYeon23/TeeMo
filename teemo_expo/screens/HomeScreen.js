@@ -12,6 +12,7 @@ import Toast from "react-native-toast-message"
 import Carousel from "react-native-reanimated-carousel"
 import { Feather, MaterialIcons } from "@expo/vector-icons"
 import { useNavigation } from "@react-navigation/native"
+import { Ubuntu_Server } from '@env'
 
 const HomeScreen = ({ route }) => {
     const ref = useRef(null)
@@ -22,7 +23,7 @@ const HomeScreen = ({ route }) => {
     const navigation = useNavigation()
 
     const fetchNickname = () => {
-        fetch("http://3.34.125.163:5001/api/get_nickname", {
+        fetch(`${Ubuntu_Server}/api/get_nickname`, {
             method: "POST", // POST 요청으로 변경
             headers: {
                 "Content-Type": "application/json"
@@ -102,7 +103,7 @@ const HomeScreen = ({ route }) => {
                     />
                 </View>
 
-                <TouchableOpacity style={styles.buttonContainer} activeOpacity={1} onPress={() => navigation.navigate("ChoiceMedia")}>
+                <TouchableOpacity style={styles.buttonContainer} activeOpacity={1} onPress={() => navigation.navigate("ChoiceMedia", { id })}>
                     <Text style={styles.buttonText}>모자이크 시작하기</Text>
                     <MaterialIcons name="navigate-next" size={30} color="#FFFFFF" />
                 </TouchableOpacity>
