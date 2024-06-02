@@ -1,9 +1,6 @@
 import { createStackNavigator } from "@react-navigation/stack"
 
-import TakePictureScreen from "../screens/TakePictureScreen"
-import RecordScreen from "../screens/RecordScreen"
 import UserListScreen from "../screens/UserListScreen"
-import LoginWebViewScreen from "../screens/LoginWebViewScreen"
 import FaceRecognitionScreen from "../screens/FaceRecognitionScreen"
 import SignInScreen from "../screens/SignInScreen"
 import SignUpScreen from "../screens/SignUpScreen"
@@ -28,22 +25,6 @@ const Navigation = () => {
                 component={NavigationScreen}
             />
             <Stack.Screen
-                name="TakePictureScreen"
-                component={TakePictureScreen}
-                options={{
-                    headerShown: false,
-                    // gestureEnabled: false
-                }}
-            />
-            <Stack.Screen
-                name="RecordScreen"
-                component={RecordScreen}
-                options={{
-                    headerShown: false,
-                    // gestureEnabled: false
-                }}
-            />
-            <Stack.Screen
                 name="SettingScreen"
                 component={SettingScreen}
                 options={{
@@ -54,14 +35,6 @@ const Navigation = () => {
             <Stack.Screen
                 name="UserListScreen"
                 component={UserListScreen}
-                options={{
-                    headerShown: false,
-                    // gestureEnabled: false
-                }}
-            />
-            <Stack.Screen
-                name="WebViewScreen"
-                component={LoginWebViewScreen}
                 options={{
                     headerShown: false,
                     // gestureEnabled: false
