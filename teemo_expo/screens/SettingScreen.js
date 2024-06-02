@@ -141,12 +141,12 @@ const SettingScreen = ({ route }) => {
     const changeProfile = async () => {
         const formData = new FormData();
         formData.append("id", id); // id를 FormData에 추가
-    
+
         Object.keys(image).forEach((key) => {
             if (image[key]) {
                 const uriParts = image[key].uri.split(".");
                 const fileType = uriParts[uriParts.length - 1];
-    
+
                 formData.append(key, {
                     uri: image[key].uri,
                     name: `photo.${fileType}`,
@@ -154,7 +154,7 @@ const SettingScreen = ({ route }) => {
                 });
             }
         });
-    
+
         console.log("FormData 내용:", formData);
         try {
             const response = await fetch(`${Ubuntu_Server}/api/update_profile_images`, {
@@ -164,17 +164,17 @@ const SettingScreen = ({ route }) => {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-    
+
             const responseText = await response.text(); // 응답 본문을 텍스트로 읽기
             console.log("Response Text:", responseText); // 응답 본문 출력
-    
+
             const data = JSON.parse(responseText); // JSON 파싱 시도
             if (response.ok) {
                 console.log("사진 업로드 성공:", data.message);
                 // 모든 입력 필드 초기화
                 clearAll();
                 // 홈 화면으로 이동
-                navigation.navigate("SignUpScreen");
+                navigation.navigate("HomeScreen", { id });
             } else {
                 console.error('사진 업로드 실패:', data.message);
             }
@@ -182,22 +182,22 @@ const SettingScreen = ({ route }) => {
             console.error('Error uploading images:', error);
         }
     }
-    
-    
+
+
     const pickImage = async (text) => {
         const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync()
         if (!permissionResult.granted) {
             Alert.alert("권한 필요", "갤러리에 접근하기 위한 권한이 필요합니다.")
             return
         }
-    
+
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsMultipleSelection: false,
             quality: 0.5,
             exif: false
         })
-    
+
         if (!result.cancelled) {
             console.log(result.assets[0].uri)
             const source = { uri: result.assets[0].uri };
@@ -293,7 +293,7 @@ const SettingScreen = ({ route }) => {
                         </View>
 
                         <View style={styles.buttonContainer}>
-                            <TouchableOpacity onPress={changeProfile}style={styles.button}>
+                            <TouchableOpacity onPress={changeProfile} style={styles.button}>
                                 <Text style={styles.buttonText}>확인</Text>
                             </TouchableOpacity>
                         </View>
