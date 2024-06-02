@@ -15,6 +15,7 @@ import { useNavigation } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
 import { SimpleLineIcons } from "@expo/vector-icons"
 import { Ubuntu_Server } from '@env'
+import LoadingModal from "./LoadingModal"
 
 const SignUpScreen = () => {
     const navigation = useNavigation();
@@ -24,7 +25,8 @@ const SignUpScreen = () => {
     const [profilePic, setProfilePic] = useState(null);
     const [availableIDText, setAvailableIDText] = useState("아이디 중복 여부를 확인해주세요.");
     const [availableIDColor, setAvailableIDColor] = useState("#AAAAAA");
-
+    const [isLoading, setIsLoading] = useState(false)
+    
     const keyboardOff = () => {
         Keyboard.dismiss();
     };
@@ -121,6 +123,7 @@ const SignUpScreen = () => {
         formData.append('nickname', nickname);
 
         try {
+            setIsLoading(true);
             const response = await fetch(`${Ubuntu_Server}/api/sign_up`, {
                 method: "POST",
                 headers: {
@@ -136,11 +139,12 @@ const SignUpScreen = () => {
 
             const data = await response.json();
             Alert.alert(data.message);
-            console.log("회원가입 완료")
+            console.log("회원가입 완료");
             clearAll();
             navigation.navigate("SignInScreen");
-
+            setIsLoading(false);
         } catch (error) {
+            setIsLoading(false);
             Alert.alert("회원가입 실패: " + error.message);
         }
     };
@@ -223,6 +227,8 @@ const SignUpScreen = () => {
                         <Text style={styles.signup}>회원가입</Text>
                     </TouchableOpacity>
                 </View>
+
+                <LoadingModal visible={isLoading} />
             </SafeAreaView>
         </TouchableWithoutFeedback>
     );

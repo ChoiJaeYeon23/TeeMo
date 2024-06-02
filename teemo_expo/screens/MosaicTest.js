@@ -1,4 +1,4 @@
-import React, { useState, useRef, useMemo, useEffect } from 'react';
+import React, { useState, useRef, useMemo, useEffect, isValidElement } from 'react';
 import {
     SafeAreaView,
     View,
@@ -16,17 +16,16 @@ import { Video } from "expo-av"
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet'
 import Toast from "react-native-toast-message"
 import CustomProgressBar from "./CustomProgressBar"
-import { Ubuntu_server, Local_Server } from '@env' 
-
+import { Ubuntu_server, Local_Server } from '@env'
+import ImageLoadingModal from './ImageLoadingModal'
 
 const MosaicTest = ({ route }) => {
     const { userList } = route.params;
     const [additionalMedia, setAdditionalMedia] = useState(null);
     const [resultImage, setResultImage] = useState(null);
     const currentStep = 3
-
     const [buttonText, setButtonText] = useState("사진 / 동영상 선택하기")
-
+    const [isLoading, setIsLoading] = useState(false)
     const navigation = useNavigation()
     const [modalVisible, setModalVisible] = useState(false)
 
@@ -110,13 +109,14 @@ const MosaicTest = ({ route }) => {
 
     // 서버로 미디어 업로드
     const handleUploadToServer = async () => {
-        console.log("미디어타입:",mediaType)
+        console.log("미디어타입:", mediaType);
         if (!additionalMedia) {
             Alert.alert("그룹 이미지를 업로드하세요.");
             return;
         }
         if (mediaType === "PHOTO") {
             const uploadToServer = async () => {
+                setIsLoading(true);
                 const formData = new FormData();
 
                 // 기준 이미지 추가
@@ -149,9 +149,11 @@ const MosaicTest = ({ route }) => {
                     const resultBlob = await response.blob();
                     const resultUrl = URL.createObjectURL(resultBlob);
                     // setResultImage(resultUrl);
-                    console.log(resultUrl)
+                    console.log(resultUrl);
+                    setIsLoading(false);
                     navigation.navigate("ResultMediaScreen", { mediaType, resultUrl });
                 } catch (error) {
+                    setIsLoading(false);
                     console.error(`에러 발생: ${error.message}`);
                     Alert.alert("에러 발생", error.message);
                 }
@@ -174,6 +176,7 @@ const MosaicTest = ({ route }) => {
         } else if (mediaType === "VIDEO") {
 
             const uploadToServer = async () => {
+                setIsLoading(true);
                 const formData = new FormData();
 
                 // 기준 이미지 추가
@@ -208,8 +211,10 @@ const MosaicTest = ({ route }) => {
                     const resultUrl = URL.createObjectURL(resultBlob);
                     // setResultImage(resultUrl);
                     console.log(resultUrl)
+                    setIsLoading(false);
                     navigation.navigate("ResultMediaScreen", { mediaType, resultUrl });
                 } catch (error) {
+                    setIsLoading(false);
                     console.error(`에러 발생: ${error.message}`);
                     Alert.alert("에러 발생", error.message);
                 }
@@ -330,7 +335,7 @@ const MosaicTest = ({ route }) => {
                                     style={styles.media}
                                     shouldPlay={true}
                                     useNativeControls={true}
-                                    
+
                                 />
                             ) : (
                                 <View />
@@ -390,6 +395,7 @@ const MosaicTest = ({ route }) => {
                     </TouchableOpacity>
                 </View>
             </BottomSheet>
+            <ImageLoadingModal visible={isLoading} />
         </SafeAreaView>
     );
 };

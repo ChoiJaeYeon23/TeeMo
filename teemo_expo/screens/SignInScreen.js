@@ -2,7 +2,7 @@ import { useState } from "react"
 import { SafeAreaView, View, Text, TouchableOpacity, TouchableWithoutFeedback, Image, StyleSheet, TextInput, Keyboard, Alert } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import { Ubuntu_Server } from '@env'
-
+import LoadingModal from "./LoadingModal"
 
 /**
  * 로그인 화면 입니다.
@@ -10,7 +10,7 @@ import { Ubuntu_Server } from '@env'
  */
 const SignInScreen = () => {
     const navigation = useNavigation()
-
+    const [isLoading, setIsLoading] = useState(false)
     const [id, setId] = useState("")
     const [password, setPassword] = useState("")
 
@@ -39,7 +39,8 @@ const SignInScreen = () => {
      * 로그인 로직입니다.
      */
     const signInButtonHandler = () => {
-        console.log("ㅅㅂ?",Ubuntu_Server)
+        setIsLoading(true)
+        console.log("ㅅㅂ?", Ubuntu_Server)
         if (id === "") {
             Alert.alert("아이디를 입력하세요.")
             return
@@ -78,11 +79,13 @@ const SignInScreen = () => {
                 })
                 .then((data) => {
                     // alert(data.message); // 로그인 성공 알림
+                    setIsLoading(false);
                     console.log("로그인 성공(DB 서버)");
                     clearAll();
                     navigation.navigate("HomeScreen", { id }); // 미디어 선택 화면으로 이동
                 })
                 .catch((error) => {
+                    setIsLoading(false);
                     alert("로그인 실패: " + error.message);
                 });
         }
@@ -140,6 +143,8 @@ const SignInScreen = () => {
                     </TouchableOpacity>
 
                 </View>
+
+                <LoadingModal visible={isLoading} />
             </SafeAreaView>
         </TouchableWithoutFeedback>
     )

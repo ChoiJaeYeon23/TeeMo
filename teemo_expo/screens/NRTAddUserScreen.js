@@ -16,6 +16,7 @@ import {
 } from 'react-native'
 import CustomProgressBar from "./CustomProgressBar"
 import { Ubuntu_Server } from '@env'
+import LoadingModal from "./LoadingModal"
 
 /**
  * NON-Real Time
@@ -25,6 +26,7 @@ const NRTAddUserScreen = ({ navigation }) => {
     const [id, setId] = useState('');
     const [userList, setUserList] = useState([]); // ui 확인용 배열
     const currentStep = 2
+    const [isLoading, setIsLoading] = useState(false)
 
     const [modalVisible, setModalVisible] = useState(false)
     // ui 확인용 임시 uri
@@ -43,6 +45,7 @@ const NRTAddUserScreen = ({ navigation }) => {
 
     const fetchUserImage = async (userId) => {
         try {
+            setIsLoading(true);
             const response = await fetch(`${Ubuntu_Server}/api/get_user_image`, {
                 method: "POST",
                 headers: {
@@ -52,6 +55,7 @@ const NRTAddUserScreen = ({ navigation }) => {
             });
 
             if (!response.ok) {
+                setIsLoading(false);
                 throw new Error(`이미지를 찾을 수 없습니다. (ID: ${userId})`);
             }
 
@@ -64,7 +68,9 @@ const NRTAddUserScreen = ({ navigation }) => {
             };
 
             reader.readAsDataURL(imageBlob); // Blob을 base64 문자열로 변환하여 읽음
+            setIsLoading(false);
         } catch (error) {
+            setIsLoading(false);
             console.error(`에러 발생: ${error.message}`);
             Alert.alert("에러 발생", error.message);
         }
@@ -247,6 +253,8 @@ const NRTAddUserScreen = ({ navigation }) => {
                         </View>
                     </TouchableWithoutFeedback>
                 </Modal>
+
+                <LoadingModal visible={isLoading} />
             </SafeAreaView>
         </TouchableWithoutFeedback>
     );
