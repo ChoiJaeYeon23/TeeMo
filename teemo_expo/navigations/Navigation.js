@@ -14,6 +14,8 @@ import NRTAddUserScreen from "../screens/NRTAddUserScreen"
 import MosaicTest from "../screens/MosaicTest"
 import RealTimeMosaic from "../screens/RealTimeMosaic"
 import RTAddUserScreen from "../screens/RTAddUserScreen"
+import HomeScreen from "../screens/HomeScreen"
+import SettingScreen from "../screens/SettingScreen"
 import NavigationScreen from "./NavigationScreen"
 
 const Stack = createStackNavigator()
@@ -36,6 +38,14 @@ const Navigation = () => {
             <Stack.Screen
                 name="RecordScreen"
                 component={RecordScreen}
+                options={{
+                    headerShown: false,
+                    // gestureEnabled: false
+                }}
+            />
+            <Stack.Screen
+                name="SettingScreen"
+                component={SettingScreen}
                 options={{
                     headerShown: false,
                     // gestureEnabled: false
@@ -84,6 +94,14 @@ const Navigation = () => {
             <Stack.Screen
                 name="SignUpScreen"
                 component={SignUpScreen}
+                options={{
+                    headerShown: false,
+                    // gestureEnabled: false
+                }}
+            />
+            <Stack.Screen
+                name="HomeScreen"
+                component={HomeScreen}
                 options={{
                     headerShown: false,
                     // gestureEnabled: false

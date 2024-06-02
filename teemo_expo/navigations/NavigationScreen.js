@@ -17,6 +17,15 @@ const NavigationScreen = () => {
             />
 
             <Button
+                title="홈화면"
+                onPress={() => navigation.navigate("HomeScreen")}
+            />
+
+            <Button
+                title="설정화면"
+                onPress={() => navigation.navigate("SettingScreen")}
+            />
+            <Button
                 title="[2] 처리 방식 선택(로그인 안 하면 오류떠요~)"
                 onPress={() => navigation.navigate("ChoiceMedia")}
             />
@@ -35,7 +44,7 @@ const NavigationScreen = () => {
                 title="[2.2.1] 기준 이미지 추가 화면(실시간 [1])"
                 onPress={() => navigation.navigate("RTAddUserScreen")}
             />
-            
+
             <Button
                 title="[2.2.2] 실시간 모자이크 웹뷰 화면"
                 onPress={() => navigation.navigate("RealTimeMosaic")}

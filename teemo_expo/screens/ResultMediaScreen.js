@@ -5,9 +5,9 @@ import {
     Text,
     TouchableOpacity,
     StyleSheet,
-    Dimensions,
+    Image,
     Alert,
-    ActivityIndicator
+    Linking
 } from "react-native"
 import * as MediaLibrary from "expo-media-library"
 import { Video } from "expo-av"
@@ -17,6 +17,7 @@ import { useNavigation } from "@react-navigation/native"
 
 /**
  * 모자이크 처리된 결과물(사진 혹은 동영상)을 화면에 출력하고 저장할 수 있는 화면입니다.
+ * blob 형태라 저장 안됨 ;;;;;; 도움 plz
  */
 const ResultMediaScreen = ({ route }) => {
     const [mediaType, setMediaType] = useState("PHOTO")  // 미디어 타입 PHOTO(사진) 또는 VIDEO(동영상), 기본 값은 PHOTO로 초기화
@@ -25,6 +26,32 @@ const ResultMediaScreen = ({ route }) => {
     const [saving, setSaving] = useState(false)     //저장 중인지 아닌지 여부
     const currentStep = 4
     const navigation = useNavigation()
+    const [permissionResponse, setPermissionResponse] = MediaLibrary.usePermissions()
+
+    const requestPermission = async () => {
+        if (permissionResponse?.status !== 'granted') {
+            const response = await setPermissionResponse();
+            if (response.status !== 'granted') {
+                Alert.alert(
+                    "접근 권한을 허용해주세요",
+                    "미디어 라이브러리 접근 권한을 허용하지 않으면 사진 혹은 동영상을 저장할 수 없습니다.",
+                    [
+                        {
+                            text: "허용안함",
+                            style: "cancel"
+                        },
+                        {
+                            text: "허용하기",
+                            style: "default",
+                            onPress: () => Linking.openSettings()
+                        }
+                    ]
+                )
+                return;
+            }
+        }
+    }
+    
     /**
      * 서버로부터 전달된 미디어(사진 or 동영상) uri를 초기화합니다.
      * 미디어의 type과 uri를 전달받아야 합니다.
@@ -35,6 +62,7 @@ const ResultMediaScreen = ({ route }) => {
     }
 
     useEffect(() => {
+        requestPermission()
         loadMedia()
     }, [mediaType], [mediaUri])
 
@@ -87,6 +115,7 @@ const ResultMediaScreen = ({ route }) => {
                                     style={styles.media}
                                     shouldPlay={true}
                                     useNativeControls={true}
+                                    resizeMode="contain"
                                 />
                             ) : (
                                 <View />
@@ -182,5 +211,9 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: "500",
         color: "#555555"
+    },
+    media: {
+        width: "100%",
+        height: "100%"
     }
 })
