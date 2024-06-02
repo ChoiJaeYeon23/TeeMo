@@ -196,7 +196,7 @@ const NRTAddUserScreen = ({ navigation }) => {
                                         onPressOut={() => endUserItemPressAnimation(index)}
                                         onPress={() => [openModal(item.imageUrl)]}
                                     >
-                                        <Text style={styles.userId}>{"닉네임 ( "}{item.id}{" )"}</Text>
+                                        <Text style={styles.userId}>{item.id}</Text>
                                         {/* <Image source={{ uri: imageUrl }} style={styles.image} /> */}
                                     </TouchableOpacity>
                                     <TouchableOpacity

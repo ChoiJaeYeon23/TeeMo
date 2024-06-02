@@ -94,6 +94,7 @@ const SettingScreen = ({ route }) => {
                 // 닉네임 변경 성공 시, 모든 입력 필드 초기화
                 clearAll();
                 // 홈 화면으로 이동
+                
                 navigation.navigate("HomeScreen", { id });
             } else {
                 console.error('닉네임 변경 실패:', data.message);
@@ -194,11 +195,11 @@ const SettingScreen = ({ route }) => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsMultipleSelection: false,
-            quality: 0.5,
+            quality: 1,
             exif: false
         })
 
-        if (!result.cancelled) {
+        if (!result.canceled) {
             console.log(result.assets[0].uri)
             const source = { uri: result.assets[0].uri };
             setImage({ ...image, [text]: source })
