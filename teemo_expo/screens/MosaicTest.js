@@ -28,7 +28,6 @@ const MosaicTest = ({ route }) => {
     const [isLoading, setIsLoading] = useState(false)
     const navigation = useNavigation()
     const [modalVisible, setModalVisible] = useState(false)
-
     const [mediaType, setMediaType] = useState("PHOTO")
     const [media, setMedia] = useState({
         fileName: "",
@@ -39,7 +38,10 @@ const MosaicTest = ({ route }) => {
         duration: "",
         uri: ""
     })
+    
+    console.log("이곳이 userList",userList)
 
+    
     const bottomSheetRef = useRef(null)
     const snapPoints = useMemo(() => ['5.5%', '20%'], [])
 
