@@ -77,7 +77,7 @@ const SignInScreen = () => {
                     // alert(data.message); // 로그인 성공 알림
                     console.log("로그인 성공(DB 서버)");
                     clearAll();
-                    navigation.navigate("ChoiceMedia", { id }); // 미디어 선택 화면으로 이동
+                    navigation.navigate("HomeScreen", { id }); // 미디어 선택 화면으로 이동
                 })
                 .catch((error) => {
                     alert("로그인 실패: " + error.message);

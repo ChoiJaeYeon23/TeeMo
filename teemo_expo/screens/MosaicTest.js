@@ -133,7 +133,7 @@ const MosaicTest = ({ route }) => {
                 });
 
                 try {
-                    const response = await fetch("http://192.168.219.101:8080/process_media", {
+                    const response = await fetch("http://192.168.219.105:8080/process_media", {
                         method: 'POST',
                         body: formData,
                         headers: {
@@ -191,7 +191,7 @@ const MosaicTest = ({ route }) => {
                 });
 
                 try {
-                    const response = await fetch("http://192.168.219.101:8080/process_media", {
+                    const response = await fetch("http://192.168.219.105:8080/process_media", {
                         method: 'POST',
                         body: formData,
                         headers: {

@@ -6,8 +6,7 @@ import {
     TouchableOpacity,
     StyleSheet,
     Image,
-    Dimensions,
-    AppRegistry
+    Dimensions
 } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import Toast from "react-native-toast-message"
