@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, Component } from "react";
+import React, { useRef } from "react";
 import {
     SafeAreaView,
     View,
@@ -9,52 +9,16 @@ import {
     Dimensions
 } from "react-native"
 import { useNavigation } from "@react-navigation/native"
-import Toast from "react-native-toast-message"
 import Carousel from "react-native-reanimated-carousel"
 import Swiper from "react-native-swiper"
 import CustomProgressBar from "./CustomProgressBar"
 
-const ChoiceMedia = ({ route }) => {
+const ChoiceMedia = () => {
     const navigation = useNavigation()
-    // const id = route.params.id
-    const [loginNow, setLoginNow] = useState(true)
     const currentStep = 1
     const ref = useRef(null)
     const screenWidth = Dimensions.get("window").width;
     const screenHeight = Dimensions.get("window").height;
-    // const fetchNickname = () => {
-    //     fetch("http://3.34.125.163:5001/api/get_nickname", {
-    //         method: "POST", // POST 요청으로 변경
-    //         headers: {
-    //             "Content-Type": "application/json"
-    //         },
-    //         body: JSON.stringify({ id: id }) // id를 서버에 전송
-    //     })
-    //         .then(response => response.json())
-    //         .then(data => {
-    //             console.log("받아온 닉네임: ", data.nickname);
-    //             showToast(data.nickname); // 닉네임으로 showToast 함수 호출
-    //         })
-    //         .catch(error => {
-    //             console.error("에러:", error);
-    //         });
-    // };
-
-    // const showToast = (nickname) => {
-    //     Toast.show({
-    //         type: 'success',
-    //         text1: `${nickname}님, 어서오세요!`,
-    //         visibilityTime: 2000,
-    //         autoHide: true,
-    //     })
-    // }
-
-    // useEffect(() => {
-    //     if (loginNow) {
-    //         fetchNickname()
-    //         setLoginNow(false);
-    //     }
-    // }, []);
 
     return (
         <>
@@ -152,7 +116,6 @@ const ChoiceMedia = ({ route }) => {
                     </TouchableOpacity>
                 </View>
             </SafeAreaView>
-            <Toast />
         </>
     )
 }
