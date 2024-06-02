@@ -39,7 +39,6 @@ const MosaicTest = ({ route }) => {
         uri: ""
     })
     
-    console.log("이곳이 userList",userList)
 
     
     const bottomSheetRef = useRef(null)
@@ -66,8 +65,7 @@ const MosaicTest = ({ route }) => {
 
         if (!result.canceled && result.assets) {
             setAdditionalMedia(result.assets[0].uri)
-            console.log(result.assets[0].uri)
-            console.log("유저리스트", userList)
+            // console.log(result.assets[0].uri)
         }
     }
 
@@ -85,8 +83,7 @@ const MosaicTest = ({ route }) => {
 
         if (!result.canceled && result.assets) {
             setAdditionalMedia(result.assets[0].uri)
-            console.log(result.assets[0].uri)
-            console.log("유저리스트", userList)
+            // console.log(result.assets[0].uri)
         }
     }
 
@@ -111,7 +108,7 @@ const MosaicTest = ({ route }) => {
 
     // 서버로 미디어 업로드
     const handleUploadToServer = async () => {
-        console.log("미디어타입:", mediaType);
+        // console.log("미디어타입:", mediaType);
         if (!additionalMedia) {
             Alert.alert("그룹 이미지를 업로드하세요.");
             return;
@@ -122,12 +119,16 @@ const MosaicTest = ({ route }) => {
                 const formData = new FormData();
 
                 // 기준 이미지 추가
-                userList.forEach((user, index) => {
-                    formData.append('reference_images', {
-                        uri: user.imageUrl,
-                        name: `reference_image_${index}.jpg`
+                userList.forEach((user, userIndex) => {
+                    Object.keys(user.images).forEach((imageKey, imageIndex) => {
+                        const imageName = `reference_image_${userIndex}_${imageIndex}.jpg`;
+                        formData.append('reference_images', {
+                            uri: user.images[imageKey],
+                            name: imageName
+                        });
                     });
                 });
+                
 
                 // 그룹 이미지 추가
                 formData.append('group_image', {
@@ -151,7 +152,7 @@ const MosaicTest = ({ route }) => {
                     const resultBlob = await response.blob();
                     const resultUrl = URL.createObjectURL(resultBlob);
                     // setResultImage(resultUrl);
-                    console.log(resultUrl);
+                    // console.log(resultUrl);
                     setIsLoading(false);
                     navigation.navigate("ResultMediaScreen", { mediaType, resultUrl });
                 } catch (error) {
@@ -182,14 +183,16 @@ const MosaicTest = ({ route }) => {
                 const formData = new FormData();
 
                 // 기준 이미지 추가
-                userList.forEach((user, index) => {
-                    formData.append('reference_images', {
-                        uri: user.imageUrl,
-                        name: `reference_image_${index}.jpg`,
-                        type: 'image/jpeg'
+                userList.forEach((user, userIndex) => {
+                    Object.keys(user.images).forEach((imageKey, imageIndex) => {
+                        const imageName = `reference_image_${userIndex}_${imageIndex}.jpg`;
+                        formData.append('reference_images', {
+                            uri: user.images[imageKey],
+                            name: imageName
+                        });
                     });
                 });
-
+                
                 // 그룹 동영상 추가
                 formData.append('group_video', {
                     uri: additionalMedia,
@@ -212,7 +215,7 @@ const MosaicTest = ({ route }) => {
                     const resultBlob = await response.blob();
                     const resultUrl = URL.createObjectURL(resultBlob);
                     // setResultImage(resultUrl);
-                    console.log(resultUrl)
+                    // console.log(resultUrl)
                     setIsLoading(false);
                     navigation.navigate("ResultMediaScreen", { mediaType, resultUrl });
                 } catch (error) {
@@ -250,7 +253,7 @@ const MosaicTest = ({ route }) => {
             exif: false,    // 메타데이터 포함 여부
         })
 
-        console.log(result)
+        // console.log(result)
 
         // setMedia({
         //     fileName: result.assets[0].fileName,
@@ -281,7 +284,7 @@ const MosaicTest = ({ route }) => {
             exif: false,    // 메타데이터 포함 여부
         })
 
-        console.log(result)
+        // console.log(result)
 
         // 선택한 미디어(사진, 동영상)의 정보를 저장
         // setMedia({

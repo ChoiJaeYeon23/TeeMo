@@ -57,11 +57,11 @@ const NRTAddUserScreen = ({ navigation }) => {
                 {
                     id: userId,
                     images: {
-                        front: `data:image/png;base64,${data.front_image_path}`,
-                        top: `data:image/png;base64,${data.top_image_path}`,
-                        bottom: `data:image/png;base64,${data.bottom_image_path}`,
-                        left: `data:image/png;base64,${data.left_image_path}`,
-                        right: `data:image/png;base64,${data.right_image_path}`
+                        front: `data:image/png;base64,${data.images.front_image_path}`,
+                        top: `data:image/png;base64,${data.images.top_image_path}`,
+                        bottom: `data:image/png;base64,${data.images.bottom_image_path}`,
+                        left: `data:image/png;base64,${data.images.left_image_path}`,
+                        right: `data:image/png;base64,${data.images.right_image_path}`
                     }
                 }
             ]);
@@ -89,7 +89,7 @@ const NRTAddUserScreen = ({ navigation }) => {
     };
 
     const handleStart = () => {
-        navigation.navigate('MosaicTest', { userList });
+        navigation.navigate('MosaicTest', { userList: userList }); // userList 데이터를 함께 전달
     };
 
     const deleteUserHandler = (position) => {
