@@ -12,7 +12,9 @@ import {
     TouchableWithoutFeedback,
     FlatList,
     Animated,
-    Modal
+    Modal,
+    KeyboardAvoidingView,
+    Platform
 } from 'react-native';
 import CustomProgressBar from "./CustomProgressBar";
 import { Ubuntu_Server } from '@env';
@@ -26,7 +28,41 @@ const NRTAddUserScreen = ({ navigation }) => {
     const [selectedImages, setSelectedImages] = useState({});
     const [isPressed, setIsPressed] = useState(new Array(userList.length).fill(false));
     const scaleValues = useRef(userList.map(() => new Animated.Value(1))).current;
+    const backScaleValue = useRef(new Animated.Value(1)).current
+    const nextScaleValue = useRef(new Animated.Value(1)).current
 
+    const startBackPressAnimation = () => {
+        Animated.timing(backScaleValue, {
+            toValue: 0.9,
+            duration: 100,
+            useNativeDriver: true
+        }).start()
+    }
+
+    const endBackPressAnimation = () => {
+        Animated.timing(backScaleValue, {
+            toValue: 1,
+            duration: 200,
+            useNativeDriver: true
+        }).start()
+    }
+
+    const startNextPressAnimation = () => {
+        Animated.timing(nextScaleValue, {
+            toValue: 0.9,
+            duration: 100,
+            useNativeDriver: true
+        }).start()
+    }
+
+    const endNextPressAnimation = () => {
+        Animated.timing(nextScaleValue, {
+            toValue: 1,
+            duration: 200,
+            useNativeDriver: true
+        }).start()
+    }
+    
     const keyboardOff = () => {
         Keyboard.dismiss();
     };
@@ -160,89 +196,110 @@ const NRTAddUserScreen = ({ navigation }) => {
 
     return (
         <TouchableWithoutFeedback onPress={keyboardOff}>
-            <SafeAreaView style={styles.container}>
-                <View style={styles.progressbarWrapper}>
-                    <CustomProgressBar currentStep={2} />
-                </View>
-
-                <View style={styles.headerContainer}>
-                    <Text style={styles.titleText}>인물 추가</Text>
-                </View>
-
-                <View style={styles.exContainer}>
-                    <View style={styles.imageContainer}>
-                        <FlatList
-                            data={userList}
-                            keyExtractor={(item, index) => index.toString()}
-                            renderItem={({ item, index }) => (
-                                <View style={styles.itemContainer}>
-                                    <TouchableOpacity
-                                        activeOpacity={0.9}
-                                        style={[styles.userItem, { transform: [{ scale: scaleValues[index] }] }]}
-                                        onPressIn={() => startUserItemPressAnimation(index)}
-                                        onPressOut={() => endUserItemPressAnimation(index)}
-                                        onPress={() => openModal(item.images)}
-                                    >
-                                        <Text style={styles.userId}>{item.id}</Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                        style={styles.delButton}
-                                        onPress={() => deleteUserHandler(index)}
-                                        activeOpacity={1}
-                                    >
-                                        <Text style={styles.delText}>삭제</Text>
-                                    </TouchableOpacity>
-                                </View>
-                            )}
-                            contentContainerStyle={styles.flatListContainer}
-                        />
+            <KeyboardAvoidingView
+                style={{ flex: 1 }}
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+            >
+                <SafeAreaView style={styles.container}>
+                    <View style={styles.progressbarWrapper}>
+                        <CustomProgressBar currentStep={2} />
                     </View>
-                </View>
 
-                <View style={styles.inputContainer}>
-                    <TextInput
-                        value={id}
-                        onChangeText={setId}
-                        placeholder="사용자 ID"
-                        style={styles.input}
-                    />
-                    <TouchableOpacity onPress={addUser} style={styles.addButton} activeOpacity={1}>
-                        <Text style={styles.buttonText}>추가</Text>
-                    </TouchableOpacity>
-                </View>
+                    <View style={styles.headerContainer}>
+                        <Text style={styles.titleText}>인물 추가</Text>
+                    </View>
 
-                <Text style={styles.guideText}>모자이크 하지 않을 사용자를 추가해주세요.</Text>
-
-                <View style={styles.buttonContainer}>
-                    <TouchableOpacity onPress={goBack} style={styles.backButton} activeOpacity={1}>
-                        <Text style={styles.back}>이전 단계</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity onPress={handleStart} style={styles.nextButton} activeOpacity={1}>
-                        <Text style={styles.next}>다음 단계</Text>
-                    </TouchableOpacity>
-                </View>
-
-                <Modal
-                    animationType="fade"
-                    transparent={true}
-                    visible={modalVisible}
-                >
-                    <TouchableWithoutFeedback onPress={closeModal}>
-                        <View style={styles.modalContainer}>
-                            <View style={styles.modalImageContainer}>
-                                {selectedImages.front && <Image source={{ uri: selectedImages.front }} style={styles.image} />}
-                                {selectedImages.top && <Image source={{ uri: selectedImages.top }} style={styles.image} />}
-                                {selectedImages.bottom && <Image source={{ uri: selectedImages.bottom }} style={styles.image} />}
-                                {selectedImages.left && <Image source={{ uri: selectedImages.left }} style={styles.image} />}
-                                {selectedImages.right && <Image source={{ uri: selectedImages.right }} style={styles.image} />}
-                            </View>
+                    <View style={styles.exContainer}>
+                        <View style={styles.imageContainer}>
+                            <FlatList
+                                data={userList}
+                                keyExtractor={(item, index) => index.toString()}
+                                renderItem={({ item, index }) => (
+                                    <View style={styles.itemContainer}>
+                                        <TouchableOpacity
+                                            activeOpacity={0.9}
+                                            style={[styles.userItem, { transform: [{ scale: scaleValues[index] }] }]}
+                                            onPressIn={() => startUserItemPressAnimation(index)}
+                                            onPressOut={() => endUserItemPressAnimation(index)}
+                                            onPress={() => openModal(item.images)}
+                                        >
+                                            <Text style={styles.userId}>{item.id}</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity
+                                            style={styles.delButton}
+                                            onPress={() => deleteUserHandler(index)}
+                                            activeOpacity={1}
+                                        >
+                                            <Text style={styles.delText}>삭제</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                )}
+                                contentContainerStyle={styles.flatListContainer}
+                            />
                         </View>
-                    </TouchableWithoutFeedback>
-                </Modal>
+                    </View>
 
-                <LoadingModal visible={isLoading} />
-            </SafeAreaView>
+                    <View style={styles.inputContainer}>
+                        <TextInput
+                            value={id}
+                            onChangeText={setId}
+                            placeholder="사용자 ID"
+                            style={styles.input}
+                        />
+                        <TouchableOpacity onPress={addUser} style={styles.addButton} activeOpacity={1}>
+                            <Text style={styles.buttonText}>추가</Text>
+                        </TouchableOpacity>
+                    </View>
+
+                    <Text style={styles.guideText}>모자이크 하지 않을 사용자를 추가해주세요.</Text>
+
+                    <View style={styles.buttonContainer}>
+                        <Animated.View style={{ width: "46%", transform: [{ scale: backScaleValue }] }}>
+                            <TouchableOpacity
+                                onPressIn={() => startBackPressAnimation()}
+                                onPressOut={() => endBackPressAnimation()}
+                                onPress={goBack}
+                                style={styles.backButton}
+                                activeOpacity={1}
+                            >
+                                <Text style={styles.back}>이전 단계</Text>
+                            </TouchableOpacity>
+                        </Animated.View>
+
+                        <Animated.View style={{ width: "46%", transform: [{ scale: nextScaleValue }] }}>
+                            <TouchableOpacity
+                                onPressIn={() => startNextPressAnimation()}
+                                onPressOut={() => endNextPressAnimation()}
+                                onPress={handleStart}
+                                style={styles.nextButton}
+                                activeOpacity={1}
+                            >
+                                <Text style={styles.next}>다음 단계</Text>
+                            </TouchableOpacity>
+                        </Animated.View>
+                    </View>
+
+                    <Modal
+                        animationType="fade"
+                        transparent={true}
+                        visible={modalVisible}
+                    >
+                        <TouchableWithoutFeedback onPress={closeModal}>
+                            <View style={styles.modalContainer}>
+                                <View style={styles.modalImageContainer}>
+                                    {selectedImages.front && <Image source={{ uri: selectedImages.front }} style={styles.image} />}
+                                    {selectedImages.top && <Image source={{ uri: selectedImages.top }} style={styles.image} />}
+                                    {selectedImages.bottom && <Image source={{ uri: selectedImages.bottom }} style={styles.image} />}
+                                    {selectedImages.left && <Image source={{ uri: selectedImages.left }} style={styles.image} />}
+                                    {selectedImages.right && <Image source={{ uri: selectedImages.right }} style={styles.image} />}
+                                </View>
+                            </View>
+                        </TouchableWithoutFeedback>
+                    </Modal>
+
+                    <LoadingModal visible={isLoading} />
+                </SafeAreaView>
+            </KeyboardAvoidingView>
         </TouchableWithoutFeedback>
     );
 };
@@ -303,7 +360,7 @@ const styles = StyleSheet.create({
         color: "#95ce67"
     },
     backButton: {
-        width: "46%",
+        width: "100%",
         height: "40%",
         borderRadius: 10,
         backgroundColor: "#FFFFFF",
@@ -316,7 +373,7 @@ const styles = StyleSheet.create({
         elevation: 5, // 그림자 높이 (Android용)
     },
     nextButton: {
-        width: "46%",
+        width: "100%",
         height: "40%",
         backgroundColor: "#95ce67",
         borderRadius: 10,

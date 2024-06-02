@@ -6,7 +6,8 @@ import {
     TouchableOpacity,
     StyleSheet,
     Image,
-    Dimensions
+    Dimensions,
+    Animated
 } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import Carousel from "react-native-reanimated-carousel"
@@ -19,6 +20,40 @@ const ChoiceMedia = () => {
     const ref = useRef(null)
     const screenWidth = Dimensions.get("window").width;
     const screenHeight = Dimensions.get("window").height;
+    const RTscaleValue = useRef(new Animated.Value(1)).current
+    const NRTscaleValue = useRef(new Animated.Value(1)).current
+
+    const startRTPressAnimation = () => {
+        Animated.timing(RTscaleValue, {
+            toValue: 0.9,
+            duration: 100,
+            useNativeDriver: true
+        }).start()
+    }
+
+    const endRTPressAnimation = () => {
+        Animated.timing(RTscaleValue, {
+            toValue: 1,
+            duration: 200,
+            useNativeDriver: true
+        }).start()
+    }
+
+    const startNRTPressAnimation = () => {
+        Animated.timing(NRTscaleValue, {
+            toValue: 0.9,
+            duration: 100,
+            useNativeDriver: true
+        }).start()
+    }
+
+    const endNRTPressAnimation = () => {
+        Animated.timing(NRTscaleValue, {
+            toValue: 1,
+            duration: 200,
+            useNativeDriver: true
+        }).start()
+    }
 
     return (
         <>
@@ -105,15 +140,30 @@ const ChoiceMedia = () => {
                 </View>
 
                 <View style={styles.buttonContainer}>
-                    <TouchableOpacity onPress={() => navigation.navigate("RTAddUserScreen")} style={[styles.button, { marginLeft: "2%" }]} activeOpacity={1}>
-                        {/* <Image source={require("../images/takePicture.png")} style={{ width: 160, height: 110, marginBottom: "10%" }} /> */}
-                        <Text style={styles.buttonText}>실시간</Text>
-                    </TouchableOpacity>
+                    <Animated.View style={{ width: "46%",transform: [{ scale: RTscaleValue }] }}>
+                        <TouchableOpacity
+                            onPressIn={() => startRTPressAnimation()}
+                            onPressOut={() => endRTPressAnimation()}
+                            onPress={() => navigation.navigate("RTAddUserScreen")}
+                            style={[styles.button, { marginLeft: "2%" }]}
+                            activeOpacity={1}
+                        >
+                            <Text style={styles.buttonText}>실시간</Text>
+                        </TouchableOpacity>
+                    </Animated.View>
 
-                    <TouchableOpacity onPress={() => navigation.navigate("NRTAddUserScreen")} style={[styles.button, { marginRight: "2%" }]} activeOpacity={1}>
-                        {/* <Image source={require("../images/uploadImage.png")} style={{ width: 100, height: 130, marginBottom: "10%" }} /> */}
-                        <Text style={styles.buttonText}>비실시간</Text>
-                    </TouchableOpacity>
+                    <Animated.View style={{ width: "46%",transform: [{ scale: NRTscaleValue }] }}>
+                        <TouchableOpacity
+                            onPressIn={() => startNRTPressAnimation()}
+                            onPressOut={() => endNRTPressAnimation()}
+                            onPress={() => navigation.navigate("NRTAddUserScreen")}
+                            style={[styles.button, { marginRight: "2%" }]}
+                            activeOpacity={1}
+                        >
+                            <Text style={styles.buttonText}>비실시간</Text>
+                        </TouchableOpacity>
+                    </Animated.View>
+
                 </View>
             </SafeAreaView>
         </>
@@ -199,7 +249,7 @@ const styles = StyleSheet.create({
         justifyContent: "space-around",
     },
     button: {
-        width: "46%",
+        width: "100%",
         height: "80%",
         backgroundColor: "#95ce67",
         borderRadius: 10,
