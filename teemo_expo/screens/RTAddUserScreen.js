@@ -20,7 +20,7 @@ import CustomProgressBar from "./CustomProgressBar";
 import { Ubuntu_Server } from '@env';
 import LoadingModal from "./LoadingModal";
 
-const NRTAddUserScreen = ({ navigation }) => {
+const RTAddUserScreen = ({ navigation }) => {
     const [id, setId] = useState('');
     const [userList, setUserList] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -62,7 +62,7 @@ const NRTAddUserScreen = ({ navigation }) => {
             useNativeDriver: true
         }).start()
     }
-
+    
     const keyboardOff = () => {
         Keyboard.dismiss();
     };
@@ -93,11 +93,11 @@ const NRTAddUserScreen = ({ navigation }) => {
                 {
                     id: userId,
                     images: {
-                        front: `data:image/png;base64,${data.front_image_path}`,
-                        top: `data:image/png;base64,${data.top_image_path}`,
-                        bottom: `data:image/png;base64,${data.bottom_image_path}`,
-                        left: `data:image/png;base64,${data.left_image_path}`,
-                        right: `data:image/png;base64,${data.right_image_path}`
+                        front: `data:image/png;base64,${data.images.front_image_path}`,
+                        top: `data:image/png;base64,${data.images.top_image_path}`,
+                        bottom: `data:image/png;base64,${data.images.bottom_image_path}`,
+                        left: `data:image/png;base64,${data.images.left_image_path}`,
+                        right: `data:image/png;base64,${data.images.right_image_path}`
                     }
                 }
             ]);
@@ -125,7 +125,7 @@ const NRTAddUserScreen = ({ navigation }) => {
     };
 
     const handleStart = () => {
-        navigation.navigate('RealTimeMosaic', { userList });
+        navigation.navigate('RealTimeMosaic', { userList: userList }); // userList 데이터를 함께 전달
     };
 
     const deleteUserHandler = (position) => {
@@ -206,7 +206,7 @@ const NRTAddUserScreen = ({ navigation }) => {
                     </View>
 
                     <View style={styles.headerContainer}>
-                        <Text style={styles.titleText}>인물 추가</Text>
+                        <Text style={styles.titleText}>실시간 인물 추가</Text>
                     </View>
 
                     <View style={styles.exContainer}>
@@ -300,11 +300,11 @@ const NRTAddUserScreen = ({ navigation }) => {
                     <LoadingModal visible={isLoading} />
                 </SafeAreaView>
             </KeyboardAvoidingView>
-        </TouchableWithoutFeedback >
+        </TouchableWithoutFeedback>
     );
 };
 
-export default NRTAddUserScreen;
+export default RTAddUserScreen;
 
 const styles = StyleSheet.create({
     container: {

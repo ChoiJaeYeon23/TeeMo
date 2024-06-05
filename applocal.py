@@ -25,13 +25,13 @@ def process_media():
 
         for reference_file in reference_files:
             reference_image = face_recognition.load_image_file(reference_file)
-            reference_face_locations = face_recognition.face_locations(reference_image, model='cnn')
+            reference_face_locations = face_recognition.face_locations(reference_image)
             reference_face_encodings = face_recognition.face_encodings(reference_image, reference_face_locations)
             reference_encodings.extend(reference_face_encodings)
 
         group_file = request.files['group_image']
         group_image = face_recognition.load_image_file(group_file)
-        group_face_locations = face_recognition.face_locations(group_image, model='cnn')
+        group_face_locations = face_recognition.face_locations(group_image)
         group_face_encodings = face_recognition.face_encodings(group_image, group_face_locations)
 
         unblurred_count = 0
