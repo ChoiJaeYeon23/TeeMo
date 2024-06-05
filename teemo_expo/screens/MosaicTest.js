@@ -303,7 +303,7 @@ const MosaicTest = ({ route }) => {
                 </View>
 
                 <View style={styles.headerContainer}>
-                    <Text style={styles.titleText}>제작하기</Text>
+                    <Text style={styles.titleText}>비실시간 제작하기</Text>
                 </View>
 
                 <View style={styles.exContainer}>

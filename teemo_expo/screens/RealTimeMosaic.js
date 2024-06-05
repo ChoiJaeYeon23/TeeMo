@@ -1,7 +1,9 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { Ionicons } from '@expo/vector-icons';
+import * as MediaLibrary from 'expo-media-library';
+import * as FileSystem from 'expo-file-system';
 import { Local_Server } from '@env'
 
 const RealTimeMosaic = () => {
@@ -9,12 +11,24 @@ const RealTimeMosaic = () => {
     const [isRecording, setIsRecording] = useState(false);
     const [isCapturing, setIsCapturing] = useState(false);
     const [intervalId, setIntervalId] = useState(null);
+    const [hasMediaLibraryPermission, setHasMediaLibraryPermission] = useState(null);
+
+    useEffect(() => {
+        (async () => {
+            const { status: mediaLibraryStatus } = await MediaLibrary.requestPermissionsAsync();
+            if (mediaLibraryStatus !== 'granted') {
+                Alert.alert('Media library permission is required to save videos.');
+            } else {
+                setHasMediaLibraryPermission(true);
+            }
+        })();
+    }, []);
 
     useEffect(() => {
         if (isRecording) {
             startRecording();
         }
-    }, [isRecording]); // isRecording이 변경될 때마다 실행
+    }, [isRecording])
 
     const toggleRecording = async () => {
         if (!isRecording) {
@@ -26,65 +40,92 @@ const RealTimeMosaic = () => {
     };
 
     const startRecording = async () => {
-        console.log('녹화 시작');
+        console.log("녹화시작");
 
-        // 서버에 녹화 시작 요청 보내기
+        // 서버에 녹화 시작 요청
         try {
-            console.log('서버에 요청 보내기 시작');
+            console.log("녹화 요청 시도")
             const response = await fetch(`${Local_Server}/start_recording`, {
-                method: 'POST',
+                method: "POST"
             });
-            console.log('서버 응답 수신:', response);
+            console.log("서버 응답 수신:", response);
             if (response.ok) {
-                Alert.alert('녹화 시작 요청 성공', '서버에 녹화 시작 요청을 성공적으로 보냈습니다.');
+                console.log("녹화 시작 요청 성공");
                 startCapturingFrames();
             } else {
-                Alert.alert('녹화 시작 요청 실패', '서버에 녹화 시작 요청을 보내는 데 실패했습니다.');
+                console.log("녹화 시작 요청 실패");
             }
-        } catch (error) {
-            console.error('녹화 시작 요청 오류:', error);
-            Alert.alert('녹화 시작 요청 오류', error.message);
+        } catch (e) {
+            console.error("녹화 시작 요청 오류", e);
         }
+        // webviewRef.current.injectJavaScript(`
+        //     (function() {
+        //         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        //             navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+        //                 .then(function(stream) {
+        //                     window.localStream = stream;
+        //                     const video = document.querySelector('video');
+        //                     video.srcObject = stream;
+        //                     window.mediaRecorder = new MediaRecorder(stream);
+        //                     window.mediaRecorder.start();
+        //                     window.recordedChunks = [];
+        //                     window.mediaRecorder.ondataavailable = function(e) {
+        //                         window.recordedChunks.push(e.data);
+        //                     };
+        //                     alert('Recording started');
+        //                 })
+        //                 .catch(function(err) {
+        //                     alert('Error accessing media devices: ' + err.message);
+        //                 });
+        //         } else {
+        //             alert('getUserMedia not supported on your browser!');
+        //         }
+        //     })();
+        // `);
     };
 
     const stopRecording = async () => {
-        console.log('녹화 중지');
+        console.log("녹화 중지");
 
-        // 서버에 녹화 중지 요청 보내기
+        // 서버에 녹화 중지 요청
         try {
-            console.log('서버에 요청 보내기 시작');
+            console.log("녹화 중지 요청 시도");
             const response = await fetch(`${Local_Server}/stop_recording`, {
-                method: 'POST',
+                method: "POST",
             });
-            console.log('서버 응답 수신:', response);
+            console.log("서버 응답 수신");
             if (response.ok) {
-                Alert.alert('녹화 중지 요청 성공', '서버에 녹화 중지 요청을 성공적으로 보냈습니다.');
+                console.log("녹화 중지 요청 성공");
                 stopCapturingFrames();
             } else {
-                Alert.alert('녹화 중지 요청 실패', '서버에 녹화 중지 요청을 보내는 데 실패했습니다.');
+                console.log("녹화 중지 요청 실패")
             }
-        } catch (error) {
-            console.error('녹화 중지 요청 오류:', error);
-            Alert.alert('녹화 중지 요청 오류', error.message);
+        } catch (e) {
+            console.log("녹화 중지 요청 오류", e)
         }
-    };
-
-    const startCapturingFrames = () => {
-        const id = setInterval(() => {
-            webviewRef.current.postMessage('captureFrame');
-        }, 1000 / 30); // 30 FPS
-        setIntervalId(id);
-    };
-
-    const stopCapturingFrames = () => {
-        clearInterval(intervalId);
+        // webviewRef.current.injectJavaScript(`
+        //     (function() {
+        //         if (window.mediaRecorder && window.mediaRecorder.state !== 'inactive') {
+        //             window.mediaRecorder.stop();
+        //             window.localStream.getTracks().forEach(track => track.stop());
+        //             const blob = new Blob(window.recordedChunks, { type: 'video/webm' });
+        //             const reader = new FileReader();
+        //             reader.onloadend = function() {
+        //                 const base64data = reader.result;
+        //                 window.ReactNativeWebView.postMessage(base64data);
+        //             };
+        //             reader.readAsDataURL(blob);
+        //             alert('Recording stopped');
+        //         }
+        //     })();
+        // `);
     };
 
     const capturePhoto = async () => {
         setIsCapturing(true);
         console.log("촬영 요청 보내는 중");
         try {
-            const response = await fetch(`${Local_Server}/capture`, {
+            const response = await fetch('http:// 172.30.1.21:5000/capture', {
                 method: 'POST',
             });
             if (response.ok) {
@@ -103,16 +144,28 @@ const RealTimeMosaic = () => {
         }
         setIsCapturing(false);
     };
+    
+    const startCapturingFrames = () => {
+        const id = setIntervalId(() => {
+            webviewRef.current.postMessage("captureFrame");
+        }, 1000 / 30);  // 30FPS
+        setIntervalId(id);
+    }
+
+    const stopCapturingFrames = () => {
+        clearInterval(intervalId);
+    }
 
     const handleMessage = async (event) => {
         if (webviewRef.current) {
             const message = event.nativeEvent.data;
+
+            // 프레임이 캡쳐 되면 서버에 업로드
             if (message === 'frameCaptured') {
-                // 프레임이 캡처되었을 때 서버에 업로드하는 로직
                 webviewRef.current.postMessage('captureFrame');
+            } else {
+                console.log("웹뷰가 아직 로드되지 않았습니다.");
             }
-        } else {
-            console.warn('웹뷰가 아직 로드되지 않았습니다.');
         }
     };
 
@@ -125,8 +178,7 @@ const RealTimeMosaic = () => {
                 style={styles.webview}
                 javaScriptEnabled={true}
                 domStorageEnabled={true}
-                onMessage={handleMessage}
-                onLoad={() => {
+                onMessage={handleMessage} onLoad={() => {
                     // 웹뷰 로드되면 자동으로 비디오 재생
                     webviewRef.current.injectJavaScript(`
                     (function() {
