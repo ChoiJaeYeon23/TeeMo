@@ -91,13 +91,15 @@ const HomeScreen = ({ route }) => {
                         mode="parallax"
                         autoPlay={true}
                         data={[
-                            require("../images/top.jpg"),
+                            require("../images/mosaic_ex5.jpg"),
+                            require("../images/mosaic_ex6.jpg"),
                             require("../images/app_logo.png"),
-                            require("../images/bottom.jpg"),
-                            require("../images/kakao_login.png"),
-                            require("../images/front.jpg"),
+                            require("../images/mosaic_ex4.jpg"),
+                            require("../images/mosaic_ex2.jpg"),
+                            require("../images/mosaic_ex1.jpg"),
                             require("../images/01.gif"),
-                            require("../images/result.jpg")
+                            require("../images/mosaic_ex7.jpg"),
+                            require("../images/mosaic_ex3.jpg")
                         ]}
                         modeConfig={{
                             parallaxScrollingScale: 0.9,

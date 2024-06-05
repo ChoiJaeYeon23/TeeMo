@@ -14,8 +14,10 @@ import {
     Animated,
     Modal,
     KeyboardAvoidingView,
-    Platform
+    Platform,
+    ScrollView
 } from 'react-native';
+
 import CustomProgressBar from "./CustomProgressBar";
 import { Ubuntu_Server } from '@env';
 import LoadingModal from "./LoadingModal";
@@ -62,7 +64,7 @@ const NRTAddUserScreen = ({ navigation }) => {
             useNativeDriver: true
         }).start()
     }
-    
+
     const keyboardOff = () => {
         Keyboard.dismiss();
     };
@@ -285,15 +287,18 @@ const NRTAddUserScreen = ({ navigation }) => {
                         visible={modalVisible}
                     >
                         <TouchableWithoutFeedback onPress={closeModal}>
-                            <View style={styles.modalContainer}>
-                                <View style={styles.modalImageContainer}>
-                                    {selectedImages.front && <Image source={{ uri: selectedImages.front }} style={styles.image} />}
-                                    {selectedImages.top && <Image source={{ uri: selectedImages.top }} style={styles.image} />}
-                                    {selectedImages.bottom && <Image source={{ uri: selectedImages.bottom }} style={styles.image} />}
-                                    {selectedImages.left && <Image source={{ uri: selectedImages.left }} style={styles.image} />}
-                                    {selectedImages.right && <Image source={{ uri: selectedImages.right }} style={styles.image} />}
+                            <ScrollView>
+                                <View style={styles.modalContainer}>
+                                    <Text style={styles.titleText}>모달 화면입니다.</Text>
+                                    <View style={styles.modalImageContainer}>
+                                        {selectedImages.front && <Image source={{ uri: selectedImages.front }} style={styles.image} />}
+                                        {selectedImages.top && <Image source={{ uri: selectedImages.top }} style={styles.image} />}
+                                        {selectedImages.bottom && <Image source={{ uri: selectedImages.bottom }} style={styles.image} />}
+                                        {selectedImages.left && <Image source={{ uri: selectedImages.left }} style={styles.image} />}
+                                        {selectedImages.right && <Image source={{ uri: selectedImages.right }} style={styles.image} />}
+                                    </View>
                                 </View>
-                            </View>
+                            </ScrollView>
                         </TouchableWithoutFeedback>
                     </Modal>
 
@@ -468,19 +473,18 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: "#00000030",
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
+        marginTop:70
     },
     modalImageContainer: {
         flexDirection: 'row',
         flexWrap: 'wrap',
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: "70%",
-        height: "40%"
+        width: "60%",
+        height: "100%"
     },
     image: {
-        width: 50,
-        height: 50,
-        margin: 5
+        width: 150,
+        height: 150,
+        margin: 10
     }
 });
