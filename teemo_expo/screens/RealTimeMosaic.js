@@ -45,7 +45,7 @@ const RealTimeMosaic = () => {
         // 서버에 녹화 시작 요청
         try {
             console.log("녹화 요청 시도")
-            const response = await fetch(`${Local_Server}/start_recording`, {
+            const response = await fetch(`http://10.20.33.103:5050/start_recording`, {
                 method: "POST"
             });
             console.log("서버 응답 수신:", response);
@@ -90,7 +90,7 @@ const RealTimeMosaic = () => {
         // 서버에 녹화 중지 요청
         try {
             console.log("녹화 중지 요청 시도");
-            const response = await fetch(`${Local_Server}/stop_recording`, {
+            const response = await fetch(`http://10.20.33.103:5050/stop_recording`, {
                 method: "POST",
             });
             console.log("서버 응답 수신");
@@ -125,7 +125,7 @@ const RealTimeMosaic = () => {
         setIsCapturing(true);
         console.log("촬영 요청 보내는 중");
         try {
-            const response = await fetch('http:// 172.30.1.21:5000/capture', {
+            const response = await fetch(`http://10.20.33.103:5050/capture`, {
                 method: 'POST',
             });
             if (response.ok) {
@@ -148,7 +148,7 @@ const RealTimeMosaic = () => {
     const startCapturingFrames = () => {
         const id = setIntervalId(() => {
             webviewRef.current.postMessage("captureFrame");
-        }, 1000 / 30);  // 30FPS
+        }, 1000 / 30);
         setIntervalId(id);
     }
 
@@ -174,7 +174,7 @@ const RealTimeMosaic = () => {
             <WebView
                 ref={webviewRef}
                 originWhitelist={['*']}
-                source={{ uri: `${Local_Server}/video` }}
+                source={{ uri: `http://10.20.33.103:5050/video` }}
                 style={styles.webview}
                 javaScriptEnabled={true}
                 domStorageEnabled={true}
