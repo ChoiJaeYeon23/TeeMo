@@ -285,27 +285,33 @@ const NRTAddUserScreen = ({ navigation }) => {
                         animationType="fade"
                         transparent={true}
                         visible={modalVisible}
+                        onRequestClose={closeModal}
                     >
                         <TouchableWithoutFeedback onPress={closeModal}>
-                            <ScrollView>
+                            <View style={styles.modalOverlay}>
                                 <View style={styles.modalContainer}>
-                                    <Text style={styles.titleText}>모달 화면입니다.</Text>
                                     <View style={styles.modalImageContainer}>
-                                        {selectedImages.front && <Image source={{ uri: selectedImages.front }} style={styles.image} />}
-                                        {selectedImages.top && <Image source={{ uri: selectedImages.top }} style={styles.image} />}
-                                        {selectedImages.bottom && <Image source={{ uri: selectedImages.bottom }} style={styles.image} />}
-                                        {selectedImages.left && <Image source={{ uri: selectedImages.left }} style={styles.image} />}
-                                        {selectedImages.right && <Image source={{ uri: selectedImages.right }} style={styles.image} />}
+                                        <View style={styles.imageRow}>
+                                            {selectedImages.front && <Image source={{ uri: selectedImages.front }} style={styles.image} />}
+                                            {selectedImages.top && <Image source={{ uri: selectedImages.top }} style={styles.image} />}
+                                        </View>
+                                        <View style={styles.imageRow}>
+                                            {selectedImages.bottom && <Image source={{ uri: selectedImages.bottom }} style={styles.image} />}
+                                            {selectedImages.left && <Image source={{ uri: selectedImages.left }} style={styles.image} />}
+                                        </View>
+                                        <View style={styles.imageRow}>
+                                            {selectedImages.right && <Image source={{ uri: selectedImages.right }} style={styles.image} />}
+                                        </View>
                                     </View>
                                 </View>
-                            </ScrollView>
+                            </View>
                         </TouchableWithoutFeedback>
                     </Modal>
 
                     <LoadingModal visible={isLoading} />
                 </SafeAreaView>
             </KeyboardAvoidingView>
-        </TouchableWithoutFeedback>
+        </TouchableWithoutFeedback >
     );
 };
 
@@ -324,12 +330,12 @@ const styles = StyleSheet.create({
     },
     headerContainer: {
         width: "100%",
-        height: "15%",
+        height: "7%",
         justifyContent: "center",
     },
     exContainer: {
         width: "95%",
-        height: "40%",
+        height: "60%",
         paddingHorizontal: "3%",
         paddingBottom: "3%",
         marginTop: "3%",
@@ -469,22 +475,36 @@ const styles = StyleSheet.create({
         fontWeight: "600",
         color: "#FFFFFF"
     },
-    modalContainer: {
+    modalOverlay: {
         flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    modalContainer: {
+        width: "100%",
+        height: "60%",
         backgroundColor: "#00000030",
         alignItems: "center",
         justifyContent: "center",
-        marginTop:70
     },
     modalImageContainer: {
+        flexDirection: 'column',
+        alignItems: 'center', // Center align the rows
+        justifyContent: 'center', // Center align the rows
+        shadowColor: "#000", // 그림자 색상
+        shadowOffset: { width: 0, height: 2 }, // 그림자 오프셋
+        shadowOpacity: 0.3, // 그림자 투명도
+        shadowRadius: 3, // 그림자 반경
+        elevation: 5, // 그림자 높이 (Android용)
+    },
+    imageRow: {
         flexDirection: 'row',
-        flexWrap: 'wrap',
-        width: "60%",
-        height: "100%"
+        justifyContent: 'space-between',
+        marginTop: "4%"
     },
     image: {
         width: 150,
         height: 150,
-        margin: 10
+        marginHorizontal: "2%"
     }
 });

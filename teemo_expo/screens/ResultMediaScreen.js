@@ -211,12 +211,12 @@ const styles = StyleSheet.create({
     },
     headerContainer: {
         width: "100%",
-        height: "15%",
+        height: "7%",
         justifyContent: "center"
     },
     exContainer: {
         width: "95%",
-        height: "60%",
+        height: "68%",
         alignItems: "center",
         justifyContent: "center",
         marginTop: "3%",
@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
         justifyContent: "center"
     },
     downloadButton: {
-        width: "90%",
+        width: "100%",
         height: "55%",
         backgroundColor: "#FFFFFF",
         alignItems: "center",

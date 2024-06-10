@@ -31,16 +31,6 @@ const MosaicTest = ({ route }) => {
     const backScaleValue = useRef(new Animated.Value(1)).current
     const nextScaleValue = useRef(new Animated.Value(1)).current
     const [mediaType, setMediaType] = useState("PHOTO")
-    const [media, setMedia] = useState({
-        fileName: "",
-        height: "",
-        width: "",
-        mimeType: "",
-        type: "",
-        duration: "",
-        uri: ""
-    })
-    
 
     const startPressAnimation = () => {
         Animated.timing(scaleValue, {
@@ -91,7 +81,7 @@ const MosaicTest = ({ route }) => {
     }
 
     const bottomSheetRef = useRef(null)
-    const snapPoints = useMemo(() => ['5.5%', '20%'], [])
+    const snapPoints = useMemo(() => ['4%', '23%'], [])
 
     const handleUploadMedia = async () => {
         bottomSheetRef.current?.expand()
@@ -139,7 +129,6 @@ const MosaicTest = ({ route }) => {
                     });
                 });
                 
-
                 // 그룹 이미지 추가
                 formData.append('group_image', {
                     uri: additionalMedia,
@@ -202,13 +191,11 @@ const MosaicTest = ({ route }) => {
                         });
                     });
                 });
-                
                 // 그룹 동영상 추가
                 formData.append('group_video', {
                     uri: additionalMedia,
                     name: 'group_video.mp4'
                 });
-
                 try {
                     const response = await fetch(`${Local_Server}/process_media`, {
                         method: 'POST',
@@ -217,7 +204,6 @@ const MosaicTest = ({ route }) => {
                             'Content-Type': 'multipart/form-data',
                         },
                     });
-
                     if (!response.ok) {
                         throw new Error('동영상 처리에 실패했습니다.');
                     }
@@ -437,12 +423,12 @@ const styles = StyleSheet.create({
     },
     headerContainer: {
         width: "100%",
-        height: "15%",
+        height: "7%",
         justifyContent: "center"
     },
     exContainer: {
         width: "95%",
-        height: "40%",
+        height: "60%",
         alignItems: "center",
         justifyContent: "center",
         marginTop: "3%",

@@ -11,6 +11,7 @@ import {
 } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import Carousel from "react-native-reanimated-carousel"
+import { Octicons, MaterialCommunityIcons } from "@expo/vector-icons"
 import Swiper from "react-native-swiper"
 import CustomProgressBar from "./CustomProgressBar"
 
@@ -63,7 +64,7 @@ const ChoiceMedia = () => {
                     <CustomProgressBar currentStep={currentStep} />
                 </View>
 
-                <View style={styles.exContainer}>
+                {/* <View style={styles.exContainer}>
                     <Carousel
                         ref={ref}
                         mode="parallax"
@@ -97,9 +98,13 @@ const ChoiceMedia = () => {
                             justifyContent: "center"
                         }}
                     />
-                </View>
+                </View> */}
 
-                <View style={styles.swiperWrapper}>
+                <View style={[styles.exContainer, { paddingBottom: "5%", marginBottom: "10%", marginTop: "7%" }]}>
+                    <View style={{ flexDirection: "row", marginVertical: "5%" }}>
+                        <Octicons name="pin" size={24} color="#787878" />
+                        <Text style={styles.guideSubTitle}>{"제작 방법"}</Text>
+                    </View>
                     <Swiper
                         style={styles.swiper}
                         showsPagination={true}
@@ -109,38 +114,52 @@ const ChoiceMedia = () => {
                         paginationStyle={styles.pagination}
                     >
                         <View style={styles.swiperSlide}>
-                            <Image source={require("../images/takePicture.png")} style={{ width: 80, height: 80, marginRight: "8%" }} />
-                            <View>
-                                <Text style={styles.guideTitle}>실시간 모자이크 촬영물 제작 가이드</Text>
-                                <Text style={styles.guideText}>
-                                    {"1. 실시간 버튼을 눌러주세요."}
-                                    {"\n"}
-                                    {"2. 모자이크를 제외할 인물을 추가해주세요."}
-                                    {"\n"}
-                                    {"3. 사진이나 동영상을 촬영해주세요."}
-                                    {"\n"}
-                                </Text>
+
+                            <Text style={styles.guideTitle}>실시간 모자이크</Text>
+                            <Image source={require("../images/takePicture.png")} style={{ width: 200, height: 200, marginRight: "8%" }} />
+                            <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                <MaterialCommunityIcons name="numeric-1-circle-outline" color="#666666" size={25} />
+                                <Text style={styles.guideText}>{"왼쪽 하단의 실시간 버튼을 눌러주세요."}</Text>
+                            </View>
+                            <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                <MaterialCommunityIcons name="numeric-2-circle-outline" color="#666666" size={25} />
+                                <Text style={styles.guideText}>{"모자이크를 제외할 인물을 추가해주세요."}</Text>
+                            </View>
+                            <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                <MaterialCommunityIcons name="numeric-3-circle-outline" color="#666666" size={25} />
+                                <Text style={styles.guideText}>{"사진이나 동영상을 촬영해주세요."}</Text>
+                            </View>
+                            <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                <MaterialCommunityIcons name="numeric-4-circle-outline" color="#666666" size={25} />
+                                <Text style={styles.guideText}>{"결과물을 확인해주세요."}</Text>
                             </View>
                         </View>
+
                         <View style={styles.swiperSlide}>
-                            <Image source={require("../images/uploadImage.png")} style={{ width: 80, height: 80, marginRight: "5%" }} />
-                            <View>
-                                <Text style={styles.guideTitle}>비실시간 모자이크 촬영물 제작 가이드</Text>
-                                <Text style={styles.guideText}>
-                                    {"1. 비실시간 버튼을 눌러주세요."}
-                                    {"\n"}
-                                    {"2. 모자이크를 제외할 인물을 추가해주세요."}
-                                    {"\n"}
-                                    {"3. 모자이크 하고싶은 사진이나 동영상을 추가해주세요."}
-                                    {"\n"}
-                                </Text>
+                            <Text style={styles.guideTitle}>비실시간 모자이크</Text>
+                            <Image source={require("../images/uploadImage.png")} style={{ width: 180, height: 180, marginRight: "5%", marginVertical: "2%" }} />
+                            <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                <MaterialCommunityIcons name="numeric-1-circle-outline" color="#666666" size={25} />
+                                <Text style={styles.guideText}>{"오른쪽 하단의 비실시간 버튼을 눌러주세요."}</Text>
+                            </View>
+                            <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                <MaterialCommunityIcons name="numeric-2-circle-outline" color="#666666" size={25} />
+                                <Text style={styles.guideText}>{"모자이크를 제외할 인물을 추가해주세요."}</Text>
+                            </View>
+                            <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                <MaterialCommunityIcons name="numeric-3-circle-outline" color="#666666" size={25} />
+                                <Text style={styles.guideText}>{"사진이나 동영상을 업로드해주세요."}</Text>
+                            </View>
+                            <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                <MaterialCommunityIcons name="numeric-4-circle-outline" color="#666666" size={25} />
+                                <Text style={styles.guideText}>{"결과물을 확인해주세요."}</Text>
                             </View>
                         </View>
                     </Swiper>
                 </View>
 
                 <View style={styles.buttonContainer}>
-                    <Animated.View style={{ width: "46%",transform: [{ scale: RTscaleValue }] }}>
+                    <Animated.View style={{ width: "46%", transform: [{ scale: RTscaleValue }] }}>
                         <TouchableOpacity
                             onPressIn={() => startRTPressAnimation()}
                             onPressOut={() => endRTPressAnimation()}
@@ -152,7 +171,7 @@ const ChoiceMedia = () => {
                         </TouchableOpacity>
                     </Animated.View>
 
-                    <Animated.View style={{ width: "46%",transform: [{ scale: NRTscaleValue }] }}>
+                    <Animated.View style={{ width: "46%", transform: [{ scale: NRTscaleValue }] }}>
                         <TouchableOpacity
                             onPressIn={() => startNRTPressAnimation()}
                             onPressOut={() => endNRTPressAnimation()}
@@ -213,17 +232,26 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: "center",
         justifyContent: "center",
-        flexDirection: "row",
     },
     guideTitle: {
-        fontSize: 18,
+        fontSize: 34,
         fontWeight: "bold",
         marginBottom: "3%",
-        color: "#333333"
+        color: "#95ce67",
+    },
+    guideSubTitle: {
+        fontSize: 22,
+        fontWeight: "600",
+        marginBottom: "3%",
+        color: "#787878",
+        marginLeft: "3%"
     },
     guideText: {
-        fontSize: 16,
-        color: "#565656"
+        fontSize: 21,
+        color: "#666666",
+        fontWeight: "bold",
+        marginVertical: "2%",
+        marginLeft: "2%"
     },
     dot: {
         backgroundColor: "#99999950",
