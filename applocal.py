@@ -166,14 +166,13 @@ def process_media():
 isRecording = False           # 녹화 중인지 여부 boolean
 isTakingPhoto = False       # 촬영 중인지 여부 boolean
 frames = []                          # frame 하나하나를 합칠 frames 배열
-reference_encodings = []
+references = []
 
 # 실시간 웹캠 실행
 def generate_frames():
-    global recording, isTakingPhoto, frames, reference_encodings
+    global recording, isTakingPhoto, frames, references
     cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)  # DirectShow를 사용하도록 설정
     cap.set(cv2.CAP_PROP_FPS, 24)
-
 
     while True:
         ret, frame = cap.read()
@@ -186,7 +185,7 @@ def generate_frames():
 
         for i, group_encoding in enumerate(group_face_encodings):
             (top, right, bottom, left) = group_face_locations[i]
-            distances = [face_recognition.face_distance([ref_encoding], group_encoding)[0] for ref_encoding in reference_encodings]
+            distances = [face_recognition.face_distance([ref_encoding], group_encoding)[0] for ref_encoding in references]
             print(f"인덱스: {i+1}, 거리: {distances}")
 
             if all(distance >= 0.44 for distance in distances):
@@ -225,21 +224,23 @@ def save_video(frames):         # frame들이 합쳐진 frames를 매개변수�
     
     out.release()       # 출력 객체 해제
     print('실시간 모자이크 영상을 저장했습니다.')
+    return send_file(output_video_path, mimetype='video/mp4')
 
 # 사진 저장
 def save_photo(frame):
     frame_bytes = cv2.imencode('.jpg', frame)[1].tobytes()
-    frame_base64 = base64.b64encode(frame_bytes).decode('utf-8')
+    frame_base64 = base64.b64encode(frame_bytes)
     out_photo_path = f"live_result_photo_{time.strftime('%Y%m%d_%H%M%S')}.jpg"
     with open(out_photo_path, 'wb') as f:
-        f.write(frame_bytes)
+        f.write(base64.b64decode(frame_base64))
     print('실시간 모자이크 사진 촬영 및 저장에 성공했습니다.')
-    return "Saving Photo Success", 200
+    # return "Saving Photo Success", 200
+    return send_file(out_photo_path, mimetype='image/jpeg')
 
 # 기준 이미지 받아서 배열에 집어넣기
 @app.route('/upload_reference_images', methods=['POST'])
 def set_reference_images():
-    global reference_encodings
+    global references
     reference_files = request.files.getlist('reference_images')
     print('받았음')
 
@@ -247,7 +248,7 @@ def set_reference_images():
         reference_image = face_recognition.load_image_file(reference_file)
         reference_face_locations = face_recognition.face_locations(reference_image)
         reference_face_encodings = face_recognition.face_encodings(reference_image, reference_face_locations)
-        reference_encodings.extend(reference_face_encodings)
+        references.extend(reference_face_encodings)
         print('한개 끝')
 
     return "Reference images uploaded successfully", 200
@@ -263,7 +264,7 @@ def video():
 def take_picture():
     global isTakingPhoto
     isTakingPhoto = True    # 촬영 시도를 했으므로 True
-    reference_encodings.clear()
+    references.clear()
     return "Picture capture requested", 200
 
 # 녹화 시작
@@ -282,7 +283,7 @@ def stop_recording():
     isRecording = False     # 녹화를 중지했으므로 False
     save_video(frames)     # 전역변수 frames를 매개변수로 영상 저장 함수 호출
     frames.clear()               # frames 초기화
-    reference_encodings.clear()
+    references.clear()
     return "Recording stopped", 200
 
 if __name__ == '__main__':
