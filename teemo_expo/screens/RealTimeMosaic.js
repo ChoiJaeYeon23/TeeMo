@@ -6,11 +6,13 @@ import * as MediaLibrary from 'expo-media-library';
 import CustomProgressBar from "./CustomProgressBar"
 import * as FileSystem from 'expo-file-system';
 import { Local_Server } from '@env'
+import { useNavigation } from '@react-navigation/native'
 
 const RealTimeMosaic = () => {
     const currentStep = 3
-
+    const navigation = useNavigation()
     const webviewRef = useRef(null);
+    const [mediaType, setMediaType] = useState("PHOTO");
     const [webviewLoaded, setWebviewLoaded] = useState(false);
     const [isRecording, setIsRecording] = useState(false);
     const [isCapturing, setIsCapturing] = useState(false);
@@ -55,6 +57,7 @@ const RealTimeMosaic = () => {
 
     const startRecording = async () => {
         console.log("녹화시작");
+        setMediaType("VIDEO")
         try {
             console.log("녹화 요청 시도")
             const response = await fetch(`${Local_Server}/start_recording`, {
@@ -95,21 +98,28 @@ const RealTimeMosaic = () => {
         }
     };
 
-    const capturePhoto = () => {
+    const capturePhoto = async () => {
+        setMediaType("PHOTO")
         setIsCapturing(true);
         console.log("촬영 요청 보내는 중");
-
-        fetch(`${Local_Server}/take_picture`, {
-            method: "POST",
-        })
-            .then((data) => {
+        try {
+            const response = await fetch(`${Local_Server}/take_picture`, {
+                method: "POST"
+            });
+            console.log("서버 응답 수신");
+            if (response.ok) {
+                console.log("사진 촬영 및 저장 완료");
                 setIsCapturing(false);
-                console.log("저장완료", data)
-                // 뭐 저장하는 로직 써야됨
-            })
-            .catch((error) => {
-                alert("에러발생")
-            })
+                console.log(response);
+                const resultBlob = await response.blob();
+                const resultUrl = URL.createObjectURL(resultBlob);
+                navigation.navigate("ResultMediaScreen", { mediaType, resultUrl });
+            } else {
+                console.error(`에러 발생: ${error.message}`);
+            }
+        } catch (e) {
+            console.log("사진 촬영 오류", e)
+        }
     };
 
     const startCapturingFrames = () => {
