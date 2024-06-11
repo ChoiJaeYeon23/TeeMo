@@ -108,12 +108,12 @@ const MosaicTest = ({ route }) => {
 
     // 서버로 미디어 업로드
     const handleUploadToServer = async () => {
-        // console.log("미디어타입:", mediaType);
         if (!additionalMedia) {
             Alert.alert("그룹 이미지를 업로드하세요.");
             return;
         }
-        if (mediaType === "PHOTO") {
+
+        if (mediaType === "PHOTO") {        // 사진 처리
             const uploadToServer = async () => {
                 setIsLoading(true);
                 const formData = new FormData();
@@ -175,8 +175,7 @@ const MosaicTest = ({ route }) => {
                     }
                 ]
             )
-        } else if (mediaType === "VIDEO") {
-
+        } else if (mediaType === "VIDEO") {         // 동영상 처리
             const uploadToServer = async () => {
                 setIsLoading(true);
                 const formData = new FormData();
