@@ -17,7 +17,7 @@ import {
     Platform
 } from 'react-native';
 import CustomProgressBar from "./CustomProgressBar";
-import { Ubuntu_Server } from '@env';
+import { Ubuntu_Server, Local_Server } from '@env';
 import LoadingModal from "./LoadingModal";
 
 const RTAddUserScreen = ({ navigation }) => {
@@ -124,8 +124,41 @@ const RTAddUserScreen = ({ navigation }) => {
         }
     };
 
-    const handleStart = () => {
-        navigation.navigate('RealTimeMosaic', { userList: userList }); // userList 데이터를 함께 전달
+    const handleStart = async () => {
+        const uploadReferenceImages = async () => {
+            try {
+                const formData = new FormData();
+                // 기준 이미지 추가
+                userList.forEach((user, userIndex) => {
+                    Object.keys(user.images).forEach((imageKey, imageIndex) => {
+                        const imageName = `reference_image_${userIndex}_${imageIndex}.jpg`;
+                        formData.append('reference_images', {
+                            uri: user.images[imageKey],
+                            name: imageName
+                        });
+                    });
+                });
+                console.log("기준이미지 전송중1")
+                const response = await fetch(`${Local_Server}/upload_reference_images`, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+
+                if (response.ok) {
+                    console.log("기준 이미지가 업로드 되었습니다");
+                } else {
+                    console.error("기준 이미지 업로드에 실패하였습니다.");
+                }
+            } catch (e) {
+                console.error("기준 이미지 업로드에 실패하였습니다.", e);
+            }
+        };
+        await uploadReferenceImages();
+        console.log("기준이미지전송성공");
+        navigation.navigate('RealTimeMosaic'); // userList 데이터를 함께 전달
     };
 
     const deleteUserHandler = (position) => {
