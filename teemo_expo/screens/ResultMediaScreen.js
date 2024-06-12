@@ -75,9 +75,10 @@ const ResultMediaScreen = ({ route }) => {
      */
     const loadMedia = async () => {
         setMediaType(route.params.mediaType)
-
+        console.log("미디어타입은", route.params.mediaType)
         // 서버로부터 받은 미디어 데이터를 가져와 로컬 파일로 저장합니다.
         const response = await fetch(route.params.resultUrl);
+        console.log("미디어경로는", route.params.resultUrl)
         const blob = await response.blob();
 
         // 파일의 확장자를 결정합니다.
