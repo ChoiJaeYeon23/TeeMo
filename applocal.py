@@ -6,6 +6,7 @@ import time
 from flask_cors import CORS
 import base64
 import datetime
+import os
 
 app = Flask(__name__)
 CORS(app)
@@ -166,11 +167,14 @@ def process_media():
 isRecording = False           # 녹화 중인지 여부 boolean
 isTakingPhoto = False       # 촬영 중인지 여부 boolean
 frames = []                          # frame 하나하나를 합칠 frames 배열
+ff = []
 references = []
+photo_path = ''
+video_path = ''
 
 # 실시간 웹캠 실행
 def generate_frames():
-    global recording, isTakingPhoto, frames, references
+    global recording, isTakingPhoto, frames, references, photo_path, video_path
     cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)  # DirectShow를 사용하도록 설정
     cap.set(cv2.CAP_PROP_FPS, 24)
 
@@ -203,7 +207,8 @@ def generate_frames():
 
         # isTakingPhoto(촬영중)가 true일 때
         if isTakingPhoto:
-            save_photo(frame)
+            ff.append(frame)
+            # save_photo(frame)
             isTakingPhoto = False
             
         ret, buffer = cv2.imencode('.jpg', frame)
@@ -224,7 +229,7 @@ def save_video(frames):         # frame들이 합쳐진 frames를 매개변수�
     
     out.release()       # 출력 객체 해제
     print('실시간 모자이크 영상을 저장했습니다.')
-    return send_file(output_video_path, mimetype='video/mp4')
+    return output_video_path
 
 # 사진 저장
 def save_photo(frame):
@@ -234,15 +239,14 @@ def save_photo(frame):
     with open(out_photo_path, 'wb') as f:
         f.write(base64.b64decode(frame_base64))
     print('실시간 모자이크 사진 촬영 및 저장에 성공했습니다.')
-    # return "Saving Photo Success", 200
-    return send_file(out_photo_path, mimetype='image/jpeg')
+    return out_photo_path
 
 # 기준 이미지 받아서 배열에 집어넣기
 @app.route('/upload_reference_images', methods=['POST'])
 def set_reference_images():
     global references
     reference_files = request.files.getlist('reference_images')
-    print('받았음')
+    print('Received Files:', reference_files)  # Debug statement
 
     for reference_file in reference_files:
         reference_image = face_recognition.load_image_file(reference_file)
@@ -262,10 +266,16 @@ def video():
 # 사진 촬영
 @app.route('/take_picture', methods=['POST'])
 def take_picture():
-    global isTakingPhoto
+    global isTakingPhoto, photo_path, ff
     isTakingPhoto = True    # 촬영 시도를 했으므로 True
-    references.clear()
-    return "Picture capture requested", 200
+
+    time.sleep(1)
+
+    photo_path = save_photo(ff[0])
+    if photo_path:
+        ff.clear()
+        references.clear()
+        return send_file(photo_path, mimetype='image/jpeg')
 
 # 녹화 시작
 @app.route('/start_recording', methods=['POST'])
@@ -278,13 +288,14 @@ def start_recording():
 # 녹화 중지
 @app.route('/stop_recording', methods=['POST'])
 def stop_recording():
-    global isRecording
+    global isRecording, video_path, frames
     print("녹화 중지 요청 수신")
     isRecording = False     # 녹화를 중지했으므로 False
-    save_video(frames)     # 전역변수 frames를 매개변수로 영상 저장 함수 호출
-    frames.clear()               # frames 초기화
-    references.clear()
-    return "Recording stopped", 200
+    video_path = save_video(frames)     # 전역변수 frames를 매개변수로 영상 저장 함수 호출
+    if video_path:
+        frames.clear()               # frames 초기화
+        references.clear()
+        return send_file(video_path, mimetype='video/mp4')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)
