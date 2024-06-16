@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Alert, SafeAreaView } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { Ionicons } from '@expo/vector-icons';
 import * as MediaLibrary from 'expo-media-library';
 import CustomProgressBar from "./CustomProgressBar"
-import * as FileSystem from 'expo-file-system';
 import { Local_Server } from '@env'
 import { useNavigation } from '@react-navigation/native'
+import ImageLoadingModal from './ImageLoadingModal'
 
 const RealTimeMosaic = () => {
     const currentStep = 3
@@ -18,6 +18,7 @@ const RealTimeMosaic = () => {
     const [isCapturing, setIsCapturing] = useState(false);
     const [intervalId, setIntervalId] = useState(null);
     const [hasMediaLibraryPermission, setHasMediaLibraryPermission] = useState(null);
+    const [isLoading, setIsLoading] = useState(false)
 
     useEffect(() => {
         (async () => {
@@ -39,7 +40,7 @@ const RealTimeMosaic = () => {
     useEffect(() => {
         const timeout = setTimeout(() => {
             if (!webviewLoaded) {
-                Alert.alert('Error', 'The request timed out.');
+                console.log('The request timed out.');
             }
         }, 30000);
 
@@ -84,11 +85,13 @@ const RealTimeMosaic = () => {
             });
             console.log("서버 응답 수신");
             if (response.ok) {
+                setIsLoading(true);
                 console.log("녹화 중지 요청 성공");
                 stopCapturingFrames();
                 const resultBlob = await response.blob();
                 const resultUrl = URL.createObjectURL(resultBlob);
                 navigation.navigate("ResultMediaScreen", { mediaType, resultUrl });
+                setIsLoading(false);
             } else {
                 console.error(`에러 발생: ${error.message}`);
                 console.log("녹화 중지 요청 실패")
@@ -108,12 +111,14 @@ const RealTimeMosaic = () => {
             });
             console.log("서버 응답 수신");
             if (response.ok) {
+                setIsLoading(true);
                 console.log("사진 촬영 및 저장 완료");
                 setIsCapturing(false);
                 console.log(response);
                 const resultBlob = await response.blob();
                 const resultUrl = URL.createObjectURL(resultBlob);
                 navigation.navigate("ResultMediaScreen", { mediaType, resultUrl });
+                setIsLoading(false);
             } else {
                 console.error(`에러 발생: ${error.message}`);
             }
@@ -147,7 +152,11 @@ const RealTimeMosaic = () => {
     };
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
+            <View style={styles.progressbarWrapper}>
+                <CustomProgressBar currentStep={currentStep} />
+            </View>
+
             <WebView
                 ref={webviewRef}
                 originWhitelist={['*']}
@@ -164,18 +173,18 @@ const RealTimeMosaic = () => {
                         video.play();
                     })();
                     `);
-                    setWebviewLoaded(true);
                 }}
             />
             <View style={styles.buttonContainer}>
                 <TouchableOpacity onPress={toggleRecording} style={styles.recordButton}>
-                    <Ionicons name={isRecording ? 'stop' : 'play'} size={35} color="#FFFFFF90" />
+                    <Ionicons name={isRecording ? 'stop' : 'play'} size={38} color="#95ce67" />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={capturePhoto} style={styles.captureButton}>
-                    <Ionicons name="camera" size={35} color="#FFFFFF90" />
+                    <Ionicons name="camera" size={38} color="#95ce67" />
                 </TouchableOpacity>
             </View>
-        </View>
+            <ImageLoadingModal visible={isLoading} />
+        </SafeAreaView>
     );
 };
 
@@ -183,30 +192,49 @@ export default RealTimeMosaic;
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor: '#000',
+        flex: 1
+    },
+    progressbarWrapper: {
+        width: "100%",
+        height: "8%",
+        alignItems: "center",
+        justifyContent: "center",
     },
     webview: {
         flex: 1,
+        marginVertical: "10%",
         width: '100%',
-        height: '100%',
+        height: '40%',
     },
     buttonContainer: {
         position: 'absolute',
-        bottom: 20,
+        bottom: 60,
+        marginBottom: "5%",
         flexDirection: 'row',
         alignSelf: 'center',
     },
     recordButton: {
-        backgroundColor: 'rgba(0,0,0,0.5)',
+        backgroundColor: '#fff',
         padding: 10,
-        borderRadius: 5,
+        borderRadius: 100,
+        alignItems: "center",
+        justifyContent: "center",
         marginHorizontal: 10,
+        shadowColor: "#000", // 그림자 색상
+        shadowOffset: { width: 0, height: 2 }, // 그림자 오프셋
+        shadowOpacity: 0.25, // 그림자 투명도
+        shadowRadius: 2, // 그림자 반경
+        elevation: 5, // 그림자 높이 (Android용)
     },
     captureButton: {
-        backgroundColor: 'rgba(0,0,0,0.5)',
+        backgroundColor: '#fff',
         padding: 10,
-        borderRadius: 5,
+        borderRadius: 100,
         marginHorizontal: 10,
+        shadowColor: "#000", // 그림자 색상
+        shadowOffset: { width: 0, height: 2 }, // 그림자 오프셋
+        shadowOpacity: 0.25, // 그림자 투명도
+        shadowRadius: 2, // 그림자 반경
+        elevation: 5, // 그림자 높이 (Android용)
     },
 });
