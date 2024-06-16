@@ -52,8 +52,8 @@ def process_media():
                 group_image[top:bottom, left:right] = face
             else:
                 unblurred_count += 1
-                cv2.rectangle(group_image, (left, top), (right, bottom), (0, 255, 0), 2)
-                cv2.putText(group_image, label, (left, top - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
+                # cv2.rectangle(group_image, (left, top), (right, bottom), (0, 255, 0), 2)
+                # cv2.putText(group_image, label, (left, top - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
 
         end_time = time.time()
 
@@ -125,12 +125,12 @@ def process_media():
                     face = frame[top:bottom, left:right]
                     face = cv2.GaussianBlur(face, (99, 99), 20)
                     frame[top:bottom, left:right] = face
-                else:
-                    # 하나라도 0.44보다 작은 경우
-                    for j, distance in enumerate(distances):
-                        if distance < 0.44:
-                            cv2.rectangle(frame, (left, top), (right, bottom), (0, 255, 0), 2)
-                            cv2.putText(frame, label, (left, top - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (36, 255, 12), 2)
+                # else:
+                #     # 하나라도 0.44보다 작은 경우
+                #     for j, distance in enumerate(distances):
+                #         if distance < 0.44:
+                #             cv2.rectangle(frame, (left, top), (right, bottom), (0, 255, 0), 2)
+                #             cv2.putText(frame, label, (left, top - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (36, 255, 12), 2)
 
             # 결과 비디오에 프레임 저장
             out.write(frame)
@@ -196,8 +196,8 @@ def generate_frames():
                 face = frame[top:bottom, left:right]
                 face = cv2.GaussianBlur(face, (99, 99), 20)
                 frame[top:bottom, left:right] = face
-            else:
-                cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
+            # else:
+            #     cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
              
         # isRecording(녹화중)이 true일 때
         if isRecording:
