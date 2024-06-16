@@ -134,17 +134,15 @@ const RTAddUserScreen = ({ navigation }) => {
                         const imageName = `reference_image_${userIndex}_${imageIndex}.jpg`;
                         formData.append('reference_images', {
                             uri: user.images[imageKey],
-                            name: imageName
+                            name: imageName,
+                            type: 'image/jpeg' // Ensure the type is set
                         });
                     });
                 });
                 console.log("기준이미지 전송중1")
                 const response = await fetch(`${Local_Server}/upload_reference_images`, {
                     method: 'POST',
-                    body: formData,
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    },
+                    body: formData
                 });
 
                 if (response.ok) {

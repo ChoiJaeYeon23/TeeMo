@@ -14,6 +14,7 @@ import {
     Platform
 } from "react-native"
 import * as ImagePicker from "expo-image-picker"
+import { Ionicons } from "@expo/vector-icons"
 import { useNavigation } from "@react-navigation/native"
 import { Ubuntu_Server } from "@env"
 
@@ -94,7 +95,7 @@ const SettingScreen = ({ route }) => {
                 // 닉네임 변경 성공 시, 모든 입력 필드 초기화
                 clearAll();
                 // 홈 화면으로 이동
-                
+
                 navigation.navigate("HomeScreen", { id });
             } else {
                 console.error('닉네임 변경 실패:', data.message);
@@ -104,6 +105,9 @@ const SettingScreen = ({ route }) => {
         }
     }
 
+    const goBack = () => {
+        navigation.goBack()
+    }
 
     const changePassword = async () => {
         // 새 비밀번호와 확인용 비밀번호가 일치하는지 확인
@@ -210,6 +214,9 @@ const SettingScreen = ({ route }) => {
     return (
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
             <SafeAreaView style={styles.container}>
+                <TouchableOpacity style={styles.goback} onPress={goBack} activeOpacity={1}>
+                    <Ionicons name="chevron-back" size={34} color="#95ce67" />
+                </TouchableOpacity>
                 <View style={styles.headerContainer}>
                     <Text style={styles.headerTitle}>회원 정보 수정</Text>
                 </View>
@@ -311,6 +318,13 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: "center"
+    },
+    goback: {
+        position: "absolute",
+        left: "2%",
+        top: "6%",
+        padding: 10,
+        zIndex: 1
     },
     headerContainer: {
         width: "100%",

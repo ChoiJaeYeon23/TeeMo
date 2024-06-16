@@ -189,7 +189,7 @@ const ResultMediaScreen = ({ route }) => {
 
             <View style={styles.bottomContainer}>
                 <TouchableOpacity onPress={() => navigation.navigate("ChoiceMedia")}>
-                    <Text style={styles.homeText}>홈으로</Text>
+                    <Text style={styles.homeText}>새로 만들기</Text>
                 </TouchableOpacity>
             </View>
         </SafeAreaView>

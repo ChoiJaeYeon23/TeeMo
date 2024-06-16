@@ -10,8 +10,7 @@ import {
     Animated
 } from "react-native"
 import { useNavigation } from "@react-navigation/native"
-import Carousel from "react-native-reanimated-carousel"
-import { Octicons, MaterialCommunityIcons } from "@expo/vector-icons"
+import { Octicons, MaterialCommunityIcons, Ionicons, AntDesign } from "@expo/vector-icons"
 import Swiper from "react-native-swiper"
 import CustomProgressBar from "./CustomProgressBar"
 
@@ -19,8 +18,6 @@ const ChoiceMedia = () => {
     const navigation = useNavigation()
     const currentStep = 1
     const ref = useRef(null)
-    const screenWidth = Dimensions.get("window").width;
-    const screenHeight = Dimensions.get("window").height;
     const RTscaleValue = useRef(new Animated.Value(1)).current
     const NRTscaleValue = useRef(new Animated.Value(1)).current
 
@@ -56,6 +53,10 @@ const ChoiceMedia = () => {
         }).start()
     }
 
+    const goBack = () => {
+        navigation.goBack()
+    }
+
     return (
         <>
             <SafeAreaView style={styles.container}>
@@ -64,45 +65,9 @@ const ChoiceMedia = () => {
                     <CustomProgressBar currentStep={currentStep} />
                 </View>
 
-                {/* <View style={styles.exContainer}>
-                    <Carousel
-                        ref={ref}
-                        mode="parallax"
-                        autoPlay={true}
-                        data={[
-                            require("../images/top.jpg"),
-                            require("../images/app_logo.png"),
-                            require("../images/bottom.jpg"),
-                            require("../images/kakao_login.png"),
-                            require("../images/front.jpg"),
-                            require("../images/01.gif"),
-                            require("../images/result.jpg")
-                        ]}
-                        modeConfig={{
-                            parallaxScrollingScale: 0.9,
-                            parallaxScrollingOffset: 50
-                        }}
-                        renderItem={({ item }) => (
-                            <View style={styles.carouselItemContainer}>
-                                <Image source={item} style={styles.carouselImage} resizeMode="contain" />
-                            </View>
-                        )}
-                        width={screenWidth * 0.97}
-                        height={screenHeight * 0.6 * 0.97}
-                        loop={true}
-                        snapEnabled={true}
-                        autoPlayInterval={1500}
-                        style={{
-                            flex: 1,
-                            alignItems: "center",
-                            justifyContent: "center"
-                        }}
-                    />
-                </View> */}
-
                 <View style={[styles.exContainer, { paddingBottom: "5%", marginBottom: "10%", marginTop: "7%" }]}>
                     <View style={{ flexDirection: "row", marginVertical: "5%" }}>
-                        <Octicons name="pin" size={24} color="#787878" />
+                        <Octicons name="pin" size={24} color="#444444" />
                         <Text style={styles.guideSubTitle}>{"제작 방법"}</Text>
                     </View>
                     <Swiper
@@ -117,42 +82,46 @@ const ChoiceMedia = () => {
 
                             <Text style={styles.guideTitle}>실시간 모자이크</Text>
                             <Image source={require("../images/takePicture.png")} style={{ width: 200, height: 200, marginRight: "8%" }} />
-                            <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                <MaterialCommunityIcons name="numeric-1-circle-outline" color="#666666" size={25} />
-                                <Text style={styles.guideText}>{"왼쪽 하단의 실시간 버튼을 눌러주세요."}</Text>
-                            </View>
-                            <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                <MaterialCommunityIcons name="numeric-2-circle-outline" color="#666666" size={25} />
-                                <Text style={styles.guideText}>{"모자이크를 제외할 인물을 추가해주세요."}</Text>
-                            </View>
-                            <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                <MaterialCommunityIcons name="numeric-3-circle-outline" color="#666666" size={25} />
-                                <Text style={styles.guideText}>{"사진이나 동영상을 촬영해주세요."}</Text>
-                            </View>
-                            <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                <MaterialCommunityIcons name="numeric-4-circle-outline" color="#666666" size={25} />
-                                <Text style={styles.guideText}>{"결과물을 확인해주세요."}</Text>
+                            <View style={{ width: "70%" }}>
+                                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                    <MaterialCommunityIcons name="gamepad-circle-up" color="#444444" size={25} />
+                                    <Text style={styles.guideText}>{"왼쪽 하단의 실시간 버튼을 눌러주세요."}</Text>
+                                </View>
+                                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                    <MaterialCommunityIcons name="gamepad-circle-right" color="#444444" size={25} />
+                                    <Text style={styles.guideText}>{"모자이크를 제외할 인물을 추가해주세요."}</Text>
+                                </View>
+                                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                    <MaterialCommunityIcons name="gamepad-circle-down" color="#444444" size={25} />
+                                    <Text style={styles.guideText}>{"사진이나 동영상을 촬영해주세요."}</Text>
+                                </View>
+                                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                    <MaterialCommunityIcons name="gamepad-circle-left" color="#444444" size={25} />
+                                    <Text style={styles.guideText}>{"결과물을 확인해주세요."}</Text>
+                                </View>
                             </View>
                         </View>
 
                         <View style={styles.swiperSlide}>
                             <Text style={styles.guideTitle}>비실시간 모자이크</Text>
                             <Image source={require("../images/uploadImage.png")} style={{ width: 180, height: 180, marginRight: "5%", marginVertical: "2%" }} />
-                            <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                <MaterialCommunityIcons name="numeric-1-circle-outline" color="#666666" size={25} />
-                                <Text style={styles.guideText}>{"오른쪽 하단의 비실시간 버튼을 눌러주세요."}</Text>
-                            </View>
-                            <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                <MaterialCommunityIcons name="numeric-2-circle-outline" color="#666666" size={25} />
-                                <Text style={styles.guideText}>{"모자이크를 제외할 인물을 추가해주세요."}</Text>
-                            </View>
-                            <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                <MaterialCommunityIcons name="numeric-3-circle-outline" color="#666666" size={25} />
-                                <Text style={styles.guideText}>{"사진이나 동영상을 업로드해주세요."}</Text>
-                            </View>
-                            <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                <MaterialCommunityIcons name="numeric-4-circle-outline" color="#666666" size={25} />
-                                <Text style={styles.guideText}>{"결과물을 확인해주세요."}</Text>
+                            <View style={{ width: "75%" }}>
+                                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                    <MaterialCommunityIcons name="gamepad-circle-up" color="#444444" size={25} />
+                                    <Text style={styles.guideText}>{"오른쪽 하단의 비실시간 버튼을 눌러주세요."}</Text>
+                                </View>
+                                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                    <MaterialCommunityIcons name="gamepad-circle-right" color="#444444" size={25} />
+                                    <Text style={styles.guideText}>{"모자이크를 제외할 인물을 추가해주세요."}</Text>
+                                </View>
+                                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                    <MaterialCommunityIcons name="gamepad-circle-down" color="#444444" size={25} />
+                                    <Text style={styles.guideText}>{"사진이나 동영상을 업로드해주세요."}</Text>
+                                </View>
+                                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                    <MaterialCommunityIcons name="gamepad-circle-left" color="#444444" size={25} />
+                                    <Text style={styles.guideText}>{"결과물을 확인해주세요."}</Text>
+                                </View>
                             </View>
                         </View>
                     </Swiper>
@@ -182,7 +151,13 @@ const ChoiceMedia = () => {
                             <Text style={styles.buttonText}>비실시간</Text>
                         </TouchableOpacity>
                     </Animated.View>
+                </View>
 
+                <View style={{ flexDirection: "row", position: "absolute", left: "2%", bottom: "5%", zIndex: 1, alignItems: "center" }}>
+                    <TouchableOpacity style={styles.goback} onPress={goBack} activeOpacity={1}>
+                        <Ionicons name="chevron-back" size={34} color="#787878" />
+                    </TouchableOpacity>
+                    <Text style={{ fontSize: 17, color: "#787878", fontWeight: "600" }}>홈으로</Text>
                 </View>
             </SafeAreaView>
         </>
@@ -243,13 +218,13 @@ const styles = StyleSheet.create({
         fontSize: 22,
         fontWeight: "600",
         marginBottom: "3%",
-        color: "#787878",
+        color: "#444444",
         marginLeft: "3%"
     },
     guideText: {
         fontSize: 21,
-        color: "#666666",
-        fontWeight: "bold",
+        color: "#444444",
+        fontWeight: "600",
         marginVertical: "2%",
         marginLeft: "2%"
     },
@@ -293,5 +268,8 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: "#FFFFFF",
         fontWeight: "bold"
+    },
+    goback: {
+        padding: 10
     }
 })

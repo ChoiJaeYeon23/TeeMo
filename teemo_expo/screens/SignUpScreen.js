@@ -15,7 +15,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
-import { SimpleLineIcons } from "@expo/vector-icons"
+import { SimpleLineIcons, Ionicons } from "@expo/vector-icons"
 import { Ubuntu_Server } from '@env'
 import LoadingModal from "./LoadingModal"
 
@@ -151,14 +151,22 @@ const SignUpScreen = () => {
         }
     };
 
+    const goBack = () => {
+        navigation.goBack()
+    }
 
     return (
         <TouchableWithoutFeedback onPress={keyboardOff}>
+
             <KeyboardAvoidingView
                 style={{ flex: 1 }}
                 behavior={Platform.OS === "ios" ? "padding" : "height"}
             >
                 <SafeAreaView style={styles.container}>
+                    <TouchableOpacity style={styles.goback} onPress={goBack} activeOpacity={1}>
+                        <Ionicons name="chevron-back" size={34} color="#95ce67" />
+                    </TouchableOpacity>
+
                     <View style={styles.profileContainer}>
                         {
                             profilePic ? (
@@ -234,6 +242,8 @@ const SignUpScreen = () => {
                         </TouchableOpacity>
                     </View>
 
+
+
                     <LoadingModal visible={isLoading} />
 
                 </SafeAreaView>
@@ -250,9 +260,16 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "space-around"
     },
+    goback: {
+        position: "absolute",
+        left: "2%",
+        top: "6%",
+        padding: 10,
+        zIndex: 1
+    },
     profileContainer: {
         width: "100%",
-        height: "50%",
+        height: "60%",
         alignItems: "center",
         justifyContent: "flex-end",
         paddingBottom: "10%"
@@ -276,7 +293,7 @@ const styles = StyleSheet.create({
     },
     signupContainer: {
         width: "100%",
-        height: "50%",
+        height: "40%",
         alignItems: "center",
         justifyContent: "flex-start",
     },
