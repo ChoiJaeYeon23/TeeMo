@@ -10,23 +10,18 @@ import RealTimeMosaic from "../screens/RealTimeMosaic"
 import RTAddUserScreen from "../screens/RTAddUserScreen"
 import HomeScreen from "../screens/HomeScreen"
 import SettingScreen from "../screens/SettingScreen"
-import NavigationScreen from "./NavigationScreen"
 
 const Stack = createStackNavigator()
 
 const Navigation = () => {
     return (
-        <Stack.Navigator initialRouteName="NavigationScreen">
-            <Stack.Screen
-                name="NavigationScreen"
-                component={NavigationScreen}
-            />
+        <Stack.Navigator initialRouteName="SignInScreen">
             <Stack.Screen
                 name="SettingScreen"
                 component={SettingScreen}
                 options={{
                     headerShown: false,
-                    // gestureEnabled: false
+                    gestureEnabled: false
                 }}
             />
             <Stack.Screen
@@ -34,7 +29,7 @@ const Navigation = () => {
                 component={RealTimeMosaic}
                 options={{
                     headerShown: false,
-                    // gestureEnabled: false
+                    gestureEnabled: false
                 }}
             />
             <Stack.Screen
@@ -42,7 +37,7 @@ const Navigation = () => {
                 component={SignInScreen}
                 options={{
                     headerShown: false,
-                    // gestureEnabled: false
+                    gestureEnabled: false
                 }}
             />
             <Stack.Screen
@@ -50,7 +45,7 @@ const Navigation = () => {
                 component={SignUpScreen}
                 options={{
                     headerShown: false,
-                    // gestureEnabled: false
+                    gestureEnabled: false
                 }}
             />
             <Stack.Screen
@@ -58,7 +53,7 @@ const Navigation = () => {
                 component={HomeScreen}
                 options={{
                     headerShown: false,
-                    // gestureEnabled: false
+                    gestureEnabled: false
                 }}
             />
             <Stack.Screen
@@ -66,7 +61,7 @@ const Navigation = () => {
                 component={ResultMediaScreen}
                 options={{
                     headerShown: false,
-                    // gestureEnabled: false
+                    gestureEnabled: false
                 }}
             />
             <Stack.Screen
@@ -74,7 +69,7 @@ const Navigation = () => {
                 component={ChoiceMedia}
                 options={{
                     headerShown: false,
-                    // gestureEnabled: false
+                    gestureEnabled: false
                 }}
             />
             <Stack.Screen
@@ -82,7 +77,7 @@ const Navigation = () => {
                 component={NRTAddUserScreen}
                 options={{
                     headerShown: false,
-                    // gestureEnabled: false
+                    gestureEnabled: false
                 }}
             />
             <Stack.Screen
@@ -90,7 +85,7 @@ const Navigation = () => {
                 component={RTAddUserScreen}
                 options={{
                     headerShown: false,
-                    // gestureEnabled: false
+                    gestureEnabled: false
                 }}
             />
             <Stack.Screen
@@ -98,7 +93,7 @@ const Navigation = () => {
                 component={MosaicTest}
                 options={{
                     headerShown: false,
-                    // gestureEnabled: false
+                    gestureEnabled: false
                 }}
             />
         </Stack.Navigator>
