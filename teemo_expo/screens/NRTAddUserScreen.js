@@ -95,11 +95,11 @@ const NRTAddUserScreen = ({ navigation }) => {
                 {
                     id: userId,
                     images: {
-                        front: `data:image/png;base64,${data.images.front_image_path}`,
-                        top: `data:image/png;base64,${data.images.top_image_path}`,
-                        bottom: `data:image/png;base64,${data.images.bottom_image_path}`,
-                        left: `data:image/png;base64,${data.images.left_image_path}`,
-                        right: `data:image/png;base64,${data.images.right_image_path}`
+                        front: `data:image/jpeg;base64,${data.images.front_image_path}`,
+                        top: `data:image/jpeg;base64,${data.images.top_image_path}`,
+                        bottom: `data:image/jpeg;base64,${data.images.bottom_image_path}`,
+                        left: `data:image/jpeg;base64,${data.images.left_image_path}`,
+                        right: `data:image/jpeg;base64,${data.images.right_image_path}`
                     }
                 }
             ]);

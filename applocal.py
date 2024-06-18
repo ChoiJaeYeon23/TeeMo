@@ -28,13 +28,13 @@ def process_media():
 
         for reference_file in reference_files:
             reference_image = face_recognition.load_image_file(reference_file)
-            reference_face_locations = face_recognition.face_locations(reference_image)
+            reference_face_locations = face_recognition.face_locations(reference_image, model ='cnn')
             reference_face_encodings = face_recognition.face_encodings(reference_image, reference_face_locations)
             reference_encodings.extend(reference_face_encodings)
 
         group_file = request.files['group_image']
         group_image = face_recognition.load_image_file(group_file)
-        group_face_locations = face_recognition.face_locations(group_image)
+        group_face_locations = face_recognition.face_locations(group_image, model ='cnn')
         group_face_encodings = face_recognition.face_encodings(group_image, group_face_locations)
 
         unblurred_count = 0
@@ -108,7 +108,7 @@ def process_media():
                 break
 
             # 프레임에서 얼굴 인식
-            group_face_locations = face_recognition.face_locations(frame, model='cnn')
+            group_face_locations = face_recognition.face_locations(frame)
             group_face_encodings = face_recognition.face_encodings(frame, group_face_locations,model='cnn')
 
             for i, group_encoding in enumerate(group_face_encodings):
@@ -184,7 +184,7 @@ def generate_frames():
             break
 
         # 실시간 캠 내에서 그룹 인코딩
-        group_face_locations = face_recognition.face_locations(frame)
+        group_face_locations = face_recognition.face_locations(frame,model='cnn')
         group_face_encodings = face_recognition.face_encodings(frame, group_face_locations, model='cnn')
 
         for i, group_encoding in enumerate(group_face_encodings):
@@ -192,7 +192,7 @@ def generate_frames():
             distances = [face_recognition.face_distance([ref_encoding], group_encoding)[0] for ref_encoding in references]
             print(f"인덱스: {i+1}, 거리: {distances}")
 
-            if all(distance >= 0.44 for distance in distances):
+            if all(distance >= 0.47 for distance in distances):
                 face = frame[top:bottom, left:right]
                 face = cv2.GaussianBlur(face, (99, 99), 20)
                 frame[top:bottom, left:right] = face
@@ -250,8 +250,8 @@ def set_reference_images():
 
     for reference_file in reference_files:
         reference_image = face_recognition.load_image_file(reference_file)
-        reference_face_locations = face_recognition.face_locations(reference_image)
-        reference_face_encodings = face_recognition.face_encodings(reference_image, reference_face_locations)
+        reference_face_locations = face_recognition.face_locations(reference_image,model='cnn')
+        reference_face_encodings = face_recognition.face_encodings(reference_image, reference_face_locations,model='cnn')
         references.extend(reference_face_encodings)
         print('한개 끝')
 

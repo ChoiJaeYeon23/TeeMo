@@ -135,7 +135,7 @@ const RTAddUserScreen = ({ navigation }) => {
                         formData.append('reference_images', {
                             uri: user.images[imageKey],
                             name: imageName,
-                            type: 'image/jpeg' // Ensure the type is set
+                            // type: 'image/jpeg' // Ensure the type is set
                         });
                     });
                 });

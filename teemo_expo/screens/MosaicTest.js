@@ -121,7 +121,7 @@ const MosaicTest = ({ route }) => {
                 // 기준 이미지 추가
                 userList.forEach((user, userIndex) => {
                     Object.keys(user.images).forEach((imageKey, imageIndex) => {
-                        const imageName = `reference_image_${userIndex}_${imageIndex}.jpg`;
+                        const imageName = `reference_image_${userIndex}_${imageIndex}.jpeg`;
                         formData.append('reference_images', {
                             uri: user.images[imageKey],
                             name: imageName
@@ -132,7 +132,7 @@ const MosaicTest = ({ route }) => {
                 // 그룹 이미지 추가
                 formData.append('group_image', {
                     uri: additionalMedia,
-                    name: 'group_image.jpg'
+                    name: 'group_image.jpeg'
                 });
 
                 try {
@@ -183,7 +183,7 @@ const MosaicTest = ({ route }) => {
                 // 기준 이미지 추가
                 userList.forEach((user, userIndex) => {
                     Object.keys(user.images).forEach((imageKey, imageIndex) => {
-                        const imageName = `reference_image_${userIndex}_${imageIndex}.jpg`;
+                        const imageName = `reference_image_${userIndex}_${imageIndex}.jpeg`;
                         formData.append('reference_images', {
                             uri: user.images[imageKey],
                             name: imageName
