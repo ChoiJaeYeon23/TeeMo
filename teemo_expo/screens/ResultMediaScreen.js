@@ -17,7 +17,7 @@ import { useNavigation } from "@react-navigation/native"
 import * as FileSystem from 'expo-file-system';
 
 /**
- * 모자이크 처리된 결과물(사진 혹은 동영상)을 화면에 출력하고 저장할 수 있는 화면입니다.
+ * 모자이크 처리된 결과물(사진 혹은 동영상)을 화면에 출력하고 저장할 수 있는 화면입니다..
  */
 const ResultMediaScreen = ({ route }) => {
     const [mediaType, setMediaType] = useState("PHOTO")  // 미디어 타입 PHOTO(사진) 또는 VIDEO(동영상), 기본 값은 PHOTO로 초기화
