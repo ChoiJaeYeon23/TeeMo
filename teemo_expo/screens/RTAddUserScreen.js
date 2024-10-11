@@ -104,7 +104,7 @@ const RTAddUserScreen = ({ navigation }) => {
             setIsLoading(false);
         } catch (error) {
             setIsLoading(false);
-            console.error(`에러 발생: ${error.message}`);
+            console.error(`에러 발생:  ${error.message}`);
             Alert.alert("에러 발생", error.message);
         }
     };
