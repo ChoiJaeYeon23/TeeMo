@@ -8,7 +8,8 @@
 
 ## 목차
 * [개요](#개요)
-* [기술 스택](#기술-스택)
+* [기술 스택 및 개발 환경](#기술-스택-및-개발-환경)
+* [비인가 인원 모자이크 처리 기술](#비인가-인원-모자이크-처리-기술)
 * [결과물](#결과물)
 
 <br/>
@@ -41,7 +42,7 @@
     
 <br/>
 
-## 기술 스택
+## 기술 스택 및 개발 환경
 
 ### Environment
 
@@ -71,7 +72,7 @@
 ![Discord](https://img.shields.io/badge/Discord-%235865F2.svg?style=for-the-badge&logo=discord&logoColor=white)
 ![Notion](https://img.shields.io/badge/Notion-%23000000.svg?style=for-the-badge&logo=notion&logoColor=white)
 
-### 사용한 버전
+### Versions
 
 | 기술 / 환경          | 버전         |
 |-------------------|-------------|
@@ -86,6 +87,28 @@
 | **React Native**  | 0.74.1      |
 | **Expo SDK**      | 51.0.1      |
 
-## 화면 구성
+<br/>
+
+## 비인가 인원 모자이크 처리 기술
+
+### 개념 모델
+<!-- 개념 모델 이미지 추가 -->
+
+* 데이터셋
+  + 인가 객체의 얼굴 사진
+    - 각 객체당 최소 1개 ~ 5개의 사진으로 구성
+    - 각도나 표정에 따른 얼굴 모양의 변화를 고려하여 인식의 정확도를 높임
+  + 모자이크 처리 대상 미디어
+    - 사진, 동영상 혹은 실시간으로 촬영 중인 카메라 화면
+> 입력 데이터셋의 크기가 큰 경우 GPU 메모리 사용량이 크게 증가하므로, GPU 환경에 맞게 조정하는 전처리 과정 필요<br/>
+> 확장자를 설정하여 모델에서 분석하기 적합한 형식의 데이터로 가공<br/>
+> ex. 사진 - JPEG, 동영상 - MP4
+
+* 얼굴 객체 탐지 및 특징 추출
+  + **dlib의 MMOD**<sup> Max-Margin Object Detection</sup> **모델**
+    - 얼굴 객체 탐지에 특화된 딥러닝 기반 객체 탐지 모델
+    - CNN<sup> Convolutional Neural Networks </sup>을 사용해 분류 정확도를 높임
+  + **face_recognition 라이브러리** [face_recognition GitHub Repository](https://github.com/ageitgey/face_recognition)
+    - face_recognition의 함수는 기본적으로 HOG<sup> Histogram of Oriented Gradients</sup> 기반의 얼굴 객체 탐지 모델을 사용
 
 ## 주요 기능
