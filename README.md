@@ -193,13 +193,13 @@
 
   ``` python
   for i, group_encoding in enumerate(group_face_encodings):
-    distance = face_recognition.face_distance([reference_encoding], group_encoding)[0]
+      distance = face_recognition.face_distance([reference_encoding], group_encoding)[0]
   ```
   
   - 함수 : **face_recognition.face_distance(<인가 객체 특징 배열>, <모자이크 처리 대상 미디어 특징 배열>)**<br/>
 
 > **얼굴 객체 간의 유사도를 측정**하기 위해 각 얼굴 객체에서 추출된 128차원의 인코딩 벡터 간의 거리를 계산한다.<br/>
-> 이때 계산되는 거리의 값은 0에서 1 사이로, 0에 가까울수록 두 얼굴 객체가 유사하다고 평가한다.<br/>
+> 이때 계산되는 거리의 값은 0에서 1 사이로, **0에 가까울수록 두 얼굴 객체가 유사하다고 평가**한다.<br/>
 > 본 프로젝트에서는 해당 거리 평가를 기반으로 **동일 인물이라고 판단하는 임계값**을 이미지와 동영상의 특성을 고려하여 각각 설정하였다.
 
 <br/>
@@ -207,10 +207,10 @@
 + **모자이크 처리**
 
   ``` python
-    if all(distance >= 임계값 for distance in distances):
-        face = group_image[top:bottom, left:right]
-        face = cv2.GaussianBlur(face, (99, 99), 30)
-        group_image[top:bottom, left:right] = face
+      if all(distance >= 임계값 for distance in distances):
+         face = group_image[top:bottom, left:right]
+         face = cv2.GaussianBlur(face, (99, 99), 30)
+         group_image[top:bottom, left:right] = face
   ```
   
   - 함수 : **cv2.GaussianBlur(<얼굴 객체 부분>, (<커널 크기>, <커널크기>), <표준편차>)**<br/>
@@ -219,5 +219,6 @@
 
 <br/>
 
-
 ## 주요 기능
+
+### 
